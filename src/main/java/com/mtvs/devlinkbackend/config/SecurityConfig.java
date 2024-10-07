@@ -22,9 +22,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UserService userService;
     private final OAuth2AuthorizedClientService authorizedClientService;
 
-    public SecurityConfig(OAuth2AuthorizedClientService authorizedClientService) {
+    public SecurityConfig(UserService userService, OAuth2AuthorizedClientService authorizedClientService) {
+        this.userService = userService;
         this.authorizedClientService = authorizedClientService;
     }
 
@@ -52,7 +54,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(UserService userService) {
+    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 

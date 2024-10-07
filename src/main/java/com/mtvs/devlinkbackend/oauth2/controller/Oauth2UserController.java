@@ -21,6 +21,23 @@ public class Oauth2UserController {
         this.userService = userService;
     }
 
+    // 로컬에 저장된 user 정보 가져오는 API
+    @GetMapping("/local/user-info")
+    public ResponseEntity<?> getLocalUserInfo(@RequestHeader("Authorization") String accessToken) {
+        try {
+            // JWT 토큰에서 사용자 정보 추출
+            Map<String, Object> claims = epicGamesTokenService.validateAndParseToken(extractToken(accessToken));
+
+            if(userService.findUserByAccessToken(extractToken(accessToken)) != null) {
+                userService.registUserByAccessToken(extractToken(accessToken));
+            }
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
     // epicgames 계정 정보 가져오는 API
     @GetMapping("/epicgames/user-info")
     public ResponseEntity<?> getEpicGamesUserInfo(
