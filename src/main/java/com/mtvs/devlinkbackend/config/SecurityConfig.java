@@ -67,15 +67,13 @@ public class SecurityConfig {
 
             // 액세스 토큰 쿠키 설정
             Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-            accessTokenCookie.setHttpOnly(true);
             accessTokenCookie.setSecure(true);
             accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 60); // 1시간
+            accessTokenCookie.setMaxAge(15 * 60); // 1시간
 
             // 리프레시 토큰 쿠키 설정
             if (refreshToken != null) {
                 Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-                refreshTokenCookie.setHttpOnly(true);
                 refreshTokenCookie.setSecure(true);
                 refreshTokenCookie.setPath("/");
                 refreshTokenCookie.setMaxAge(3 * 60 * 60); // 3시간
