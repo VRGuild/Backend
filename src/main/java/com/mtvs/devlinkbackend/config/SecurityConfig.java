@@ -1,77 +1,92 @@
 package com.mtvs.devlinkbackend.config;
 
-
+import com.mtvs.devlinkbackend.oauth2.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final OAuth2AuthorizedClientService authorizedClientService;
+
+    public SecurityConfig(OAuth2AuthorizedClientService authorizedClientService) {
+        this.authorizedClientService = authorizedClientService;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/", "/login").permitAll() // 새로운 메서드 사용
-                .anyRequest().authenticated()
-            )
-            .oauth2Login(oauth2Login -> oauth2Login
-                .loginPage("/login") // 로그인 페이지 URL
-                .defaultSuccessUrl("/", true) // 로그인 성공 후 리디렉션
-                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                        .userService(oauth2UserService()) // 커스텀 유저 서비스
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/", "/login").permitAll()
+                        .anyRequest().authenticated()
                 )
-            );
-
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .userService(oauth2UserService())
+                        )
+                        .successHandler(oauth2AuthenticationSuccessHandler()) // 성공 핸들러 추가
+                );
         return http.build();
     }
 
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
-        return new DefaultOAuth2UserService() {
-            @Override
-            public OAuth2User loadUser(OAuth2UserRequest userRequest) {
-                OAuth2User oauth2User = super.loadUser(userRequest);
+        return new DefaultOAuth2UserService();
+    }
 
-                // 사용자 정보 가져오기
-                Map<String, Object> attributes = oauth2User.getAttributes();
-                String userId = (String) attributes.get("sub"); // "sub"는 Epic Games 사용자 ID
-                String name = oauth2User.getAttribute("name");
-                String email = oauth2User.getAttribute("email");
+    @Bean
+    public AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler(UserService userService) {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
-                // 필요한 경우 추가 로직 구현 (사용자 등록, 데이터베이스 연동 등)
+            // OAuth2AuthorizedClient를 사용하여 액세스 토큰과 리프레시 토큰 가져오기
+            String clientRegistrationId = ((OAuth2UserRequest) authentication.getDetails()).getClientRegistration().getRegistrationId();
+            OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(clientRegistrationId, oauthUser.getName());
 
-                // 데이터베이스에서 sub로 사용자 조회
-//                User user = userRepository.findBySub(sub);
-//
-//                if (user == null) {
-//                    // 새로운 사용자인 경우 저장
-//                    user = new User(sub, name, email);
-//                    userRepository.save(user);
-//                } else {
-//                    // 기존 사용자의 정보 업데이트 (필요 시)
-//                    user.setName(name);
-//                    user.setEmail(email);
-//                    userRepository.save(user);
-//                }
+            String accessToken = authorizedClient.getAccessToken().getTokenValue();
+            String refreshToken = authorizedClient.getRefreshToken() != null ? authorizedClient.getRefreshToken().getTokenValue() : null;
 
-                Set<OAuth2UserAuthority> authorities = new HashSet<>();
-                authorities.add(new OAuth2UserAuthority(attributes));
+            // 액세스 토큰 쿠키 설정
+            Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setMaxAge(60 * 60); // 1시간
 
-                // OAuth2User 객체 반환 (사용자 정보 포함)
-                return new DefaultOAuth2User(authorities, attributes, "sub");
+            // 리프레시 토큰 쿠키 설정
+            if (refreshToken != null) {
+                Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+                refreshTokenCookie.setHttpOnly(true);
+                refreshTokenCookie.setSecure(true);
+                refreshTokenCookie.setPath("/");
+                refreshTokenCookie.setMaxAge(3 * 60 * 60); // 3시간
+                response.addCookie(refreshTokenCookie);
+            }
+
+            response.addCookie(accessTokenCookie);
+
+            if(userService.findUserByAccessToken(accessToken) != null) { // 가입 했던 적이 있는지 확인
+                userService.registUserByAccessToken(accessToken);
+                response.sendRedirect("/user/info"); // 추가 정보 입력 페이지로 이동
+            } else {
+                response.sendRedirect("/"); // 가입했던 적이 있다면 홈으로 redirect
             }
         };
     }
