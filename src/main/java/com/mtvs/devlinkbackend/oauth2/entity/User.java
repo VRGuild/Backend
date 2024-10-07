@@ -25,11 +25,6 @@ public class User {
         this.accountId = accountId;
     }
 
-    public User(String accountId, String email) {
-        this.accountId = accountId;
-        this.email = email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
