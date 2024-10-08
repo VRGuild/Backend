@@ -17,10 +17,10 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public void registUserByAccessToken(String accessToken) {
+    public User registUserByAccessToken(String accessToken) {
         try {
             String accountId = jwtUtil.getSubjectFromToken(accessToken);
-            userRepository.save(new User(
+            return userRepository.save(new User(
                     accountId
             ));
         } catch (Exception e) {

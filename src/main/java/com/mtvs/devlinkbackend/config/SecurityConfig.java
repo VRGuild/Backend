@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.config;
 
+import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -17,6 +19,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -24,10 +29,12 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserService userService, OAuth2AuthorizedClientService authorizedClientService) {
+    public SecurityConfig(UserService userService, OAuth2AuthorizedClientService authorizedClientService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userService = userService;
         this.authorizedClientService = authorizedClientService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -44,7 +51,16 @@ public class SecurityConfig {
                                 .userService(oauth2UserService())
                         )
                         .successHandler(oauth2AuthenticationSuccessHandler()) // 성공 핸들러 추가
-                );
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler(logoutHandler())
+                        .logoutSuccessHandler(logoutSuccessHandler())
+                )
+                // 세션을 생성하지 않도록 설정
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // JWT 필터 추가
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -65,29 +81,41 @@ public class SecurityConfig {
             String accessToken = authorizedClient.getAccessToken().getTokenValue();
             String refreshToken = authorizedClient.getRefreshToken() != null ? authorizedClient.getRefreshToken().getTokenValue() : null;
 
-            // 액세스 토큰 쿠키 설정
-            Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-            accessTokenCookie.setSecure(true);
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(15 * 60); // 1시간
-
-            // 리프레시 토큰 쿠키 설정
-            if (refreshToken != null) {
-                Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-                refreshTokenCookie.setSecure(true);
-                refreshTokenCookie.setPath("/");
-                refreshTokenCookie.setMaxAge(3 * 60 * 60); // 3시간
-                response.addCookie(refreshTokenCookie);
-            }
-
-            response.addCookie(accessTokenCookie);
-
-            if(userService.findUserByAccessToken(accessToken) != null) { // 가입 했던 적이 있는지 확인
-                userService.registUserByAccessToken(accessToken);
+            User foundUser = userService.findUserByAccessToken(accessToken);
+            if(foundUser == null) { // 가입 했던 적이 있는지 확인
+                foundUser = userService.registUserByAccessToken(accessToken);
+                foundUser.setRefreshToken(refreshToken);
                 response.sendRedirect("/user/info"); // 추가 정보 입력 페이지로 이동
             } else {
+                foundUser.setRefreshToken(refreshToken);
                 response.sendRedirect("/"); // 가입했던 적이 있다면 홈으로 redirect
             }
         };
+    }
+
+    @Bean
+    public LogoutHandler logoutHandler() {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            // 쿠키 삭제
+            deleteCookie(response, "accessToken");
+            deleteCookie(response, "refreshToken");
+        };
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+            // 로그아웃 성공 후 리디렉트
+            response.sendRedirect("/login?logout");
+        };
+    }
+
+    private void deleteCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 쿠키 즉시 삭제
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
     }
 }

@@ -59,7 +59,7 @@ public class Oauth2UserController {
 
         String code = payload.get("code");
 
-        Map<String, Object> tokenBody = epicGamesTokenService.getAccessTokenAndRefreshToken(code);
+        Map<String, Object> tokenBody = epicGamesTokenService.getAccessTokenAndRefreshTokenByCode(code);
 
         if (tokenBody != null) {
             String accessToken = (String) tokenBody.get("access_token");

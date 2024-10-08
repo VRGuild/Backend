@@ -17,6 +17,8 @@ public class User {
     private String email;
     @Column(name = "USER_NAME")
     private String userName;
+    @Column(name = "REFRESH_TOKEN")
+    private String refreshToken;
     // 추후 추가 정보 필요시 Entity에 Column 추가 예정
 
     public User() {}
@@ -31,5 +33,9 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
