@@ -35,7 +35,7 @@ public class EpicGamesTokenService {
     // 오프라인 JWT 검증 및 파싱 메서드
     public Map<String, Object> validateAndParseToken(String token) throws Exception {
         // JWT 토큰 검증 및 파싱하여 Claims를 추출
-        return jwtUtil.getClaimsFromToken(token);
+        return jwtUtil.getClaimsFromTokenWithoutAuth(token);
     }
 
     public String getAccessTokenByRefreshToken(String refreshToken) {
@@ -110,7 +110,7 @@ public class EpicGamesTokenService {
 
         try {
             response = restTemplate.exchange(
-                    "https://api.epicgames.dev/epic/id/v2/accounts?accountId=" + jwtUtil.getClaimsFromToken(accessToken),
+                    "https://api.epicgames.dev/epic/id/v2/accounts?accountId=" + jwtUtil.getClaimsFromTokenWithAuth(accessToken),
                     HttpMethod.GET,
                     request,
                     Map.class

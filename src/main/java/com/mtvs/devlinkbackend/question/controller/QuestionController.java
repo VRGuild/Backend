@@ -1,7 +1,6 @@
 package com.mtvs.devlinkbackend.question.controller;
 
 import com.mtvs.devlinkbackend.config.JwtUtil;
-import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
 import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
 import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.entity.Question;
@@ -31,14 +30,14 @@ public class QuestionController {
             @RequestBody QuestionRegistRequestDTO questionRegistRequestDTO,
             @RequestHeader(name = "Authorization") String accessToken) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromToken(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithAuth(accessToken);
         Question createdQuestion = questionService.registQuestion(questionRegistRequestDTO, accountId);
         return ResponseEntity.ok(createdQuestion);
     }
 
     // Retrieve a question by ID
     @GetMapping("/{questionId}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable long questionId) {
+    public ResponseEntity<Question> getQuestionById(@PathVariable Long questionId) {
         Question question = questionService.findQuestionByQuestionId(questionId);
         if (question != null) {
             return ResponseEntity.ok(question);
@@ -60,7 +59,7 @@ public class QuestionController {
             @RequestParam int page,
             @RequestHeader(name = "Authorization") String accessToken) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromToken(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
         List<Question> questions = questionService.findQuestionsByAccountIdWithPaging(page, accountId);
         return ResponseEntity.ok(questions);
     }
@@ -71,7 +70,7 @@ public class QuestionController {
             @RequestBody QuestionUpdateRequestDTO questionUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String accessToken) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromToken(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
         try {
             Question updatedQuestion = questionService.updateQuestion(questionUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedQuestion);
@@ -81,9 +80,10 @@ public class QuestionController {
     }
 
     // Delete a question by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable long id) {
-        questionService.deleteQuestion(id);
+    @DeleteMapping("/{questionId}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable Long questionId) {
+
+        questionService.deleteQuestion(questionId);
         return ResponseEntity.noContent().build();
     }
 }
