@@ -1,9 +1,11 @@
 package com.mtvs.devlinkbackend.reply.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mtvs.devlinkbackend.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -36,6 +38,7 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "QUESTION_ID", nullable = false)
+    @JsonBackReference
     private Question question;
 
     public Reply(String content, String accountId, Question question) {

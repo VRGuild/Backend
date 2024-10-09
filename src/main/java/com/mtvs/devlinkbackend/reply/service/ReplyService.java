@@ -37,7 +37,7 @@ public class ReplyService {
     }
 
     public List<Reply> findRepliesByQuestionId(Long questionId) {
-        return replyRepository.findRepliesByQuestionId(questionId);
+        return replyRepository.findRepliesByQuestion_QuestionId(questionId);
     }
 
     public List<Reply> findRepliesByAccountId(String accountId) {
