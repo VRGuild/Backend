@@ -13,7 +13,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -53,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null) { // refreshToken도 없어 AccessToken이 아예 없는 경우 지나가기
             try {
                 // 토큰 검증 | 검증 성공 시 SecurityContext에 인증 정보 저장
-                String userPrincipal = jwtUtil.getSubjectFromToken(token);
+                String userPrincipal = jwtUtil.getSubjectFromTokenWithAuth(token);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userPrincipal, null, null);
 

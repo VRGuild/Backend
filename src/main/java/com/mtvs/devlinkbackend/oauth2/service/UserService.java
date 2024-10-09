@@ -19,7 +19,7 @@ public class UserService {
 
     public User registUserByAccessToken(String accessToken) {
         try {
-            String accountId = jwtUtil.getSubjectFromToken(accessToken);
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
             return userRepository.save(new User(
                     accountId
             ));
@@ -30,7 +30,7 @@ public class UserService {
 
     public User findUserByAccessToken(String accessToken) {
         try {
-            String accountId = jwtUtil.getSubjectFromToken(accessToken);
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
             return userRepository.findUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -39,7 +39,7 @@ public class UserService {
 
     public void updateUserByAccessToken(String accessToken, UserUpdateRequestDTO userUpdateRequestDTO) {
         try {
-            String accountId = jwtUtil.getSubjectFromToken(accessToken);
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
             User user = userRepository.findUserByAccountId(accountId);
             if(user != null) {
                 user.setEmail(userUpdateRequestDTO.getEmail());
@@ -53,7 +53,7 @@ public class UserService {
 
     public void deleteUserByAccessToken(String accessToken) {
         try {
-            String accountId = jwtUtil.getSubjectFromToken(accessToken);
+            String accountId = jwtUtil.getSubjectFromTokenWithAuth(accessToken);
             userRepository.deleteUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);

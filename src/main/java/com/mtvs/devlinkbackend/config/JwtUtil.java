@@ -28,30 +28,33 @@ public class JwtUtil {
     }
 
     // JWT 서명 및 검증을 통한 Claims 추출
-    public Map<String, Object> getClaimsFromToken(String token) throws Exception {
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        JWK jwk = jwkCache.getCachedJWKSet().getKeyByKeyId(signedJWT.getHeader().getKeyID());
-
-        if (jwk == null || !JWSAlgorithm.RS256.equals(jwk.getAlgorithm())) {
-            throw new RuntimeException("JWK key is missing or invalid algorithm");
-        }
-
-        JWSVerifier verifier = new RSASSAVerifier(jwk.toRSAKey());
-        if (!signedJWT.verify(verifier)) {
-            throw new RuntimeException("JWT signature verification failed");
-        }
-
+    public Map<String, Object> getClaimsFromTokenWithAuth(String token) throws Exception {
         // Claims 검증
-        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+        JWTClaimsSet claims = getClaimsFromToken(token);
         validateClaims(claims);
 
         // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환
         return convertClaimsToMap(claims);
     }
 
-    // 'sub' 값 검증 (예제)
-    public String getSubjectFromToken(String token) throws Exception {
-        Map<String, Object> claims = getClaimsFromToken(token);
+    // JWT 서명 및 검증을 통한 Claims 추출
+    public Map<String, Object> getClaimsFromTokenWithoutAuth(String token) throws Exception {
+        // Claims 검증
+        JWTClaimsSet claims = getClaimsFromToken(token);
+
+        // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환
+        return convertClaimsToMap(claims);
+    }
+
+    // 검증된 'sub' 값, accountId 반환
+    public String getSubjectFromTokenWithAuth(String token) throws Exception {
+        Map<String, Object> claims = getClaimsFromTokenWithAuth(token);
+        return (String) claims.get("sub");
+    }
+
+    // 검증된 'sub' 값, accountId 반환
+    public String getSubjectFromTokenWithoutAuth(String token) throws Exception {
+        Map<String, Object> claims = getClaimsFromTokenWithoutAuth(token);
         return (String) claims.get("sub");
     }
 
@@ -77,6 +80,22 @@ public class JwtUtil {
         if (audience == null || !audience.contains(clientId)) {
             throw new BadJWTException("Invalid audience");
         }
+    }
+
+    private JWTClaimsSet getClaimsFromToken(String token) throws Exception {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWK jwk = jwkCache.getCachedJWKSet().getKeyByKeyId(signedJWT.getHeader().getKeyID());
+
+        if (jwk == null || !JWSAlgorithm.RS256.equals(jwk.getAlgorithm())) {
+            throw new RuntimeException("JWK key is missing or invalid algorithm");
+        }
+
+        JWSVerifier verifier = new RSASSAVerifier(jwk.toRSAKey());
+        if (!signedJWT.verify(verifier)) {
+            throw new RuntimeException("JWT signature verification failed");
+        }
+
+        return signedJWT.getJWTClaimsSet();
     }
 
     // Claims를 Map<String, Object> 형식으로 변환하는 메서드
