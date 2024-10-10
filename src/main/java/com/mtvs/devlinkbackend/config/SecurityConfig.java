@@ -80,8 +80,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//
         return http.build();
     }
 
