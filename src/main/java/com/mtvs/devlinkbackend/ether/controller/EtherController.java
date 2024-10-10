@@ -57,7 +57,7 @@ public class EtherController {
     }
 
     // Update
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Ether> updateEther(@RequestBody EtherUpdateRequestDTO etherUpdateRequestDTO) {
         try {
             Ether updatedEther = etherService.updateEther(etherUpdateRequestDTO);
