@@ -22,6 +22,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/question/**", "/login").permitAll()
+                        .requestMatchers("*", "/question/**", "/login").permitAll() // "*"에 대한 설정은 CorsTest를 위함
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -60,7 +63,8 @@ public class SecurityConfig {
                 // 세션을 생성하지 않도록 설정
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JWT 필터 추가
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilter(corsFilter());
         return http.build();
     }
 
@@ -97,8 +101,8 @@ public class SecurityConfig {
     public LogoutHandler logoutHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             // 쿠키 삭제
-            deleteCookie(response, "accessToken");
-            deleteCookie(response, "refreshToken");
+            deleteCookie(response, "access_token");
+            deleteCookie(response, "refresh_token");
         };
     }
 
@@ -117,5 +121,22 @@ public class SecurityConfig {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         response.addCookie(cookie);
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173"); // 테스트에서 사용되는 도메인 추가
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("PATCH");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.setAllowCredentials(true); // 인증 정보 포함 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 설정 적용
+        return new CorsFilter(source);
     }
 }
