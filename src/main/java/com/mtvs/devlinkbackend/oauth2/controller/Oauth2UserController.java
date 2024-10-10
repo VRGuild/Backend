@@ -2,6 +2,9 @@ package com.mtvs.devlinkbackend.oauth2.controller;
 
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.*;
@@ -23,6 +26,15 @@ public class Oauth2UserController {
 
     // 로컬 user 정보 가져오는 API
     @GetMapping("/local/user-info")
+    @Operation(
+            summary = "로컬 유저 정보 조회",
+            description = "DevLink만의 DB에 저장된 유저 정보를 조회한다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
+            @ApiResponse(responseCode = "401", description = "인증되지 않음")
+    })
     public ResponseEntity<?> getLocalUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             String token = extractToken(authorizationHeader);
@@ -35,6 +47,15 @@ public class Oauth2UserController {
 
     // epicgames 계정 정보 가져오는 API
     @GetMapping("/epicgames/user-info")
+    @Operation(
+            summary = "EpicGames 유저 정보 조회",
+            description = "EpicGames의 유저 정보를 조회한다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
+            @ApiResponse(responseCode = "401", description = "인증되지 않음")
+    })
     public ResponseEntity<?> getEpicGamesUserInfo(
             @RequestHeader("Authorization") String authorizationHeader) {
 
@@ -49,6 +70,14 @@ public class Oauth2UserController {
     }
 
     @PostMapping("/epicgames/callback")
+    @Operation(
+            summary = "EpicGames AccessToken 요청",
+            description = "EpicGames로부터 사용자에게 AccessToken을 전달한다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "AccessToken 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
+    })
     public ResponseEntity<?> handleEpicGamesCallback(
             @RequestBody Map<String, String> payload, HttpServletResponse response) {
 
@@ -71,7 +100,7 @@ public class Oauth2UserController {
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
