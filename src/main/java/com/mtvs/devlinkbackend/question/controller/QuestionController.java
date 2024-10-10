@@ -65,7 +65,7 @@ public class QuestionController {
     }
 
     // Update a question by ID
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Question> updateQuestion(
             @RequestBody QuestionUpdateRequestDTO questionUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String accessToken) throws Exception {

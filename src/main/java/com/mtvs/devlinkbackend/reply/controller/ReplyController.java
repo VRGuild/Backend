@@ -53,7 +53,7 @@ public class ReplyController {
         return ResponseEntity.ok(replies);
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Reply> updateReply(
             @RequestBody ReplyUpdateRequestDTO replyUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String token) throws Exception {
