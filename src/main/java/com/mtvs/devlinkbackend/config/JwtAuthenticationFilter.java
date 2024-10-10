@@ -28,6 +28,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        System.out.println("JwtAuthenticationFilter 실행됨: " + request.getRequestURI());
+
         // Authorization 헤더에서 Bearer 토큰 추출
         String authorizationHeader = request.getHeader("Authorization");
         String token = null;
@@ -66,6 +68,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 필터 체인 진행
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        // Swagger 관련 모든 경로 예외 처리
+        return path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.equals("/swagger-ui.html")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")
+                || path.startsWith("/login");
     }
 
     // 쿠키에서 리프레시 토큰을 추출하는 메서드
