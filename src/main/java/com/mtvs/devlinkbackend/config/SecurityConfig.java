@@ -130,6 +130,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("GET");
         configuration.addAllowedMethod("POST");
         configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("PATCH");
         configuration.addAllowedMethod("DELETE");
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 인증 정보 포함 허용
