@@ -51,7 +51,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/",
+                                "/**",
+                                "/api/auth/epicgames/callback", // 토큰 호출 부분
                                 "/login",
                                 "/v3/api-docs/**",                // Swagger API Docs 경로
                                 "/swagger-ui/**",                 // Swagger UI 정적 리소스 경로
@@ -64,6 +65,7 @@ public class SecurityConfig {
                         ).permitAll() // Swagger 관련 경로 허용
                         .anyRequest().authenticated()
                 )
+
                 // oauth2Login 설정이 다른 경로에서만 작동하도록 설정
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
@@ -74,12 +76,13 @@ public class SecurityConfig {
                         )
                         .successHandler(oauth2AuthenticationSuccessHandler())
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .addLogoutHandler(logoutHandler())
-                        .logoutSuccessUrl("/")
-                )
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .addLogoutHandler(logoutHandler())
+//                        .logoutSuccessUrl("/")
+//                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -119,21 +122,21 @@ public class SecurityConfig {
         };
     }
 
-    @Bean
-    public LogoutHandler logoutHandler() {
-        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-            // 쿠키 삭제
-            deleteCookie(response, "access_token");
-            deleteCookie(response, "refresh_token");
-        };
-    }
-
-    private void deleteCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setPath("/");
-        cookie.setMaxAge(0); // 쿠키 즉시 삭제
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-    }
+//    @Bean
+//    public LogoutHandler logoutHandler() {
+//        return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+//            // 쿠키 삭제
+//            deleteCookie(response, "access_token");
+//            deleteCookie(response, "refresh_token");
+//        };
+//    }
+//
+//    private void deleteCookie(HttpServletResponse response, String cookieName) {
+//        Cookie cookie = new Cookie(cookieName, null);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(0); // 쿠키 즉시 삭제
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        response.addCookie(cookie);
+//    }
 }
