@@ -85,7 +85,7 @@ public class RequestController {
             @ApiResponse(responseCode = "200", description = "의뢰가 성공적으로 업데이트됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 또는 권한 없음")
     })
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<Request> updateRequest(
             @RequestBody RequestUpdateRequestDTO requestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) {
