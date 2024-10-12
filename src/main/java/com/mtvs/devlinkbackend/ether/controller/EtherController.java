@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ether")
+@RequestMapping("/api/ether")
 public class EtherController {
     private final EtherService etherService;
     private final JwtUtil jwtUtil;
