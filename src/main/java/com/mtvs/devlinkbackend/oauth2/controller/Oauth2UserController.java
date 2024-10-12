@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
+import com.mtvs.devlinkbackend.oauth2.dto.EpicGamesCallbackRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -79,9 +80,9 @@ public class Oauth2UserController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
     })
     public ResponseEntity<?> handleEpicGamesCallback(
-            @RequestBody Map<String, String> payload, HttpServletResponse response) {
+            @RequestBody EpicGamesCallbackRequestDTO payload, HttpServletResponse response) {
 
-        String code = payload.get("code");
+        String code = payload.getCode();
 
         Map<String, Object> tokenBody = epicGamesTokenService.getAccessTokenAndRefreshTokenByCode(code);
 
