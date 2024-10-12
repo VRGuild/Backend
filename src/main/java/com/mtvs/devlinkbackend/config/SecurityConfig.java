@@ -51,7 +51,6 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/**",
                                 "/api/auth/epicgames/callback", // 토큰 호출 부분
                                 "/login",
                                 "/v3/api-docs/**",                // Swagger API Docs 경로
