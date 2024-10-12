@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.request.controller;
 
+import com.mtvs.devlinkbackend.config.JwtUtil;
 import com.mtvs.devlinkbackend.request.dto.RequestRegistRequestDTO;
 import com.mtvs.devlinkbackend.request.dto.RequestUpdateRequestDTO;
 import com.mtvs.devlinkbackend.request.entity.Request;
@@ -19,9 +20,11 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
+    private final JwtUtil jwtUtil;
 
-    public RequestController(RequestService requestService) {
+    public RequestController(RequestService requestService, JwtUtil jwtUtil) {
         this.requestService = requestService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "새로운 의뢰 등록", description = "새로운 의뢰를 등록합니다.")
@@ -30,7 +33,11 @@ public class RequestController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터")
     })
     @PostMapping
-    public ResponseEntity<Request> registerRequest(@RequestBody RequestRegistRequestDTO requestDTO, @RequestParam String accountId) {
+    public ResponseEntity<Request> registerRequest(
+            @RequestBody RequestRegistRequestDTO requestDTO,
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         Request newRequest = requestService.registRequest(requestDTO, accountId);
         return new ResponseEntity<>(newRequest, HttpStatus.CREATED);
     }
@@ -55,7 +62,10 @@ public class RequestController {
             @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/account")
-    public ResponseEntity<List<Request>> getRequestsByAccountId(@RequestParam String accountId) {
+    public ResponseEntity<List<Request>> getRequestsByAccountId(
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         List<Request> requests = requestService.findRequestsByAccountId(accountId);
         return ResponseEntity.ok(requests);
     }
@@ -76,11 +86,14 @@ public class RequestController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 또는 권한 없음")
     })
     @PutMapping
-    public ResponseEntity<Request> updateRequest(@RequestBody RequestUpdateRequestDTO requestDTO, @RequestParam String accountId) {
+    public ResponseEntity<Request> updateRequest(
+            @RequestBody RequestUpdateRequestDTO requestDTO,
+            @RequestHeader(name = "Authorization") String authorizationHeader) {
         try {
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
             Request updatedRequest = requestService.updateRequest(requestDTO, accountId);
             return ResponseEntity.ok(updatedRequest);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
