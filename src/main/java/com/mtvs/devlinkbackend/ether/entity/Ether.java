@@ -9,7 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Table(name = "ETHER")
-@Entity(name = "ETHER")
+@Entity(name = "Ether")
 @Getter
 @ToString
 public class Ether {

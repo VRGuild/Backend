@@ -40,15 +40,14 @@ public class QuestionController {
     })
     public ResponseEntity<Question> createQuestion(
             @RequestBody QuestionRegistRequestDTO questionRegistRequestDTO,
-            @RequestHeader(name = "Authorization") String accessToken) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithAuth(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithAuth(authorizationHeader);
         Question createdQuestion = questionService.registQuestion(questionRegistRequestDTO, accountId);
         return ResponseEntity.ok(createdQuestion);
     }
 
     // Retrieve a question by ID
-    @GetMapping("/{questionId}")
     @Operation(
             summary = "PK에 따른 질문 조회",
             description = "PK값으로 사용자가 올린 공개 질문 1개를 조회한다."
@@ -58,6 +57,7 @@ public class QuestionController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
+    @GetMapping("/{questionId}")
     public ResponseEntity<Question> getQuestionById(@PathVariable Long questionId) {
         Question question = questionService.findQuestionByQuestionId(questionId);
         if (question != null) {
@@ -84,7 +84,6 @@ public class QuestionController {
     }
 
     // Retrieve questions by account ID with pagination
-    @GetMapping
     @Operation(
             summary = "Pagination으로 로그인한 사용자의 질문 조회",
             description = "Pagination으로 사용자가 했던 질문 전체를 조회한다. 최대 20개가 주어진다"
@@ -94,17 +93,17 @@ public class QuestionController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
+    @GetMapping("/account")
     public ResponseEntity<List<Question>> getQuestionsByAccountIdWithPaging(
             @RequestParam int page,
-            @RequestHeader(name = "Authorization") String accessToken) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         List<Question> questions = questionService.findQuestionsByAccountIdWithPaging(page, accountId);
         return ResponseEntity.ok(questions);
     }
 
     // Update a question by ID
-    @PatchMapping("/{id}")
     @Operation(
             summary = "사용자 질문 수정",
             description = "사용자가 했던 질문을 수정한다."
@@ -114,11 +113,12 @@ public class QuestionController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
+    @PatchMapping
     public ResponseEntity<Question> updateQuestion(
             @RequestBody QuestionUpdateRequestDTO questionUpdateRequestDTO,
-            @RequestHeader(name = "Authorization") String accessToken) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         try {
             Question updatedQuestion = questionService.updateQuestion(questionUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedQuestion);
@@ -128,7 +128,6 @@ public class QuestionController {
     }
 
     // Delete a question by ID
-    @DeleteMapping("/{questionId}")
     @Operation(
             summary = "사용자 질문 삭제",
             description = "사용자가 했던 질문을 삭제한다"
@@ -138,6 +137,7 @@ public class QuestionController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
+    @DeleteMapping("/{questionId}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long questionId) {
 
         questionService.deleteQuestion(questionId);

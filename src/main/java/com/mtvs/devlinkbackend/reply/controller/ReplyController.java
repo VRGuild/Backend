@@ -34,9 +34,9 @@ public class ReplyController {
     @PostMapping
     public ResponseEntity<Reply> registReply(
             @RequestBody ReplyRegistRequestDTO replyRegistRequestDTO,
-            @RequestHeader(name = "Authorization") String token) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithAuth(token);
+        String accountId = jwtUtil.getSubjectFromTokenWithAuth(authorizationHeader);
         Reply reply = replyService.registReply(replyRegistRequestDTO, accountId);
         return ResponseEntity.ok(reply);
     }
@@ -71,11 +71,11 @@ public class ReplyController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음"),
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     })
-    @GetMapping("/account/{accountId}")
+    @GetMapping("/account")
     public ResponseEntity<List<Reply>> findRepliesByAccountId(
-            @RequestHeader(name = "Authorization") String token) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(token);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         List<Reply> replies = replyService.findRepliesByAccountId(accountId);
         return ResponseEntity.ok(replies);
     }
@@ -89,9 +89,9 @@ public class ReplyController {
     @PatchMapping
     public ResponseEntity<Reply> updateReply(
             @RequestBody ReplyUpdateRequestDTO replyUpdateRequestDTO,
-            @RequestHeader(name = "Authorization") String token) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(token);
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
         try {
             Reply updatedReply = replyService.updateReply(replyUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedReply);
