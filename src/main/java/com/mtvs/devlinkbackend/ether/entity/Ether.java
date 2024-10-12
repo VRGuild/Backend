@@ -1,7 +1,8 @@
 package com.mtvs.devlinkbackend.ether.entity;
 
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,7 +10,8 @@ import java.time.LocalDateTime;
 
 @Table(name = "ETHER")
 @Entity(name = "ETHER")
-@NoArgsConstructor
+@Getter
+@ToString
 public class Ether {
 
     @Id
@@ -33,6 +35,8 @@ public class Ether {
 
     @Column(name = "ACCOUNT_ID")
     private String accountId;
+
+    public Ether () {}
 
     public Ether(String accountId, String reason, Long amount) {
         this.accountId = accountId;

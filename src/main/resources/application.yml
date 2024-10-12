@@ -32,3 +32,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-operation-id: true # 메서드 ID 표시
+    default-model-expand-depth: 1 # 모델 깊이
+    doc-expansion: none # 기본 확장 상태 (none, list, full)
+    show-extensions: true # 확장 정보 표시
+    operationsSorter: alpha # 알파벳순 정렬
+    tagsSorter: alpha # 태그 알파벳순 정렬
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
