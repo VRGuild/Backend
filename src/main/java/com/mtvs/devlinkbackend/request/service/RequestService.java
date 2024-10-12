@@ -5,6 +5,7 @@ import com.mtvs.devlinkbackend.request.dto.RequestUpdateRequestDTO;
 import com.mtvs.devlinkbackend.request.entity.Request;
 import com.mtvs.devlinkbackend.request.repository.RequestRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ public class RequestService {
         this.requestRepository = requestRepository;
     }
 
+    @Transactional
     public Request registRequest(RequestRegistRequestDTO requestRegistRequestDTO, String accountId) {
         return requestRepository.save(new Request(
                 requestRegistRequestDTO.getTitle(),
@@ -40,6 +42,7 @@ public class RequestService {
         return requestRepository.findRequestsWithinDateRange(starDateTime, endDateTime);
     }
 
+    @Transactional
     public Request updateRequest(RequestUpdateRequestDTO requestUpdateRequestDTO, String accountId) {
         Optional<Request> request = requestRepository.findById(requestUpdateRequestDTO.getRequestId());
         if (request.isPresent()) {
