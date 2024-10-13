@@ -41,11 +41,14 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 조회", description = "ID를 사용하여 댓글을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 조회되었습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 조회되었습니다."),
+            @ApiResponse(responseCode = "404", description = "해당 댓글을 찾을 수 없습니다.")
+    })
     @GetMapping("/{commentId}")
     public ResponseEntity<Comment> findCommentByCommentId(@PathVariable Long commentId) {
         Comment comment = commentService.findCommentByCommentId(commentId);
-        return ResponseEntity.ok(comment);
+        return comment != null ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "요청 ID로 댓글 조회", description = "특정 요청에 연관된 모든 댓글을 조회합니다.")
