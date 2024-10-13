@@ -1,5 +1,7 @@
 package com.mtvs.devlinkbackend.request.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mtvs.devlinkbackend.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +10,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "REQUEST")
-@Entity(name = "REQUEST")
+@Entity(name = "Request")
 @NoArgsConstructor
 @ToString
 @Getter
@@ -36,12 +40,16 @@ public class Request {
     private String accountId;
 
     @CreationTimestamp
-    @Column(name = "CREATED_AT")
+    @Column(name = "CREATED_AT", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
+
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
 
     public Request(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String accountId) {
         this.title = title;

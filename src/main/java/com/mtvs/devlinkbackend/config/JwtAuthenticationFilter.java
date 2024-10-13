@@ -78,8 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.equals("/swagger-ui.html")
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/webjars")
-                || path.startsWith("/login")
-                || path.startsWith("/**");
+                || path.startsWith("/api");
     }
 
     // 쿠키에서 리프레시 토큰을 추출하는 메서드

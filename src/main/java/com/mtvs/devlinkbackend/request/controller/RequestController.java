@@ -75,8 +75,11 @@ public class RequestController {
             @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/date-range")
-    public ResponseEntity<List<Request>> getRequestsBetweenDates(@RequestParam LocalDateTime startDateTime, @RequestParam LocalDateTime endDateTime) {
-        List<Request> requests = requestService.findAllRequestsBetweenStarDateTimeAndEndDateTime(startDateTime, endDateTime);
+    public ResponseEntity<List<Request>> getRequestsBetweenDates(
+            @RequestParam LocalDateTime startDateTime, @RequestParam LocalDateTime endDateTime) {
+
+        List<Request> requests =
+                requestService.findAllRequestsBetweenStarDateTimeAndEndDateTime(startDateTime, endDateTime);
         return ResponseEntity.ok(requests);
     }
 
@@ -89,6 +92,7 @@ public class RequestController {
     public ResponseEntity<Request> updateRequest(
             @RequestBody RequestUpdateRequestDTO requestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) {
+
         try {
             String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
             Request updatedRequest = requestService.updateRequest(requestDTO, accountId);

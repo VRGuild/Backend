@@ -13,7 +13,7 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findRequestsByAccountId(String accountId);
 
-    @Query("SELECT r FROM REQUEST r WHERE r.startDateTime BETWEEN :startDateTime AND :endDateTime " +
+    @Query("SELECT r FROM Request r WHERE r.startDateTime BETWEEN :startDateTime AND :endDateTime " +
             "AND r.endDateTime BETWEEN :startDateTime AND :endDateTime")
     List<Request> findRequestsWithinDateRange(
             @Param("startDateTime") LocalDateTime startDateTime,

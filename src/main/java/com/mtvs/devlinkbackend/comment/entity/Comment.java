@@ -1,7 +1,8 @@
-package com.mtvs.devlinkbackend.reply.entity;
+package com.mtvs.devlinkbackend.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mtvs.devlinkbackend.question.entity.Question;
+import com.mtvs.devlinkbackend.request.entity.Request;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,20 +12,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Table(name = "REPLY")
-@Entity(name = "Reply")
-@Getter
+@Table(name = "COMMENT")
+@Entity(name = "Comment")
 @NoArgsConstructor
-@ToString(exclude = "question") // request 필드를 toString에서 제외
-public class Reply {
-
+@Getter
+@ToString(exclude = "request") // request 필드를 toString에서 제외
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REPLY_ID")
-    private Long replyId;
+    @Column(name = "COMMENT_ID")
+    private Long commentId;
 
     @Column(name = "CONTENT")
     private String content;
+
+    @Column(name = "ACCOUNT_ID")
+    private String accountId;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -34,18 +37,15 @@ public class Reply {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @Column(name = "ACCOUNT_ID")
-    private String accountId;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "QUESTION_ID", nullable = false)
+    @JoinColumn(name = "REQUEST_ID", nullable = false)
     @JsonIgnore
-    private Question question;
+    private Request request;
 
-    public Reply(String content, String accountId, Question question) {
+    public Comment(String content, String accountId, Request request) {
         this.content = content;
         this.accountId = accountId;
-        this.question = question;
+        this.request = request;
     }
 
     public void setContent(String content) {
