@@ -1,7 +1,5 @@
-package com.mtvs.devlinkbackend.reply;
+package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.dto.ReplyRegistRequestDTO;
 import com.mtvs.devlinkbackend.reply.dto.ReplyUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.service.ReplyService;

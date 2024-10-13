@@ -1,17 +1,13 @@
-package com.mtvs.devlinkbackend.ether;
+package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.ether.dto.EtherRegistRequestDTO;
 import com.mtvs.devlinkbackend.ether.dto.EtherUpdateRequestDTO;
 import com.mtvs.devlinkbackend.ether.service.EtherService;
-import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
-import com.mtvs.devlinkbackend.question.service.QuestionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;

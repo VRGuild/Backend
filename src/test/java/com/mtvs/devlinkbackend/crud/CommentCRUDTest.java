@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.comment;
+package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.comment.dto.CommentRegistRequestDTO;
 import com.mtvs.devlinkbackend.comment.dto.CommentUpdateRequestDTO;
