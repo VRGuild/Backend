@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,14 @@ public class Team {
     @CollectionTable(name = "TEAM_MEMBER", joinColumns = @JoinColumn(name = "TEAM_ID"))
     @Column(name = "MEMBER_LIST")
     private List<String> memberList = new ArrayList<>();
+
+    @CreationTimestamp
+    @Column(name = "CREATED_AT", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt;
 
     public Team(String pmId, String teamName, String introduction, List<String> memberList) {
         this.pmId = pmId;
