@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.question;
+package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
 import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;

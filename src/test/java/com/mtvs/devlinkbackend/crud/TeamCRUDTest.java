@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.team;
+package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;

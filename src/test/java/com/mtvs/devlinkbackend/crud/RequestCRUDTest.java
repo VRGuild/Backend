@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.request;
+package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.request.dto.RequestRegistRequestDTO;
 import com.mtvs.devlinkbackend.request.dto.RequestUpdateRequestDTO;
