@@ -41,7 +41,7 @@ public class RequestCRUDTest {
     @ParameterizedTest
     @MethodSource("newRequest")
     @Order(0)
-    public void testCreateQuestion(RequestRegistRequestDTO requestRegistRequestDTO, String accountId) {
+    public void testCreateRequest(RequestRegistRequestDTO requestRegistRequestDTO, String accountId) {
         Assertions.assertDoesNotThrow(() -> requestService.registRequest(requestRegistRequestDTO, accountId));
     }
 
