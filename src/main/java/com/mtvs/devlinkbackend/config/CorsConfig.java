@@ -17,11 +17,7 @@ public class CorsConfig {
         configuration.addAllowedOrigin("http://localhost:8080");
         configuration.addAllowedOrigin("http://localhost:5173"); // 테스트에서 사용되는 도메인 추가
 
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("PATCH");
-        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("*");
 
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
 

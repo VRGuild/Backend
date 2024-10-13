@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.comment.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mtvs.devlinkbackend.request.entity.Request;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity(name = "Comment")
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = "request") // request 필드를 toString에서 제외
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REQUEST_ID", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Request request;
 
     public Comment(String content, String accountId, Request request) {

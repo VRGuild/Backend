@@ -51,7 +51,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
-                                "/**",
+                                "/api/**",
                                 "/v3/api-docs/**",                // Swagger API Docs 경로
                                 "/swagger-ui/**",                 // Swagger UI 정적 리소스 경로
                                 "/swagger-ui.html",               // Swagger UI 페이지 경로

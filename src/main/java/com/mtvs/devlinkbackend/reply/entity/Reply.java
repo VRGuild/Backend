@@ -1,10 +1,11 @@
 package com.mtvs.devlinkbackend.reply.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mtvs.devlinkbackend.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity(name = "Reply")
 @Getter
 @NoArgsConstructor
+@ToString(exclude = "question") // request 필드를 toString에서 제외
 public class Reply {
 
     @Id
@@ -37,7 +39,7 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "QUESTION_ID", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Question question;
 
     public Reply(String content, String accountId, Question question) {

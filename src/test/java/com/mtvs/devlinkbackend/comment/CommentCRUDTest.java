@@ -3,7 +3,6 @@ package com.mtvs.devlinkbackend.comment;
 import com.mtvs.devlinkbackend.comment.dto.CommentRegistRequestDTO;
 import com.mtvs.devlinkbackend.comment.dto.CommentUpdateRequestDTO;
 import com.mtvs.devlinkbackend.comment.service.CommentService;
-import com.mtvs.devlinkbackend.request.service.RequestService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 @SpringBootTest
@@ -34,7 +32,7 @@ public class CommentCRUDTest {
     private static Stream<Arguments> modifiedComment() {
         return Stream.of(
                 Arguments.of(new CommentUpdateRequestDTO(1L, "내용0"), "계정1"),
-                Arguments.of(new CommentUpdateRequestDTO(2L, "내용00"), "계정1")
+                Arguments.of(new CommentUpdateRequestDTO(2L, "내용00"), "계정2")
         );
     }
 

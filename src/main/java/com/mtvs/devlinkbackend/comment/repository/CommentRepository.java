@@ -1,7 +1,6 @@
 package com.mtvs.devlinkbackend.comment.repository;
 
 import com.mtvs.devlinkbackend.comment.entity.Comment;
-import com.mtvs.devlinkbackend.request.entity.Request;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
