@@ -66,12 +66,4 @@ public class Team {
     public void setMemberList(List<String> memberList) {
         this.memberList = memberList;
     }
-
-    public void addMember(String memberId) {
-        this.memberList.add(memberId);
-    }
-
-    public void removeMember(String memberId) {
-        this.memberList.remove(memberId);
-    }
 }

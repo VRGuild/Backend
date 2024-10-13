@@ -10,5 +10,5 @@ import java.util.List;
 @ToString
 public class GuildMemberModifyRequestDTO {
     private Long guildId;
-    private List<String> newMemberId;
+    private List<String> newMemberList;
 }

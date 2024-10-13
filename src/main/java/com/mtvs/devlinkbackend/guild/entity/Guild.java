@@ -54,7 +54,7 @@ public class Guild {
         this.guildName = guildName;
         this.introduction = introduction;
         this.maximumMember = maximumMember;
-        this.memberList = memberList;
+        this.memberList = new ArrayList<>(memberList);
     }
 
     public Guild(String ownerId, String guildName, String introduction, Long maximumMember, List<String> memberList, Long channelId) {
@@ -62,7 +62,7 @@ public class Guild {
         this.guildName = guildName;
         this.introduction = introduction;
         this.maximumMember = maximumMember;
-        this.memberList = memberList;
+        this.memberList = new ArrayList<>(memberList);
         this.channelId = channelId;
     }
 
@@ -87,14 +87,6 @@ public class Guild {
     }
 
     public void setMemberList(List<String> memberList) {
-        this.memberList = memberList;
-    }
-
-    public void addMemberList(String memberId) {
-        this.memberList.add(memberId);
-    }
-
-    public void removeMemberList(String memberId) {
-        this.memberList.remove(memberId);
+        this.memberList = new ArrayList<>(memberList);
     }
 }

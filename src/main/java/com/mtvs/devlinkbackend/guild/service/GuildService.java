@@ -69,9 +69,7 @@ public class GuildService {
         if (guild.isPresent()) {
             Guild foundGuild = guild.get();
             if(foundGuild.getOwnerId().equals(accountId)) {
-                for(String memberId : foundGuild.getMemberList()) {
-                    foundGuild.addMemberList(memberId);
-                }
+                foundGuild.getMemberList().addAll(guildMemberModifyRequestDTO.getNewMemberList());
                 return foundGuild;
             } else throw new IllegalArgumentException("owner가 아닌 계정으로 Guild 수정 시도");
         } else return null;
@@ -83,9 +81,7 @@ public class GuildService {
         if (guild.isPresent()) {
             Guild foundGuild = guild.get();
             if(foundGuild.getOwnerId().equals(accountId)) {
-                for(String memberId : foundGuild.getMemberList()) {
-                    foundGuild.removeMemberList(memberId);
-                }
+                foundGuild.getMemberList().removeAll(guildMemberModifyRequestDTO.getNewMemberList());
                 return foundGuild;
             } else throw new IllegalArgumentException("owner가 아닌 계정으로 Guild 수정 시도");
         } else return null;
