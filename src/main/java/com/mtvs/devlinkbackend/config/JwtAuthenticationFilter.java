@@ -38,18 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 부분 추출
         } else {
-            // 헤더에 액세스 토큰이 없는 경우, 쿠키에서 리프레시 토큰 추출
-            token = getRefreshTokenFromCookies(request);
-            if (token != null) {
-                // 리프레시 토큰으로 새 액세스 토큰 발급
-                token = epicGamesTokenService.getAccessTokenByRefreshToken(token);
-
-                // 새로 발급된 액세스 토큰을 Authorization 헤더에 추가
-                response.setHeader("Authorization", "Bearer " + token);
-            } else {
-                System.out.println("refrehToken으로 accessToken 발급하려다가 refreshToken 없어서 실패");
-                return;
-            }
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 잘못된 인증 헤더
+            return;
         }
 
         try {
@@ -61,7 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
             // 검증 실패 시 401 에러 설정
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            if(e.getMessage().equals("JWT is expired"))
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            else
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
