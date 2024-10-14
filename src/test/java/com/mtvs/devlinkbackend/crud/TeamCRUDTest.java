@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.crud;
 
+import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
 import com.mtvs.devlinkbackend.team.service.TeamService;
@@ -31,10 +32,17 @@ public class TeamCRUDTest {
         );
     }
 
-    private static Stream<Arguments> modifiedTeam() {
+    private static Stream<Arguments> updatedTeam() {
         return Stream.of(
                 Arguments.of(new TeamUpdateRequestDTO(1L,"팀 이름0", "소개0", List.of("계정2","계정3")), "계정1"),
                 Arguments.of(new TeamUpdateRequestDTO(2L,"팀 이름00", "소개00", List.of("계정1","계정3")), "계정2")
+        );
+    }
+
+    private static Stream<Arguments> modifiedTeam() {
+        return Stream.of(
+                Arguments.of(new TeamMemberModifyRequestDTO(1L, List.of("계정2","계정3")), "계정1"),
+                Arguments.of(new TeamMemberModifyRequestDTO(2L, List.of("계정3","계정4")), "계정2")
         );
     }
 
@@ -83,7 +91,7 @@ public class TeamCRUDTest {
     }
 
     @DisplayName("팀 수정 테스트")
-    @MethodSource("modifiedTeam")
+    @MethodSource("updatedTeam")
     @ParameterizedTest
     @Order(5)
     public void testUpdateTeam(TeamUpdateRequestDTO questionUpdateRequestDTO, String accountId) {
@@ -91,10 +99,28 @@ public class TeamCRUDTest {
                 System.out.println(teamService.updateTeam(questionUpdateRequestDTO, accountId)));
     }
 
+    @DisplayName("팀 멤버 추가 테스트")
+    @MethodSource("modifiedTeam")
+    @ParameterizedTest
+    @Order(5)
+    public void testAddMemberToTeam(TeamMemberModifyRequestDTO teamMemberModifyRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println(teamService.addMemberToTeam(teamMemberModifyRequestDTO, accountId)));
+    }
+
+    @DisplayName("팀 멤버 삭제 테스트")
+    @MethodSource("modifiedTeam")
+    @ParameterizedTest
+    @Order(5)
+    public void testRemoveMemberToTeam(TeamMemberModifyRequestDTO teamMemberModifyRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println(teamService.removeMemberToTeam(teamMemberModifyRequestDTO, accountId)));
+    }
+
     @DisplayName("팀 삭제 테스트")
     @ValueSource(longs = {0,1})
     @ParameterizedTest
-    @Order(6)
+    @Order(8)
     public void testDeleteTeam(long teamId) {
         Assertions.assertDoesNotThrow(() ->
                 teamService.deleteTeam(teamId));
