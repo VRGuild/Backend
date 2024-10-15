@@ -1,52 +1,44 @@
 package com.mtvs.devlinkbackend.channel.entity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
-@Document(collation = "CHANNEL")
+@Data
+@NoArgsConstructor
+@ToString
+@Document(collation = "channel")
 public class Channel {
     @Id
-    private Long channelId;
+    private String channelId;
 
-    @Column(name = "JSON_DATA", columnDefinition = "TEXT")
-    private String jsonData;
+    @Field(name = "owner_id")
+    private String ownerId;
 
-    @Transient
-    private List<Map<String, Object>> dataList;
+    private List<PositionType> positionTypes; // 여러 개의 position과 type 저장
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    @CreationTimestamp
-    @Column(name = "CREATED_AT")
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "MODIFIED_AT")
+    @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Long getChannelId() {
-        return channelId;
+    public Channel(String ownerId, List<PositionType> positionTypes) {
+        this.channelId = UUID.randomUUID().toString();
+        this.ownerId = ownerId;
+        this.positionTypes = positionTypes;
     }
 
-    public List<Map<String, Object>> getDataList() throws JsonProcessingException {
-        if (this.dataList == null && this.jsonData != null) {
-            this.dataList = objectMapper.readValue(this.jsonData, List.class);
-        }
-        return this.dataList;
-    }
-
-    public void setDataList(List<Map<String, Object>> dataList) throws JsonProcessingException {
-        this.dataList = dataList;
-        this.jsonData = objectMapper.writeValueAsString(dataList);
+    public void setPositionTypes(List<PositionType> positionTypes) {
+        this.positionTypes = positionTypes;
     }
 }
