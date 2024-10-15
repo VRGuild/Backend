@@ -7,19 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Table(name = "CHANNEL")
-@Entity(name = "Channel")
-@ToString
-@NoArgsConstructor
+@Document(collation = "CHANNEL")
 public class Channel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CHANNEL_ID")
     private Long channelId;
 
     @Column(name = "JSON_DATA", columnDefinition = "TEXT")
