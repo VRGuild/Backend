@@ -115,7 +115,7 @@ public class Oauth2UserController {
 
         // 222 : 해당 User는 이미 서비스를 사용한 경험이 있음
         // 260 : 해당 User가 처음 서비스를 사용
-        return user != null ? ResponseEntity.status(222).build() : ResponseEntity.status(260).build();
+        return user != null ? ResponseEntity.status(222).body("Existing User") : ResponseEntity.status(260).body("New User");
     }
 
     @PatchMapping("/local/user-info")
