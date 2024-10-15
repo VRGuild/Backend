@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.config;
 
+import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
+import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,11 +19,11 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
-    private final EpicGamesTokenService epicGamesTokenService;
+    private final UserService userService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, EpicGamesTokenService epicGamesTokenService) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
-        this.epicGamesTokenService = epicGamesTokenService;
+        this.userService = userService;
     }
 
     @Override
@@ -44,11 +46,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             // 토큰 검증 | 검증 성공 시 SecurityContext에 인증 정보 저장
-            String userPrincipal = jwtUtil.getSubjectFromTokenWithAuth(token);
+            User user = userService.findUserByAccessToken(token);
+            String accountId = jwtUtil.getSubjectFromTokenWithAuth(token);
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userPrincipal, null, null);
+                    new UsernamePasswordAuthenticationToken(accountId, null, null);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            if(user == null) {
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            } else
+                response.setStatus(HttpServletResponse.SC_OK);
+
         } catch (Exception e) {
             // 검증 실패 시 401 에러 설정
             if(e.getMessage().equals("JWT is expired"))
