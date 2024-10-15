@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.BadJWTException;
@@ -86,7 +87,7 @@ public class JwtUtil {
         SignedJWT signedJWT = SignedJWT.parse(token);
         JWK jwk = jwkCache.getCachedJWKSet().getKeyByKeyId(signedJWT.getHeader().getKeyID());
 
-        if (jwk == null || !JWSAlgorithm.RS256.equals(jwk.getAlgorithm())) {
+        if (jwk == null || !JWSAlgorithm.RS256.equals(signedJWT.getHeader().getAlgorithm())) {
             throw new RuntimeException("JWK key is missing or invalid algorithm");
         }
 

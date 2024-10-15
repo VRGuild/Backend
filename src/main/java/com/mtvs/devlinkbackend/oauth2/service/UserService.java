@@ -30,7 +30,7 @@ public class UserService {
 
     public User findUserByAuthorizationHeader(String authorizationHeader) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(extractToken(authorizationHeader));
             return userRepository.findUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -57,6 +57,14 @@ public class UserService {
             userRepository.deleteUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String extractToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        } else {
+            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
         }
     }
 }
