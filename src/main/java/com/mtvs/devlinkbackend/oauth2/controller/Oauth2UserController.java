@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
 import com.mtvs.devlinkbackend.oauth2.dto.EpicGamesCallbackRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +41,7 @@ public class Oauth2UserController {
         try {
             String token = extractToken(authorizationHeader);
 
-            return ResponseEntity.ok(userService.findUserByAccessToken(token));
+            return ResponseEntity.ok(userService.findUserByAuthorizationHeader(token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
@@ -105,6 +106,22 @@ public class Oauth2UserController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authLogin(
+            @RequestHeader(name = "Authorization") String authorizationHeader) {
+        User user = userService.findUserByAuthorizationHeader(authorizationHeader);
+
+        // 222 : 해당 User는 이미 서비스를 사용한 경험이 있음
+        // 260 : 해당 User가 처음 서비스를 사용
+        return user != null ? ResponseEntity.status(222).build() : ResponseEntity.status(260).build();
+    }
+
+    @PatchMapping("/local/user-info")
+    public ResponseEntity<?> updateLocalUserInfo() {
+        // User 추가 정보 확정되면 개발 예정
+        return ResponseEntity.ok().build();
     }
 
     private String extractToken(String authorizationHeader) {

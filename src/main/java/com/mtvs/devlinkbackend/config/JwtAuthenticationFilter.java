@@ -40,30 +40,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 부분 추출
         } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 잘못된 인증 헤더
+            response.setStatus(450); // 잘못된 인증 헤더
             return;
         }
 
         try {
             // 토큰 검증 | 검증 성공 시 SecurityContext에 인증 정보 저장
-            User user = userService.findUserByAccessToken(token);
             String accountId = jwtUtil.getSubjectFromTokenWithAuth(token);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(accountId, null, null);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            if(user == null) {
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-            } else
-                response.setStatus(HttpServletResponse.SC_OK);
-
         } catch (Exception e) {
             // 검증 실패 시 401 에러 설정
             if(e.getMessage().equals("JWT is expired"))
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             else
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(449); // 헤더에 들어 있는 토큰이 잘못됨
             return;
         }
 

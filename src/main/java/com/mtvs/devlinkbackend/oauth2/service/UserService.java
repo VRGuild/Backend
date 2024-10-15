@@ -28,9 +28,9 @@ public class UserService {
         }
     }
 
-    public User findUserByAccessToken(String accessToken) {
+    public User findUserByAuthorizationHeader(String authorizationHeader) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
+            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
             return userRepository.findUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
