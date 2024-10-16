@@ -27,7 +27,7 @@ public class ChannelController {
             @RequestBody ChannelRegistRequestDTO channelRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         Channel savedChannel = channelService.saveChannel(channelRegistRequestDTO, accountId);
         return ResponseEntity.ok(savedChannel);
     }
@@ -35,14 +35,14 @@ public class ChannelController {
     // 모든 채널 조회
     @GetMapping
     public ResponseEntity<List<Channel>> getAllChannels() {
-        List<Channel> channels = channelService.getAllChannels();
+        List<Channel> channels = channelService.findAllChannels();
         return ResponseEntity.ok(channels);
     }
 
     // 특정 채널 조회
     @GetMapping("/{channelId}")
     public ResponseEntity<Channel> getChannelById(@PathVariable String channelId) {
-        return channelService.getChannelById(channelId)
+        return channelService.findChannelByChannelId(channelId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -53,7 +53,7 @@ public class ChannelController {
             @RequestBody ChannelUpdateRequestDTO channelUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
             Channel updatedChannel = channelService.updateChannel(channelUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedChannel);

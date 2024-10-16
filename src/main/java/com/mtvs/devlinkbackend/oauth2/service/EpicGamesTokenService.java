@@ -28,7 +28,7 @@ public class EpicGamesTokenService {
 
     private final String getAuthorizationCodeURL = "https://www.epicgames.com/id/authorize";
     private final String getAccessTokenURL = "https://api.epicgames.dev/epic/oauth/v2/token";
-    private final String getAccountURL = "https://api.epicgames.dev/epic/id/v2/accounts";
+    private final String getAccountURL = "https://api.epicgames.dev/epic/id/v2/accounts?accountId=";
 
     private final EpicGamesJWKCache jwkCache;
     private final JwtUtil jwtUtil;
@@ -40,9 +40,9 @@ public class EpicGamesTokenService {
     }
 
     // 오프라인 JWT 검증 및 파싱 메서드
-    public Map<String, Object> validateAndParseToken(String token) throws Exception {
+    public Map<String, Object> validateAuthHeaderAndParseToken(String authorizationHeader) throws Exception {
         // JWT 토큰 검증 및 파싱하여 Claims를 추출
-        return jwtUtil.getClaimsFromTokenWithoutAuth(token);
+        return jwtUtil.getClaimsFromAuthHeaderWithAuth(authorizationHeader);
     }
 
     public Map<String, Object> getAccessTokenAndRefreshTokenByCode(String code) {
@@ -91,7 +91,7 @@ public class EpicGamesTokenService {
         // Epic Games 토큰 엔드포인트 요청
         ResponseEntity<List<Map<String, Object>>> response;
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(extractToken(authorizationHeader));
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         System.out.println(accountId);
         try {
             response = restTemplate.exchange(
@@ -107,13 +107,5 @@ public class EpicGamesTokenService {
         }
 
         return response.getBody();
-    }
-
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        } else {
-            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
-        }
     }
 }

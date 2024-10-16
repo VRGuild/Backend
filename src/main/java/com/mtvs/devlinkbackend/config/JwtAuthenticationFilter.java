@@ -1,7 +1,5 @@
 package com.mtvs.devlinkbackend.config;
 
-import com.mtvs.devlinkbackend.oauth2.entity.User;
-import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             // 토큰 검증 | 검증 성공 시 SecurityContext에 인증 정보 저장
-            String accountId = jwtUtil.getSubjectFromTokenWithAuth(token);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(token);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(accountId, null, null);
 

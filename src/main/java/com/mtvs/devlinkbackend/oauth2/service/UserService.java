@@ -19,7 +19,7 @@ public class UserService {
 
     public User registUserByAccessToken(String accessToken) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(accessToken);
             return userRepository.save(new User(
                     accountId
             ));
@@ -30,7 +30,7 @@ public class UserService {
 
     public User findUserByAuthorizationHeader(String authorizationHeader) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(extractToken(authorizationHeader));
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(extractToken(authorizationHeader));
             return userRepository.findUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -39,7 +39,7 @@ public class UserService {
 
     public void updateUserByAccessToken(String accessToken, UserUpdateRequestDTO userUpdateRequestDTO) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(accessToken);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(accessToken);
             User user = userRepository.findUserByAccountId(accountId);
             if(user != null) {
                 user.setEmail(userUpdateRequestDTO.getEmail());
@@ -53,7 +53,7 @@ public class UserService {
 
     public void deleteUserByAccessToken(String accessToken) {
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithAuth(accessToken);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(accessToken);
             userRepository.deleteUserByAccountId(accountId);
         } catch (Exception e) {
             throw new RuntimeException(e);

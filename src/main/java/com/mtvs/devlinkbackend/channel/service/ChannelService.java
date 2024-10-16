@@ -5,6 +5,7 @@ import com.mtvs.devlinkbackend.channel.dto.ChannelUpdateRequestDTO;
 import com.mtvs.devlinkbackend.channel.entity.Channel;
 import com.mtvs.devlinkbackend.channel.repository.ChannelRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class ChannelService {
     }
 
     // 새 채널 저장
+    @Transactional
     public Channel saveChannel(ChannelRegistRequestDTO channelRegistRequestDTO, String accountId) {
         return channelRepository.save(new Channel(
                 accountId,
@@ -27,16 +29,17 @@ public class ChannelService {
 
     // 모든 채널 조회
 
-    public List<Channel> getAllChannels() {
+    public List<Channel> findAllChannels() {
         return channelRepository.findAll();
     }
 
     // ID로 특정 채널 조회
-    public Optional<Channel> getChannelById(String channelId) {
+    public Optional<Channel> findChannelByChannelId(String channelId) {
         return channelRepository.findById(channelId);
     }
 
     // ID로 채널 업데이트
+    @Transactional
     public Channel updateChannel(ChannelUpdateRequestDTO channelUpdateRequestDTO, String accountId) {
         Optional<Channel> channel = channelRepository.findById(channelUpdateRequestDTO.getChannelId());
         if (channel.isPresent()) {

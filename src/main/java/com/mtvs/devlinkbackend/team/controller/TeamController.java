@@ -1,8 +1,6 @@
 package com.mtvs.devlinkbackend.team.controller;
 
 import com.mtvs.devlinkbackend.config.JwtUtil;
-import com.mtvs.devlinkbackend.guild.dto.GuildMemberModifyRequestDTO;
-import com.mtvs.devlinkbackend.guild.entity.Guild;
 import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
@@ -66,7 +64,7 @@ public class TeamController {
     public ResponseEntity<List<Team>> getTeamsByPmId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String pmId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String pmId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Team> teams = teamService.findTeamsByPmId(pmId);
         return ResponseEntity.ok(teams);
     }
@@ -91,7 +89,7 @@ public class TeamController {
     public ResponseEntity<List<Team>> getTeamsByMemberIdContaining(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String memberId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String memberId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Team> teams = teamService.findTeamsByMemberIdContaining(memberId);
         return ResponseEntity.ok(teams);
     }
@@ -126,7 +124,7 @@ public class TeamController {
             @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return teamService.addMemberToTeam(teamMemberModifyRequestDTO, accountId);
     }
 
@@ -141,7 +139,7 @@ public class TeamController {
             @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return teamService.removeMemberToTeam(teamMemberModifyRequestDTO, accountId);
     }
 

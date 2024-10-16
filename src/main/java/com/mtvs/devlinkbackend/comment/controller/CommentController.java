@@ -35,7 +35,7 @@ public class CommentController {
             @RequestBody CommentRegistRequestDTO commentRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         Comment comment = commentService.registComment(commentRegistRequestDTO, accountId);
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
@@ -65,7 +65,7 @@ public class CommentController {
     public ResponseEntity<List<Comment>> findCommentsByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Comment> comments = commentService.findCommentsByAccountId(accountId);
         return ResponseEntity.ok(comments);
     }
@@ -81,7 +81,7 @@ public class CommentController {
             @RequestBody CommentUpdateRequestDTO commentUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         Comment updatedComment = commentService.updateComment(commentUpdateRequestDTO, accountId);
         return ResponseEntity.ok(updatedComment);
     }

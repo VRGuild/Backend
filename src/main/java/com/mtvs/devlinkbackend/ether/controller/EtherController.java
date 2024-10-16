@@ -35,7 +35,7 @@ public class EtherController {
             @RequestBody EtherRegistRequestDTO etherRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         Ether newEther = etherService.registEther(etherRegistRequestDTO, accountId);
         return ResponseEntity.ok(newEther);
     }
@@ -61,7 +61,7 @@ public class EtherController {
     public ResponseEntity<List<Ether>> findEthersByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Ether> ethers = etherService.findEthersByAccountId(accountId);
         return ResponseEntity.ok(ethers);
     }

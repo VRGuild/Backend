@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
+import com.mtvs.devlinkbackend.config.JwtUtil;
 import com.mtvs.devlinkbackend.oauth2.dto.EpicGamesCallbackRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
@@ -7,8 +8,6 @@ import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +20,12 @@ public class Oauth2UserController {
 
     private final EpicGamesTokenService epicGamesTokenService;
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public Oauth2UserController(EpicGamesTokenService epicGamesTokenService, UserService userService) {
+    public Oauth2UserController(EpicGamesTokenService epicGamesTokenService, UserService userService, JwtUtil jwtUtil) {
         this.epicGamesTokenService = epicGamesTokenService;
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     // 로컬 user 정보 가져오는 API
@@ -39,6 +40,7 @@ public class Oauth2UserController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     public ResponseEntity<?> getLocalUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
+
         try {
             return ResponseEntity.ok(userService.findUserByAuthorizationHeader(authorizationHeader));
         } catch (Exception e) {
@@ -67,6 +69,17 @@ public class Oauth2UserController {
                     epicGamesTokenService.getEpicGamesUserAccount(authorizationHeader);
 
             return ResponseEntity.ok(userAccount);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
+    @GetMapping("/epicgames/accountId")
+    public ResponseEntity<?> getAccountId(
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        try {
+            return ResponseEntity.ok(jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }

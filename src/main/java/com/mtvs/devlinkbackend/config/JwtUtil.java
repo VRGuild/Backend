@@ -5,7 +5,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.BadJWTException;
@@ -29,33 +28,33 @@ public class JwtUtil {
     }
 
     // JWT 서명 및 검증을 통한 Claims 추출
-    public Map<String, Object> getClaimsFromTokenWithAuth(String token) throws Exception {
+    public Map<String, Object> getClaimsFromAuthHeaderWithAuth(String authorizationHeader) throws Exception {
         // Claims 검증
-        JWTClaimsSet claims = getClaimsFromToken(token);
+        JWTClaimsSet claims = getClaimsFromToken(extractToken(authorizationHeader));
         validateClaims(claims);
 
         // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환
         return convertClaimsToMap(claims);
     }
 
-    // JWT 서명 및 검증을 통한 Claims 추출
-    public Map<String, Object> getClaimsFromTokenWithoutAuth(String token) throws Exception {
+    // JWT Claims 추출
+    public Map<String, Object> getClaimsFromAuthHeaderWithoutAuth(String authorizationHeader) throws Exception {
         // Claims 검증
-        JWTClaimsSet claims = getClaimsFromToken(token);
+        JWTClaimsSet claims = getClaimsFromToken(extractToken(authorizationHeader));
 
         // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환
         return convertClaimsToMap(claims);
     }
 
     // 검증된 'sub' 값, accountId 반환
-    public String getSubjectFromTokenWithAuth(String token) throws Exception {
-        Map<String, Object> claims = getClaimsFromTokenWithAuth(token);
+    public String getSubjectFromAuthHeaderWithAuth(String authorizationHeader) throws Exception {
+        Map<String, Object> claims = getClaimsFromAuthHeaderWithAuth(authorizationHeader);
         return (String) claims.get("sub");
     }
 
-    // 검증된 'sub' 값, accountId 반환
-    public String getSubjectFromTokenWithoutAuth(String token) throws Exception {
-        Map<String, Object> claims = getClaimsFromTokenWithoutAuth(token);
+    // 검증되지 않은 'sub' 값, accountId 반환
+    public String getSubjectFromAuthHeaderWithoutAuth(String authorizationHeader) throws Exception {
+        Map<String, Object> claims = getClaimsFromAuthHeaderWithoutAuth(authorizationHeader);
         return (String) claims.get("sub");
     }
 
@@ -104,5 +103,14 @@ public class JwtUtil {
         Map<String, Object> claimsMap = new HashMap<>();
         claims.getClaims().forEach(claimsMap::put);
         return claimsMap;
+    }
+
+    private String extractToken(String authorizationHeader) {
+        System.out.println(authorizationHeader);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        } else {
+            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
+        }
     }
 }

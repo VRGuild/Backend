@@ -42,7 +42,7 @@ public class QuestionController {
             @RequestBody QuestionRegistRequestDTO questionRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader);
         Question createdQuestion = questionService.registQuestion(questionRegistRequestDTO, accountId);
         return ResponseEntity.ok(createdQuestion);
     }
@@ -98,7 +98,7 @@ public class QuestionController {
             @RequestParam int page,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Question> questions = questionService.findQuestionsByAccountIdWithPaging(page, accountId);
         return ResponseEntity.ok(questions);
     }
@@ -118,7 +118,7 @@ public class QuestionController {
             @RequestBody QuestionUpdateRequestDTO questionUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
             Question updatedQuestion = questionService.updateQuestion(questionUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedQuestion);
