@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,9 +40,7 @@ public class Oauth2UserController {
     })
     public ResponseEntity<?> getLocalUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String token = extractToken(authorizationHeader);
-
-            return ResponseEntity.ok(userService.findUserByAuthorizationHeader(token));
+            return ResponseEntity.ok(userService.findUserByAuthorizationHeader(authorizationHeader));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
@@ -61,9 +60,11 @@ public class Oauth2UserController {
     public ResponseEntity<?> getEpicGamesUserInfo(
             @RequestHeader("Authorization") String authorizationHeader) {
 
+        System.out.println(authorizationHeader);
+
         try {
-            Map<String, Object> userAccount =
-                    epicGamesTokenService.getEpicGamesUserAccount(extractToken(authorizationHeader));
+            List<Map<String, Object>> userAccount =
+                    epicGamesTokenService.getEpicGamesUserAccount(authorizationHeader);
 
             return ResponseEntity.ok(userAccount);
         } catch (Exception e) {
@@ -81,31 +82,16 @@ public class Oauth2UserController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
     })
     public ResponseEntity<?> handleEpicGamesCallback(
-            @RequestBody EpicGamesCallbackRequestDTO payload, HttpServletResponse response) {
+            @RequestBody EpicGamesCallbackRequestDTO payload) {
 
         String code = payload.getCode();
 
         Map<String, Object> tokenBody = epicGamesTokenService.getAccessTokenAndRefreshTokenByCode(code);
 
-        if (tokenBody != null) {
-            String accessToken = (String) tokenBody.get("access_token");
-            String refreshToken = (String) tokenBody.get("refresh_token");
-
-            // accessToken과 refreshToken을 쿠키에 담아 return
-            Cookie accessTokenCookie = new Cookie("access_token", "Bearer " + accessToken);
-            accessTokenCookie.setMaxAge(15 * 60);
-            accessTokenCookie.setSecure(true);
-            Cookie refreshTokenCookie = new Cookie("refresh_token", "Bearer " + refreshToken);
-            refreshTokenCookie.setMaxAge(3 * 60 * 60);
-            refreshTokenCookie.setSecure(true);
-
-            response.addCookie(accessTokenCookie);
-            response.addCookie(refreshTokenCookie);
-
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (tokenBody != null)
+            return ResponseEntity.status(HttpStatus.CREATED).body(tokenBody);
+        else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/login")
@@ -122,13 +108,5 @@ public class Oauth2UserController {
     public ResponseEntity<?> updateLocalUserInfo() {
         // User 추가 정보 확정되면 개발 예정
         return ResponseEntity.ok().build();
-    }
-
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        } else {
-            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
-        }
     }
 }

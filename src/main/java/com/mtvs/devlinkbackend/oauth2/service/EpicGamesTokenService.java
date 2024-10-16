@@ -3,6 +3,7 @@ package com.mtvs.devlinkbackend.oauth2.service;
 import com.mtvs.devlinkbackend.config.JwtUtil;
 import com.mtvs.devlinkbackend.oauth2.component.EpicGamesJWKCache;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -11,17 +12,23 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class EpicGamesTokenService {
-    @Value("${spring.security.oauth2.client.registration.epicgames.client-id}")
+    @Value("${epicgames.registration.client-id}")
     private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.epicgames.client-secret}")
+    @Value("${epicgames.registration.client-secret}")
     private String clientSecret;
 
-    private final String redirectUri = "";
+    @Value("${epicgames.registration.deployment-id}")
+    private String deploymentId;
+
+    private final String getAuthorizationCodeURL = "https://www.epicgames.com/id/authorize";
+    private final String getAccessTokenURL = "https://api.epicgames.dev/epic/oauth/v2/token";
+    private final String getAccountURL = "https://api.epicgames.dev/epic/id/v2/accounts";
 
     private final EpicGamesJWKCache jwkCache;
     private final JwtUtil jwtUtil;
@@ -38,31 +45,6 @@ public class EpicGamesTokenService {
         return jwtUtil.getClaimsFromTokenWithoutAuth(token);
     }
 
-    public String getAccessTokenByRefreshToken(String refreshToken) {
-        // Epic Games의 OAuth2 토큰 엔드포인트 호출
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-
-        // Basic Authentication 헤더 추가
-        String auth = clientId + ":" + clientSecret;
-        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
-        String authHeader = "Basic " + new String(encodedAuth);
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", authHeader);
-
-        // 요청 본문 설정
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "refresh_token");
-        body.add("token", refreshToken);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-
-        // Epic Games 토큰 엔드포인트에 요청
-        ResponseEntity<Map> response = restTemplate.postForEntity("https://api.epicgames.dev/epic/oauth/v2/token", request, Map.class);
-
-        return (String) response.getBody().get("sub");
-    }
-
     public Map<String, Object> getAccessTokenAndRefreshTokenByCode(String code) {
         // Epic Games의 OAuth2 토큰 엔드포인트 호출
         RestTemplate restTemplate = new RestTemplate();
@@ -72,53 +54,66 @@ public class EpicGamesTokenService {
         String auth = clientId + ":" + clientSecret;
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
         String authHeader = "Basic " + new String(encodedAuth);
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
         headers.set("Authorization", authHeader);
 
         // 요청 본문 설정
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
-        body.add("redirect_uri", redirectUri);
+        body.add("scope", "basic_profile friends_list presence");
+        body.add("deployment_id", deploymentId);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
         // Epic Games 토큰 엔드포인트 요청
-        ResponseEntity<Map> response = restTemplate.exchange(
-                "https://api.epicgames.dev/epic/oauth/v2/token",
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                getAccessTokenURL,
                 HttpMethod.POST,
                 request,
-                Map.class
+                new ParameterizedTypeReference<Map<String, Object>>() {}
         );
 
         return response.getBody();
     }
 
-    public Map<String, Object> getEpicGamesUserAccount(String accessToken) {
+    public List<Map<String, Object>> getEpicGamesUserAccount(String authorizationHeader) throws Exception {
         // Epic Games의 OAuth2 토큰 엔드포인트 호출
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
         // Bearer Authentication 헤더 추가
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", accessToken);
+        headers.set("Authorization", authorizationHeader);
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(new LinkedMultiValueMap<>(), headers);
 
         // Epic Games 토큰 엔드포인트 요청
-        ResponseEntity<Map> response;
+        ResponseEntity<List<Map<String, Object>>> response;
 
+        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(extractToken(authorizationHeader));
+        System.out.println(accountId);
         try {
             response = restTemplate.exchange(
-                    "https://api.epicgames.dev/epic/id/v2/accounts?accountId=" + jwtUtil.getClaimsFromTokenWithAuth(accessToken),
+                    getAccountURL + accountId,
                     HttpMethod.GET,
                     request,
-                    Map.class
+                    new ParameterizedTypeReference<List<Map<String, Object>>>() {}
             );
+            System.out.println(response);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("API 요청 중 오류 발생 : " + e.getMessage());
         }
 
         return response.getBody();
+    }
+
+    private String extractToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        } else {
+            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
+        }
     }
 }
