@@ -1,41 +1,25 @@
 package com.mtvs.devlinkbackend.config;
 
-import com.mtvs.devlinkbackend.oauth2.entity.User;
-import com.mtvs.devlinkbackend.oauth2.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserService userService;
     private final OAuth2AuthorizedClientService authorizedClientService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserService userService, CorsConfigurationSource corsConfigurationSource, OAuth2AuthorizedClientService authorizedClientService, JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.userService = userService;
+    public SecurityConfig(CorsConfigurationSource corsConfigurationSource, OAuth2AuthorizedClientService authorizedClientService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.corsConfigurationSource = corsConfigurationSource;
         this.authorizedClientService = authorizedClientService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;

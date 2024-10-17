@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.config;
+package com.mtvs.devlinkbackend.util;
 
 import com.mtvs.devlinkbackend.oauth2.component.EpicGamesJWKCache;
 import com.nimbusds.jose.JWSAlgorithm;

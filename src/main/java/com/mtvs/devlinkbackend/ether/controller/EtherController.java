@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.ether.controller;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.ether.dto.EtherRegistRequestDTO;
 import com.mtvs.devlinkbackend.ether.dto.EtherUpdateRequestDTO;
 import com.mtvs.devlinkbackend.ether.entity.Ether;

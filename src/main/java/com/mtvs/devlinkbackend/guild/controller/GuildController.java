@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.guild.controller;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.guild.dto.GuildMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.guild.dto.GuildRegistRequestDTO;
 import com.mtvs.devlinkbackend.guild.dto.GuildUpdateRequestDTO;
