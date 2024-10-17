@@ -1,8 +1,9 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerConvertRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
 import com.mtvs.devlinkbackend.oauth2.service.UserPartnerService;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/user/partner")
 public class UserPartnerController {
     private final UserPartnerService userPartnerService;
+    private final JwtUtil jwtUtil;
 
-    public UserPartnerController(UserPartnerService userPartnerService) {
+    public UserPartnerController(UserPartnerService userPartnerService, JwtUtil jwtUtil) {
         this.userPartnerService = userPartnerService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "UserPartner 등록")
@@ -27,9 +30,11 @@ public class UserPartnerController {
     })
     @PostMapping
     public ResponseEntity<UserPartner> convertUserToUserPartner(
-            @RequestBody UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
+            @RequestBody UserPartnerRequestDTO userPartnerRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserPartner userPartner = userPartnerService.registUserPartner(userPartnerConvertRequestDTO, authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserPartner userPartner = userPartnerService.registUserPartner(userPartnerRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -42,7 +47,8 @@ public class UserPartnerController {
     public ResponseEntity<UserPartner> findUserPartnerByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        UserPartner userPartner = userPartnerService.findUserPartnerByAuthorizationHeader(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserPartner userPartner = userPartnerService.findUserPartnerByAccountId(accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -93,9 +99,11 @@ public class UserPartnerController {
     })
     @PatchMapping
     public ResponseEntity<UserPartner> updateUserPartner(
-            @RequestBody UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
+            @RequestBody UserPartnerRequestDTO userPartnerRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserPartner userPartner = userPartnerService.updateUserPartner(userPartnerConvertRequestDTO, authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserPartner userPartner = userPartnerService.updateUserPartner(userPartnerRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -107,7 +115,9 @@ public class UserPartnerController {
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUserPartnerByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        userPartnerService.deleteByAuthorizationHeader(authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        userPartnerService.deleteByAccountId(accountId);
         return ResponseEntity.noContent().build();
     }
 }

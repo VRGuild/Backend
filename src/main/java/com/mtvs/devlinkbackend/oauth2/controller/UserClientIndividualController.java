@@ -1,8 +1,9 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientIndividualConvertRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.UserClientIndividualRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientIndividual;
 import com.mtvs.devlinkbackend.oauth2.service.UserClientIndividualService;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/user/individual")
 public class UserClientIndividualController {
     private final UserClientIndividualService userClientIndividualService;
+    private final JwtUtil jwtUtil;
 
-    public UserClientIndividualController(UserClientIndividualService userClientIndividualService) {
+    public UserClientIndividualController(UserClientIndividualService userClientIndividualService, JwtUtil jwtUtil) {
         this.userClientIndividualService = userClientIndividualService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "UserClientIndividual로 등록")
@@ -27,12 +30,13 @@ public class UserClientIndividualController {
     })
     @PostMapping
     public ResponseEntity<UserClientIndividual> convertUserToUserClientIndividual(
-            @RequestBody UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
+            @RequestBody UserClientIndividualRequestDTO userClientIndividualRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         UserClientIndividual userClientIndividual =
                 userClientIndividualService.registUserClientIndividual(
-                        userClientIndividualConvertRequestDTO, authorizationHeader);
+                        userClientIndividualRequestDTO, accountId);
         return ResponseEntity.ok(userClientIndividual);
     }
 
@@ -45,8 +49,9 @@ public class UserClientIndividualController {
     public ResponseEntity<UserClientIndividual> findUserClientIndividualByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         UserClientIndividual userClientIndividual =
-                userClientIndividualService.findUserClientIndividualByAuthorizationHeader(authorizationHeader);
+                userClientIndividualService.findUserClientIndividualByAccountId(accountId);
         return ResponseEntity.ok(userClientIndividual);
     }
 
@@ -79,12 +84,13 @@ public class UserClientIndividualController {
     })
     @PatchMapping
     public ResponseEntity<UserClientIndividual> updateUserClientIndividual(
-            @RequestBody UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
+            @RequestBody UserClientIndividualRequestDTO userClientIndividualRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         UserClientIndividual userClientIndividual =
                 userClientIndividualService.updateUserClientIndividual(
-                        userClientIndividualConvertRequestDTO, authorizationHeader);
+                        userClientIndividualRequestDTO, accountId);
         return ResponseEntity.ok(userClientIndividual);
     }
 
@@ -97,7 +103,8 @@ public class UserClientIndividualController {
     public ResponseEntity<Void> deleteUserClientIndividualByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
-        userClientIndividualService.deleteByAuthorizationHeader(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        userClientIndividualService.deleteByAccountId(accountId);
         return ResponseEntity.noContent().build();
     }
 }

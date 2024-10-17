@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserClientIndividualConvertRequestDTO {
+public class UserClientIndividualRequestDTO {
     private String purpose = "UserClientIndividual";
     private String name;
     private String phone;

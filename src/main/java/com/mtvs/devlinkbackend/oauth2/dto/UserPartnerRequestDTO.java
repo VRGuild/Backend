@@ -9,7 +9,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserPartnerConvertRequestDTO {
+public class UserPartnerRequestDTO {
     private String purpose = "UserClientPartner";
     private String nickname;
     private String name;

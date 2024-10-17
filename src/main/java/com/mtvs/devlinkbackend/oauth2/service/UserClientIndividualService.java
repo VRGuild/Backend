@@ -1,9 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientIndividualConvertRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.UserClientIndividualRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientIndividual;
 import com.mtvs.devlinkbackend.oauth2.repository.UserClientIndividualRepository;
-import com.mtvs.devlinkbackend.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,27 +12,23 @@ import java.util.List;
 public class UserClientIndividualService {
 
     private final UserClientIndividualRepository userClientIndividualRepository;
-    private final JwtUtil jwtUtil;
 
-    public UserClientIndividualService(UserClientIndividualRepository userClientIndividualRepository, JwtUtil jwtUtil) {
+    public UserClientIndividualService(UserClientIndividualRepository userClientIndividualRepository) {
         this.userClientIndividualRepository = userClientIndividualRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     @Transactional
-    public UserClientIndividual registUserClientIndividual(UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
-                                                           String authorizationHeader) throws Exception {
+    public UserClientIndividual registUserClientIndividual(UserClientIndividualRequestDTO userClientIndividualRequestDTO,
+                                                           String accountId) {
 
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return userClientIndividualRepository.save(new UserClientIndividual(
                 accountId,
-                userClientIndividualConvertRequestDTO.getPurpose(),
-                userClientIndividualConvertRequestDTO.getName(),
-                userClientIndividualConvertRequestDTO.getPhone()
+                userClientIndividualRequestDTO.getPurpose(),
+                userClientIndividualRequestDTO.getName(),
+                userClientIndividualRequestDTO.getPhone()
         ));
     }
-    public UserClientIndividual findUserClientIndividualByAuthorizationHeader(String authorizationHeader) throws Exception {
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+    public UserClientIndividual findUserClientIndividualByAccountId(String accountId) {
         return userClientIndividualRepository.findUserClientIndividualByAccountId(accountId);
 
     };
@@ -47,22 +42,20 @@ public class UserClientIndividualService {
     };
 
     @Transactional
-    public UserClientIndividual updateUserClientIndividual(UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
-                                                           String authorizationHeader) throws Exception {
+    public UserClientIndividual updateUserClientIndividual(UserClientIndividualRequestDTO userClientIndividualRequestDTO,
+                                                           String accountId) {
 
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         UserClientIndividual userClientIndividual = userClientIndividualRepository.findUserClientIndividualByAccountId(accountId);
         if(userClientIndividual == null)
             throw new IllegalArgumentException("잘못된 계정으로 개인 정보 수정 시도");
 
-        userClientIndividual.setName(userClientIndividualConvertRequestDTO.getName());
-        userClientIndividual.setPhone(userClientIndividualConvertRequestDTO.getPhone());
+        userClientIndividual.setName(userClientIndividualRequestDTO.getName());
+        userClientIndividual.setPhone(userClientIndividualRequestDTO.getPhone());
 
         return userClientIndividual;
     }
 
-    public void deleteByAuthorizationHeader(String authorizationHeader) throws Exception {
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+    public void deleteByAccountId(String accountId) {
         userClientIndividualRepository.deleteByAccountId(accountId);
     };
 }

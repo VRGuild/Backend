@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserClientGroupConvertRequestDTO {
+public class UserClientGroupRequestDTO {
     private String purpose = "UserClientGroup";
     private String clientType;
     private String groupName;

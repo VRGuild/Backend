@@ -1,8 +1,9 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientGroupConvertRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.UserClientGroupRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientGroup;
 import com.mtvs.devlinkbackend.oauth2.service.UserClientGroupService;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/user/group")
 public class UserClientGroupController {
     private final UserClientGroupService userClientGroupService;
+    private final JwtUtil jwtUtil;
 
-    public UserClientGroupController(UserClientGroupService userClientGroupService) {
+    public UserClientGroupController(UserClientGroupService userClientGroupService, JwtUtil jwtUtil) {
         this.userClientGroupService = userClientGroupService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "UserClientGroup 등록")
@@ -27,9 +30,12 @@ public class UserClientGroupController {
     })
     @PostMapping
     public ResponseEntity<UserClientGroup> convertUserToUserClientGroup(
-            @RequestBody UserClientGroupConvertRequestDTO userClientGroupConvertRequestDTO,
+            @RequestBody UserClientGroupRequestDTO userClientGroupRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserClientGroup userClientGroup = userClientGroupService.registUserClientGroup(userClientGroupConvertRequestDTO, authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserClientGroup userClientGroup = 
+                userClientGroupService.registUserClientGroup(userClientGroupRequestDTO, accountId);
         return ResponseEntity.ok(userClientGroup);
     }
 
@@ -42,11 +48,12 @@ public class UserClientGroupController {
     public ResponseEntity<UserClientGroup> findUserClientGroupByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
-        UserClientGroup userClientGroup = userClientGroupService.findUserClientGroupByAuthorizationHeader(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserClientGroup userClientGroup = userClientGroupService.findUserClientGroupByAccountId(accountId);
         return ResponseEntity.ok(userClientGroup);
     }
 
-    @Operation(summary = "관리자 이름에 특정 키워드가 포함된 UserClientGroups 조회")
+    @Operation(summary = "담당자 이름에 특정 키워드가 포함된 UserClientGroups 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
@@ -76,7 +83,7 @@ public class UserClientGroupController {
         return ResponseEntity.ok(userClientGroups);
     }
 
-    @Operation(summary = "관리자 전화번호로 UserClientGroups 조회")
+    @Operation(summary = "담당자 전화번호로 UserClientGroups 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
@@ -93,9 +100,12 @@ public class UserClientGroupController {
     })
     @PatchMapping
     public ResponseEntity<UserClientGroup> updateUserClientGroup(
-            @RequestBody UserClientGroupConvertRequestDTO userClientGroupConvertRequestDTO,
+            @RequestBody UserClientGroupRequestDTO userClientGroupRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserClientGroup userClientGroup = userClientGroupService.updateUserClientGroup(userClientGroupConvertRequestDTO, authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserClientGroup userClientGroup =
+                userClientGroupService.updateUserClientGroup(userClientGroupRequestDTO, accountId);
         return ResponseEntity.ok(userClientGroup);
     }
 
@@ -106,7 +116,9 @@ public class UserClientGroupController {
     })
     @DeleteMapping
     public ResponseEntity<Void> deleteUserClientGroupByAuthorizationHeader(@RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        userClientGroupService.deleteByAuthorizationHeader(authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        userClientGroupService.deleteByAccountId(accountId);
         return ResponseEntity.noContent().build();
     }
 }
