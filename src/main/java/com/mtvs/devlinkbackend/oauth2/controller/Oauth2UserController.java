@@ -29,26 +29,6 @@ public class Oauth2UserController {
         this.userService = userService;
     }
 
-//    // 로컬 user 정보 가져오는 API
-//    @GetMapping("/local/user-info")
-//    @Operation(
-//            summary = "로컬 유저 정보 조회",
-//            description = "DevLink만의 DB에 저장된 유저 정보를 조회한다."
-//    )
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "조회 성공"),
-//            @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
-//            @ApiResponse(responseCode = "401", description = "인증되지 않음")
-//    })
-//    public ResponseEntity<?> getLocalUserInfo(@RequestHeader("Authorization") String authorizationHeader) {
-//
-//        try {
-//            return ResponseEntity.ok(userPartnerService.findUserByAuthorizationHeader(authorizationHeader));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-//        }
-//    }
-
     // epicgames 계정 정보 가져오는 API
     @GetMapping("/user-info")
     @Operation(
@@ -80,8 +60,9 @@ public class Oauth2UserController {
             @RequestHeader("Authorization") String authorizationHeader) {
 
         try {
-            return ResponseEntity.ok(jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader));
+            return ResponseEntity.ok(jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
     }

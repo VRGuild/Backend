@@ -24,6 +24,9 @@ public class User {
     @Column(name = "PURPOSE", nullable = false, insertable = false, updatable = false) // "UserClient", "UserPartners" 둘 중 한개
     private String purpose;
 
+    @Column(name = "CHARACTER_ID", unique = true)
+    private Long characterId;
+
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
     private LocalDateTime createdAt;
