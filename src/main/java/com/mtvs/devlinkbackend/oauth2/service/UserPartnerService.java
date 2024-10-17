@@ -23,7 +23,8 @@ public class UserPartnerService {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserPartner findUserPartnerByAccountId(String accountId) {
+    public UserPartner findUserPartnerByAuthorizationHeader(String authorizationHeader) throws Exception {
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return userPartnersRepository.findUserPartnerByAccountId(accountId);
     };
 
