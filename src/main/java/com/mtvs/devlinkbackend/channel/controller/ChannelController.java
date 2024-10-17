@@ -4,7 +4,7 @@ import com.mtvs.devlinkbackend.channel.dto.ChannelRegistRequestDTO;
 import com.mtvs.devlinkbackend.channel.dto.ChannelUpdateRequestDTO;
 import com.mtvs.devlinkbackend.channel.entity.Channel;
 import com.mtvs.devlinkbackend.channel.service.ChannelService;
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

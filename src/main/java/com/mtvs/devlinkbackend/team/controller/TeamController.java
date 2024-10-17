@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.team.controller;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;

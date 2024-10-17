@@ -1,70 +1,29 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
-import com.mtvs.devlinkbackend.oauth2.dto.UserUpdateRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.repository.UserRepository;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
-
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
+    public UserService(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
-    public User registUserByAccessToken(String accessToken) {
-        try {
-            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(accessToken);
-            return userRepository.save(new User(
-                    accountId
-            ));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @Transactional
+    public User registUserByAuthorizationHeader(String authorizationHeader) throws Exception {
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        return userRepository.save(new User(accountId));
     }
 
-    public User findUserByAuthorizationHeader(String authorizationHeader) {
-        try {
-            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(extractToken(authorizationHeader));
-            return userRepository.findUserByAccountId(accountId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void updateUserByAccessToken(String accessToken, UserUpdateRequestDTO userUpdateRequestDTO) {
-        try {
-            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(accessToken);
-            User user = userRepository.findUserByAccountId(accountId);
-            if(user != null) {
-                user.setEmail(userUpdateRequestDTO.getEmail());
-                user.setUserName(userUpdateRequestDTO.getUserName());
-            }
-            else throw new RuntimeException("user not found");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void deleteUserByAccessToken(String accessToken) {
-        try {
-            String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(accessToken);
-            userRepository.deleteUserByAccountId(accountId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        } else {
-            throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
-        }
+    public User findUserByAuthorizationHeader(String authorizationHeader) throws Exception {
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        return userRepository.findUserByAccountId(accountId);
     }
 }

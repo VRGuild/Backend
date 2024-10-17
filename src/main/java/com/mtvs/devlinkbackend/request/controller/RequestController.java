@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.request.controller;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.request.dto.RequestRegistRequestDTO;
 import com.mtvs.devlinkbackend.request.dto.RequestUpdateRequestDTO;
 import com.mtvs.devlinkbackend.request.entity.Request;

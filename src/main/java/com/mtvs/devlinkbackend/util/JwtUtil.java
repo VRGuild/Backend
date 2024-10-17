@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.config;
+package com.mtvs.devlinkbackend.util;
 
 import com.mtvs.devlinkbackend.oauth2.component.EpicGamesJWKCache;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -31,6 +31,7 @@ public class JwtUtil {
     public Map<String, Object> getClaimsFromAuthHeaderWithAuth(String authorizationHeader) throws Exception {
         // Claims 검증
         JWTClaimsSet claims = getClaimsFromToken(extractToken(authorizationHeader));
+        System.out.println(claims);
         validateClaims(claims);
 
         // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환

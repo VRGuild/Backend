@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.oauth2.component.EpicGamesJWKCache;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -83,7 +83,7 @@ public class EpicGamesTokenService {
         HttpHeaders headers = new HttpHeaders();
 
         // Bearer Authentication 헤더 추가
-        headers.set("Authorization", authorizationHeader);
+        headers.set("Authorization", authorizationHeader.replaceAll("\\r?\\n",""));
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(new LinkedMultiValueMap<>(), headers);

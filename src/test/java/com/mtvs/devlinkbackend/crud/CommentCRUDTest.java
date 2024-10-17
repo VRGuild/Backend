@@ -31,8 +31,8 @@ public class CommentCRUDTest {
 
     private static Stream<Arguments> modifiedComment() {
         return Stream.of(
-                Arguments.of(new CommentUpdateRequestDTO(1L, "내용0"), "계정1"),
-                Arguments.of(new CommentUpdateRequestDTO(2L, "내용00"), "계정2")
+                Arguments.of(new CommentUpdateRequestDTO(3L, "내용0"), "계정1"),
+                Arguments.of(new CommentUpdateRequestDTO(4L, "내용00"), "계정2")
         );
     }
 

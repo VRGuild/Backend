@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.reply.controller;
 
-import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.reply.dto.ReplyRegistRequestDTO;
 import com.mtvs.devlinkbackend.reply.dto.ReplyUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.entity.Reply;
