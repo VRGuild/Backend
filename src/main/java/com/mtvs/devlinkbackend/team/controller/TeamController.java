@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.team.controller;
 
 import com.mtvs.devlinkbackend.config.JwtUtil;
+import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
 import com.mtvs.devlinkbackend.team.entity.Team;
@@ -63,7 +64,7 @@ public class TeamController {
     public ResponseEntity<List<Team>> getTeamsByPmId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String pmId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String pmId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Team> teams = teamService.findTeamsByPmId(pmId);
         return ResponseEntity.ok(teams);
     }
@@ -88,7 +89,7 @@ public class TeamController {
     public ResponseEntity<List<Team>> getTeamsByMemberIdContaining(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String memberId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String memberId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Team> teams = teamService.findTeamsByMemberIdContaining(memberId);
         return ResponseEntity.ok(teams);
     }
@@ -110,6 +111,36 @@ public class TeamController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @Operation(summary = "팀 멤버 추가", description = "길드에 멤버를 추가합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "멤버가 성공적으로 추가되었습니다."),
+            @ApiResponse(responseCode = "403", description = "추가 권한이 없습니다."),
+            @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
+    })
+    @PostMapping("/member")
+    public Team addMemberToTeam(
+            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        return teamService.addMemberToTeam(teamMemberModifyRequestDTO, accountId);
+    }
+
+    @Operation(summary = "팀 멤버 제거", description = "길드에서 멤버를 제거합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "멤버가 성공적으로 제거되었습니다."),
+            @ApiResponse(responseCode = "403", description = "제거 권한이 없습니다."),
+            @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
+    })
+    @DeleteMapping("/member")
+    public Team removeMemberFromTeam(
+            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        return teamService.removeMemberToTeam(teamMemberModifyRequestDTO, accountId);
     }
 
     @Operation(summary = "팀 삭제", description = "ID를 통해 팀을 삭제합니다.")

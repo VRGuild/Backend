@@ -36,7 +36,7 @@ public class ReplyController {
             @RequestBody ReplyRegistRequestDTO replyRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader);
         Reply reply = replyService.registReply(replyRegistRequestDTO, accountId);
         return ResponseEntity.ok(reply);
     }
@@ -75,7 +75,7 @@ public class ReplyController {
     public ResponseEntity<List<Reply>> findRepliesByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Reply> replies = replyService.findRepliesByAccountId(accountId);
         return ResponseEntity.ok(replies);
     }
@@ -91,7 +91,7 @@ public class ReplyController {
             @RequestBody ReplyUpdateRequestDTO replyUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
             Reply updatedReply = replyService.updateReply(replyUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedReply);

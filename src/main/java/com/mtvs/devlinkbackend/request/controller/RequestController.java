@@ -37,7 +37,7 @@ public class RequestController {
             @RequestBody RequestRegistRequestDTO requestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         Request newRequest = requestService.registRequest(requestDTO, accountId);
         return new ResponseEntity<>(newRequest, HttpStatus.CREATED);
     }
@@ -65,7 +65,7 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         List<Request> requests = requestService.findRequestsByAccountId(accountId);
         return ResponseEntity.ok(requests);
     }
@@ -94,7 +94,7 @@ public class RequestController {
             @RequestHeader(name = "Authorization") String authorizationHeader) {
 
         try {
-            String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
             Request updatedRequest = requestService.updateRequest(requestDTO, accountId);
             return ResponseEntity.ok(updatedRequest);
         } catch (Exception e) {

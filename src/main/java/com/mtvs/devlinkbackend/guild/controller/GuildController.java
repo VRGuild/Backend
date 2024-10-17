@@ -35,7 +35,7 @@ public class GuildController {
             @RequestBody GuildRegistRequestDTO guildRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.createGuild(guildRegistRequestDTO, accountId);
     }
 
@@ -62,7 +62,7 @@ public class GuildController {
     public List<Guild> findGuildsByOwnerId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String ownerId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String ownerId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.findGuildsByOwnerId(ownerId);
     }
 
@@ -72,7 +72,7 @@ public class GuildController {
     public List<Guild> findGuildsByMemberIdContaining(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String memberId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String memberId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.findGuildsByMemberIdContaining(memberId);
     }
 
@@ -87,7 +87,7 @@ public class GuildController {
             @RequestBody GuildUpdateRequestDTO guildUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.updateGuild(guildUpdateRequestDTO, accountId);
     }
 
@@ -102,7 +102,7 @@ public class GuildController {
             @RequestBody GuildMemberModifyRequestDTO guildMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.addMemberToGuild(guildMemberModifyRequestDTO, accountId);
     }
 
@@ -117,7 +117,7 @@ public class GuildController {
             @RequestBody GuildMemberModifyRequestDTO guildMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromTokenWithoutAuth(authorizationHeader);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         return guildService.removeMemberToGuild(guildMemberModifyRequestDTO, accountId);
     }
 
