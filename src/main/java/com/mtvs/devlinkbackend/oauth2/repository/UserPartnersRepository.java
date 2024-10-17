@@ -20,7 +20,7 @@ public interface UserPartnersRepository extends JpaRepository<UserPartner, Long>
 
     List<UserPartner> findUserPartnersByEmail(String email);
 
-    @Query("SELECT u FROM UserPartners u JOIN u.skillSet s WHERE KEY(s) = :skillName AND VALUE(s) >= :proficiency")
+    @Query("SELECT u FROM UserPartner u JOIN u.skillSet s WHERE KEY(s) = :skillName AND VALUE(s) >= :proficiency")
     List<UserPartner> findBySkillSetWithMinProficiency(
             @Param("skillName") String skillName, @Param("proficiency") Integer proficiency
     );

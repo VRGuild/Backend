@@ -51,9 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             // 검증 실패 시 401 에러 설정
             if(e.getMessage().equals("JWT is expired"))
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(449);
             else
-                response.setStatus(449); // 헤더에 들어 있는 토큰이 잘못됨
+                System.out.println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 헤더에 들어 있는 토큰이 잘못됨
             return;
         }
 

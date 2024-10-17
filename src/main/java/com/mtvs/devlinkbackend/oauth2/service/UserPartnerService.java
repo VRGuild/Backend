@@ -50,7 +50,7 @@ public class UserPartnerService {
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         User user = userRepository.findUserByAccountId(accountId);
         if(user == null)
-            throw new IllegalArgumentException("해당 계정으로 등록된 사용자 정보 없음 / 없는 정보로 추가 정보 등록 시도");
+            throw new IllegalArgumentException("잘못된 계정으로 추가 정보 입력 중");
 
         userRepository.delete(user);
 
@@ -90,7 +90,7 @@ public class UserPartnerService {
         return userPartner;
     }
 
-    public void deleteUserPartner(String authorizationHeader) throws Exception {
+    public void deleteByAuthorizationHeader(String authorizationHeader) throws Exception {
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         userPartnersRepository.deleteUserByAccountId(accountId);
     }

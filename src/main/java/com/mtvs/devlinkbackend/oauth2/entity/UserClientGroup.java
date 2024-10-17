@@ -5,11 +5,12 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "USER_CLIENT_GROUP")
 @Entity(name = "UserClientGroup")
 @DiscriminatorValue("UserClientGroup") // purpose 값으로 지정
-@Getter
+@Getter @Setter
 public class UserClientGroup extends User {
     @Column(name = "CLIENT_TYPE")
     private String clientType;
@@ -22,4 +23,15 @@ public class UserClientGroup extends User {
 
     @Column(name = "MANAGER_PHONE")
     private String managerPhone;
+
+    public UserClientGroup() {
+    }
+
+    public UserClientGroup(Long userId, String accountId, String purpose, String clientType, String groupName, String managerName, String managerPhone) {
+        super(userId, accountId, purpose);
+        this.clientType = clientType;
+        this.groupName = groupName;
+        this.managerName = managerName;
+        this.managerPhone = managerPhone;
+    }
 }
