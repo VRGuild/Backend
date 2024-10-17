@@ -1,10 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
 import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerConvertRequestDTO;
-import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
 import com.mtvs.devlinkbackend.oauth2.repository.UserPartnersRepository;
-import com.mtvs.devlinkbackend.oauth2.repository.UserRepository;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +12,31 @@ import java.util.List;
 @Service
 public class UserPartnerService {
     private final UserPartnersRepository userPartnersRepository;
-    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public UserPartnerService(UserPartnersRepository userPartnersRepository, UserRepository userRepository, JwtUtil jwtUtil) {
+    public UserPartnerService(UserPartnersRepository userPartnersRepository, JwtUtil jwtUtil) {
         this.userPartnersRepository = userPartnersRepository;
-        this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+    }
+
+    @Transactional
+    public UserPartner registUserPartner(UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
+                                         String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+
+        return userPartnersRepository.save(new UserPartner(
+                accountId,
+                userPartnerConvertRequestDTO.getPurpose(),
+                userPartnerConvertRequestDTO.getNickname(),
+                userPartnerConvertRequestDTO.getName(),
+                userPartnerConvertRequestDTO.getEmail(),
+                userPartnerConvertRequestDTO.getPhone(),
+                userPartnerConvertRequestDTO.getPortfolioList(),
+                userPartnerConvertRequestDTO.getExperience(),
+                userPartnerConvertRequestDTO.getSkillSet(),
+                userPartnerConvertRequestDTO.getMessage()
+        ));
     }
 
     public UserPartner findUserPartnerByAuthorizationHeader(String authorizationHeader) throws Exception {
@@ -43,32 +59,6 @@ public class UserPartnerService {
     public UserPartner findUserPartnerByPhone(String phone) {
         return userPartnersRepository.findUserPartnerByPhone(phone);
     };
-
-    @Transactional
-    public UserPartner converUserToUserPartner(UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
-                                               String authorizationHeader) throws Exception {
-
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        User user = userRepository.findUserByAccountId(accountId);
-        if(user == null)
-            throw new IllegalArgumentException("잘못된 계정으로 추가 정보 입력 중");
-
-        userRepository.delete(user);
-
-        return userPartnersRepository.save(new UserPartner(
-                user.getUserId(),
-                user.getAccountId(),
-                userPartnerConvertRequestDTO.getPurpose(),
-                userPartnerConvertRequestDTO.getNickname(),
-                userPartnerConvertRequestDTO.getName(),
-                userPartnerConvertRequestDTO.getEmail(),
-                userPartnerConvertRequestDTO.getPhone(),
-                userPartnerConvertRequestDTO.getPortfolioList(),
-                userPartnerConvertRequestDTO.getExperience(),
-                userPartnerConvertRequestDTO.getSkillSet(),
-                userPartnerConvertRequestDTO.getMessage()
-        ));
-    }
 
     @Transactional
     public UserPartner updateUserPartner(UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,

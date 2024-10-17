@@ -27,8 +27,8 @@ public class UserClientGroup extends User {
     public UserClientGroup() {
     }
 
-    public UserClientGroup(Long userId, String accountId, String purpose, String clientType, String groupName, String managerName, String managerPhone) {
-        super(userId, accountId, purpose);
+    public UserClientGroup(String accountId, String purpose, String clientType, String groupName, String managerName, String managerPhone) {
+        super(accountId, purpose);
         this.clientType = clientType;
         this.groupName = groupName;
         this.managerName = managerName;

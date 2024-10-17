@@ -20,6 +20,19 @@ public class UserPartnerController {
         this.userPartnerService = userPartnerService;
     }
 
+    @Operation(summary = "UserPartner 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 UserPartner로 등록됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
+    })
+    @PostMapping
+    public ResponseEntity<UserPartner> convertUserToUserPartner(
+            @RequestBody UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
+            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
+        UserPartner userPartner = userPartnerService.registUserPartner(userPartnerConvertRequestDTO, authorizationHeader);
+        return ResponseEntity.ok(userPartner);
+    }
+
     @Operation(summary = "Account ID로 UserPartner 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserPartner를 조회함"),
@@ -70,19 +83,6 @@ public class UserPartnerController {
     @GetMapping("/phone/{phone}")
     public ResponseEntity<UserPartner> findUserPartnerByPhone(@PathVariable String phone) {
         UserPartner userPartner = userPartnerService.findUserPartnerByPhone(phone);
-        return ResponseEntity.ok(userPartner);
-    }
-
-    @Operation(summary = "User를 UserPartner로 변환")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 User를 UserPartner로 변환함"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
-    })
-    @PostMapping
-    public ResponseEntity<UserPartner> convertUserToUserPartner(
-            @RequestBody UserPartnerConvertRequestDTO userPartnerConvertRequestDTO,
-            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserPartner userPartner = userPartnerService.converUserToUserPartner(userPartnerConvertRequestDTO, authorizationHeader);
         return ResponseEntity.ok(userPartner);
     }
 

@@ -41,8 +41,8 @@ public class UserPartner extends User {
     @Column(name = "MESSAGE", columnDefinition = "TEXT") // 하고 싶은 말
     private String messsage;
 
-    public UserPartner(Long userId, String accountId, String purpose, String nickname, String name, String email, String phone, List<String> portfolioList, String experience, Map<String, Integer> skillSet, String messsage) {
-        super(userId, accountId, purpose);
+    public UserPartner(String accountId, String purpose, String nickname, String name, String email, String phone, List<String> portfolioList, String experience, Map<String, Integer> skillSet, String messsage) {
+        super(accountId, purpose);
         this.nickname = nickname;
         this.name = name;
         this.email = email;

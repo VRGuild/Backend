@@ -21,8 +21,8 @@ public class UserClientIndividual extends User {
     public UserClientIndividual() {
     }
 
-    public UserClientIndividual(Long userId, String accountId, String purpose, String name, String phone) {
-        super(userId, accountId, purpose);
+    public UserClientIndividual(String accountId, String purpose, String name, String phone) {
+        super(accountId, purpose);
         this.name = name;
         this.phone = phone;
     }

@@ -20,6 +20,19 @@ public class UserClientGroupController {
         this.userClientGroupService = userClientGroupService;
     }
 
+    @Operation(summary = "UserClientGroup 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroup이 등록됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
+    })
+    @PostMapping
+    public ResponseEntity<UserClientGroup> convertUserToUserClientGroup(
+            @RequestBody UserClientGroupConvertRequestDTO userClientGroupConvertRequestDTO,
+            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
+        UserClientGroup userClientGroup = userClientGroupService.registUserClientGroup(userClientGroupConvertRequestDTO, authorizationHeader);
+        return ResponseEntity.ok(userClientGroup);
+    }
+
     @Operation(summary = "Authorization Header로 UserClientGroup 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroup을 조회함"),
@@ -71,19 +84,6 @@ public class UserClientGroupController {
     public ResponseEntity<List<UserClientGroup>> findByManagerPhone(@PathVariable String managerPhone) {
         List<UserClientGroup> userClientGroups = userClientGroupService.findByManagerPhone(managerPhone);
         return ResponseEntity.ok(userClientGroups);
-    }
-
-    @Operation(summary = "User를 UserClientGroup으로 변환")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 User를 UserClientGroup으로 변환함"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
-    })
-    @PostMapping
-    public ResponseEntity<UserClientGroup> convertUserToUserClientGroup(
-            @RequestBody UserClientGroupConvertRequestDTO userClientGroupConvertRequestDTO,
-            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-        UserClientGroup userClientGroup = userClientGroupService.converUserToUserClientGroup(userClientGroupConvertRequestDTO, authorizationHeader);
-        return ResponseEntity.ok(userClientGroup);
     }
 
     @Operation(summary = "UserClientGroup 정보 수정")

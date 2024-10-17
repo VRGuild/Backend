@@ -21,7 +21,7 @@ public class User {
     @Column(name = "ACCOUNT_ID", unique = true)
     private String accountId;
 
-    @Column(name = "PURPOSE", nullable = false, insertable = false, updatable = false) // "UserClient", "UserPartners" 둘 중 한개
+    @Column(name = "PURPOSE", insertable = false, updatable = false) // "UserClient", "UserPartners" 둘 중 한개
     private String purpose;
 
     @Column(name = "CHARACTER_ID", unique = true)
@@ -41,7 +41,7 @@ public class User {
         this.accountId = accountId;
     }
 
-    public User(Long userId, String accountId, String purpose) {
+    public User(String accountId, String purpose) {
         this.userId = userId;
         this.accountId = accountId;
         this.purpose = purpose;

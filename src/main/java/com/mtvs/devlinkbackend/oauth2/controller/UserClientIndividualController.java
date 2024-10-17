@@ -20,6 +20,22 @@ public class UserClientIndividualController {
         this.userClientIndividualService = userClientIndividualService;
     }
 
+    @Operation(summary = "UserClientIndividual로 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공적으로 UserClientIndividual이 등록됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
+    })
+    @PostMapping
+    public ResponseEntity<UserClientIndividual> convertUserToUserClientIndividual(
+            @RequestBody UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
+            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
+
+        UserClientIndividual userClientIndividual =
+                userClientIndividualService.registUserClientIndividual(
+                        userClientIndividualConvertRequestDTO, authorizationHeader);
+        return ResponseEntity.ok(userClientIndividual);
+    }
+
     @Operation(summary = "Authorization Header로 UserClientIndividual 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientIndividual을 조회함"),
@@ -54,22 +70,6 @@ public class UserClientIndividualController {
         List<UserClientIndividual> userClientIndividuals =
                 userClientIndividualService.findUserClientIndividualsByPhone(phone);
         return ResponseEntity.ok(userClientIndividuals);
-    }
-
-    @Operation(summary = "User를 UserClientIndividual로 변환")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 User를 UserClientIndividual로 변환함"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
-    })
-    @PostMapping
-    public ResponseEntity<UserClientIndividual> convertUserToUserClientIndividual(
-            @RequestBody UserClientIndividualConvertRequestDTO userClientIndividualConvertRequestDTO,
-            @RequestHeader("Authorization") String authorizationHeader) throws Exception {
-
-        UserClientIndividual userClientIndividual =
-                userClientIndividualService.convertUserToUserClientIndividual(
-                        userClientIndividualConvertRequestDTO, authorizationHeader);
-        return ResponseEntity.ok(userClientIndividual);
     }
 
     @Operation(summary = "UserClientIndividual 정보 수정")
