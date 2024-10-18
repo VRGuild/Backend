@@ -30,19 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Authorization 헤더에서 Bearer 토큰 추출
         String authorizationHeader = request.getHeader("Authorization");
-        String token = null;
-
-        // 헤더에서 액세스 토큰 추출
-        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
-            token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰 부분 추출
-        } else {
-            response.setStatus(450); // 잘못된 인증 헤더
-            return;
-        }
 
         try {
             // 토큰 검증 | 검증 성공 시 SecurityContext에 인증 정보 저장
-            String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(token);
+            String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(accountId, null, null);
 
@@ -72,17 +63,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/webjars")
                 || path.startsWith("/api");
-    }
-
-    // 쿠키에서 리프레시 토큰을 추출하는 메서드
-    private String getRefreshTokenFromCookies(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
     }
 }
