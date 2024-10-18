@@ -16,7 +16,7 @@ import java.util.*;
 @Component
 public class JwtUtil {
 
-    private static final String ISSUER_URL = "https://api.epicgames.dev";
+    private static final String ISSUER_URL = "https://api.epicgames.dev/epic/oauth/v1";
 
     @Value("${spring.security.oauth2.client.registration.epicgames.client-id}")
     private String clientId;
@@ -31,7 +31,6 @@ public class JwtUtil {
     public Map<String, Object> getClaimsFromAuthHeaderWithAuth(String authorizationHeader) throws Exception {
         // Claims 검증
         JWTClaimsSet claims = getClaimsFromToken(extractToken(authorizationHeader));
-        System.out.println(claims);
         validateClaims(claims);
 
         // 검증이 완료되었을 경우 모든 Claims을 Map으로 변환하여 반환
@@ -61,7 +60,7 @@ public class JwtUtil {
 
     private void validateClaims(JWTClaimsSet claims) throws BadJWTException {
         // 'iss' 검증
-        if (claims.getIssuer() == null || !claims.getIssuer().startsWith(ISSUER_URL)) {
+        if (claims.getIssuer() == null || !claims.getIssuer().equals(ISSUER_URL)) {
             throw new BadJWTException("Invalid issuer");
         }
 
@@ -107,7 +106,6 @@ public class JwtUtil {
     }
 
     private String extractToken(String authorizationHeader) {
-        System.out.println(authorizationHeader);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);
         } else {
