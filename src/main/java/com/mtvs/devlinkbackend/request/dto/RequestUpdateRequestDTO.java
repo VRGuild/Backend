@@ -11,8 +11,17 @@ import java.time.LocalDateTime;
 @ToString
 public class RequestUpdateRequestDTO {
     private Long requestId;
+    private String workScope;
+    private String workType;
+    private String progressClassification;
+    private String companyName;
     private String title;
     private String content;
+    private Integer requiredClient;
+    private Integer requiredServer;
+    private Integer requiredDesign;
+    private Integer requiredPlanner;
+    private Integer requiredAIEngineer;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 }

@@ -1,6 +1,12 @@
 package com.mtvs.devlinkbackend.request.dto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -9,8 +15,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class RequestRegistRequestDTO {
+    private String workScope;
+    private String workType;
+    private String progressClassification;
+    private String companyName;
     private String title;
     private String content;
+    private Integer requiredClient;
+    private Integer requiredServer;
+    private Integer requiredDesign;
+    private Integer requiredPlanner;
+    private Integer requiredAIEngineer;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 }
