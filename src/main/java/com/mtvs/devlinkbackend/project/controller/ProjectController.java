@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/request")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -47,9 +47,9 @@ public class ProjectController {
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰가 성공적으로 조회됨"),
             @ApiResponse(responseCode = "404", description = "프로젝트 의뢰를 찾을 수 없음")
     })
-    @GetMapping("/{requestId}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long requestId) {
-        Project project = projectService.findProjectByRequestId(requestId);
+    @GetMapping("/{projectId}")
+    public ResponseEntity<Project> getProjectById(@PathVariable Long projectId) {
+        Project project = projectService.findProjectByProjectId(projectId);
         if (project != null) {
             return ResponseEntity.ok(project);
         } else {

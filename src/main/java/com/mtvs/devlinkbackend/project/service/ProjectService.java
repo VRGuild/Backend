@@ -40,8 +40,8 @@ public class ProjectService {
         ));
     }
 
-    public Project findProjectByRequestId(Long requestId) {
-        return projectRepository.findById(requestId).orElse(null);
+    public Project findProjectByProjectId(Long projectId) {
+        return projectRepository.findById(projectId).orElse(null);
     }
 
     public List<Project> findProjectsByAccountId(String accountId) {
