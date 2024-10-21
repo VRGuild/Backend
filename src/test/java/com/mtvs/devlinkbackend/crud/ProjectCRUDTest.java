@@ -119,7 +119,7 @@ public class ProjectCRUDTest {
     @Order(2)
     public void testFindRequestsByAccountId(String accountId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByAccountId(accountId)));
+                System.out.println("Request = " + projectService.findProjectsByAccountIdWithPaging(accountId)));
     }
 
     @DisplayName("의뢰 수정 테스트")
@@ -155,7 +155,7 @@ public class ProjectCRUDTest {
     @Order(2)
     public void testFindRequestsByWorkType(String workType) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByWorkType(workType)));
+                System.out.println("Request = " + projectService.findProjectsByWorkTypeWithPaging(workType)));
     }
 
     @DisplayName("진행 분류에 따른 의뢰 조회 테스트")
@@ -174,7 +174,7 @@ public class ProjectCRUDTest {
     @Order(2)
     public void testFindRequestsByTitleContainingIgnoreCase(String title) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByTitleContainingIgnoreCase(title)));
+                System.out.println("Request = " + projectService.findProjectsByTitleContainingIgnoreCaseWithPaging(title)));
     }
 
     @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
