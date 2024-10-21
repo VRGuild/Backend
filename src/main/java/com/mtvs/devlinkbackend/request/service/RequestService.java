@@ -64,9 +64,9 @@ public class RequestService {
         return requestRepository.findRequestsByTitleContainingIgnoreCase(title);
     }
 
-    public List<Request> findAllRequestsBetweenStarDateTimeAndEndDateTime(
+    public List<Request> findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
             LocalDateTime starDateTime, LocalDateTime endDateTime) {
-        return requestRepository.findRequestsWithinDateRange(starDateTime, endDateTime);
+        return requestRepository.findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(starDateTime, endDateTime);
     }
 
     public List<Request> findRequestsWithLargerRequirements(

@@ -21,11 +21,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findRequestsByTitleContainingIgnoreCase(String title);
 
-    @Query("SELECT r FROM Request r WHERE r.startDateTime BETWEEN :startDateTime AND :endDateTime " +
-            "AND r.endDateTime BETWEEN :startDateTime AND :endDateTime")
-    List<Request> findRequestsWithinDateRange(
-            @Param("startDateTime") LocalDateTime startDateTime,
-            @Param("endDateTime") LocalDateTime endDateTime);
+    List<Request> findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     // required 값들이 넘겨준 값보다 큰 row를 조회하는 쿼리
     @Query("SELECT r FROM Request r WHERE " +

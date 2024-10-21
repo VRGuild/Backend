@@ -114,7 +114,7 @@ public class RequestController {
         return ResponseEntity.ok(requests);
     }
 
-    @Operation(summary = "특정 기간 내의 의뢰 목록 조회", description = "시작과 끝 날짜 사이의 모든 의뢰를 조회합니다.")
+    @Operation(summary = "특정 기간 내의 의뢰 목록 조회", description = "시작날짜 또는 끝 날짜를 포함하는 모든 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
     })
@@ -122,8 +122,8 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsBetweenDates(
             @RequestParam LocalDateTime startDateTime, @RequestParam LocalDateTime endDateTime) {
 
-        List<Request> requests =
-                requestService.findAllRequestsBetweenStarDateTimeAndEndDateTime(startDateTime, endDateTime);
+        List<Request> requests = requestService.findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
+                        startDateTime, endDateTime);
         return ResponseEntity.ok(requests);
     }
 
