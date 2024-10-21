@@ -22,8 +22,17 @@ public class RequestService {
     @Transactional
     public Request registRequest(RequestRegistRequestDTO requestRegistRequestDTO, String accountId) {
         return requestRepository.save(new Request(
+                requestRegistRequestDTO.getWorkScope(),
+                requestRegistRequestDTO.getWorkType(),
+                requestRegistRequestDTO.getProgressClassification(),
+                requestRegistRequestDTO.getCompanyName(),
                 requestRegistRequestDTO.getTitle(),
                 requestRegistRequestDTO.getContent(),
+                requestRegistRequestDTO.getRequiredClient(),
+                requestRegistRequestDTO.getRequiredServer(),
+                requestRegistRequestDTO.getRequiredDesign(),
+                requestRegistRequestDTO.getRequiredPlanner(),
+                requestRegistRequestDTO.getRequiredAIEngineer(),
                 requestRegistRequestDTO.getStartDateTime(),
                 requestRegistRequestDTO.getEndDateTime(),
                 accountId
@@ -38,8 +47,33 @@ public class RequestService {
         return requestRepository.findRequestsByAccountId(accountId);
     }
 
-    public List<Request> findAllRequestsBetweenStarDateTimeAndEndDateTime(LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    public List<Request> findRequestsByWorkScope(String workScope) {
+        return requestRepository.findRequestsByWorkScope(workScope);
+    }
+
+    public List<Request> findRequestsByWorkType(String workType) {
+        return requestRepository.findRequestsByWorkType(workType);
+    }
+
+    public List<Request> findRequestsByProgressClassification(String progressClassification) {
+        return requestRepository.findRequestsByProgressClassification(progressClassification);
+    }
+
+    public List<Request> findRequestsByTitleContainingIgnoreCase(String title) {
+        return requestRepository.findRequestsByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Request> findAllRequestsBetweenStarDateTimeAndEndDateTime(
+            LocalDateTime starDateTime, LocalDateTime endDateTime) {
         return requestRepository.findRequestsWithinDateRange(starDateTime, endDateTime);
+    }
+
+    public List<Request> findRequestsWithLargerRequirements(
+            Integer requiredClient, Integer requiredServer, Integer requiredDesign,
+            Integer requiredPlanner, Integer requiredAIEngineer) {
+
+        return requestRepository.findRequestsWithLargerRequirements(
+                requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer);
     }
 
     @Transactional
@@ -48,8 +82,16 @@ public class RequestService {
         if (request.isPresent()) {
             Request foundRequest = request.get();
             if(foundRequest.getAccountId().equals(accountId)) {
+                foundRequest.setWorkScope(requestUpdateRequestDTO.getWorkScope());
+                foundRequest.setWorkType(requestUpdateRequestDTO.getWorkType());
+                foundRequest.setProgressClassification(requestUpdateRequestDTO.getProgressClassification());
                 foundRequest.setTitle(requestUpdateRequestDTO.getTitle());
                 foundRequest.setContent(requestUpdateRequestDTO.getContent());
+                foundRequest.setRequiredClient(requestUpdateRequestDTO.getRequiredClient());
+                foundRequest.setRequiredServer(requestUpdateRequestDTO.getRequiredServer());
+                foundRequest.setRequiredDesign(requestUpdateRequestDTO.getRequiredDesign());
+                foundRequest.setRequiredPlanner(requestUpdateRequestDTO.getRequiredPlanner());
+                foundRequest.setRequiredAIEngineer(requestUpdateRequestDTO.getRequiredAIEngineer());
                 foundRequest.setStartDateTime(requestUpdateRequestDTO.getStartDateTime());
                 foundRequest.setEndDateTime(requestUpdateRequestDTO.getEndDateTime());
                 return foundRequest;

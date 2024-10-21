@@ -103,6 +103,38 @@ public class Request {
         this.accountId = accountId;
     }
 
+    public void setWorkScope(String workScope) {
+        this.workScope = workScope;
+    }
+
+    public void setWorkType(String workType) {
+        this.workType = workType;
+    }
+
+    public void setProgressClassification(String progressClassification) {
+        this.progressClassification = progressClassification;
+    }
+
+    public void setRequiredClient(Integer requiredClient) {
+        this.requiredClient = requiredClient;
+    }
+
+    public void setRequiredServer(Integer requiredServer) {
+        this.requiredServer = requiredServer;
+    }
+
+    public void setRequiredDesign(Integer requiredDesign) {
+        this.requiredDesign = requiredDesign;
+    }
+
+    public void setRequiredPlanner(Integer requiredPlanner) {
+        this.requiredPlanner = requiredPlanner;
+    }
+
+    public void setRequiredAIEngineer(Integer requiredAIEngineer) {
+        this.requiredAIEngineer = requiredAIEngineer;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
