@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.controller;
 
+import com.mtvs.devlinkbackend.project.dto.ProjectPagingResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.ProjectVectorRegistRequestDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
@@ -59,87 +60,102 @@ public class ProjectController {
         }
     }
 
-    @Operation(summary = "계정별 프로젝트 의뢰 목록 조회", description = "특정 계정에 대한 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 계정별 프로젝트 의뢰 목록 조회", description = "Pagination으로 특정 계정에 대한 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/account")
-    public ResponseEntity<List<Project>> getProjectsByAccountId(
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByAccountId(
+            @RequestParam int page,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Project> projects = projectService.findProjectsByAccountId(accountId);
+        ProjectPagingResponseDTO projects = projectService.findProjectsByAccountIdWithPaging(page, accountId);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "업무 범위별 프로젝트 의뢰 목록 조회", description = "특정 업무 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 업무 범위별 프로젝트 의뢰 목록 조회", description = "Pagination으로 특정 업무 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/work-scope")
-    public ResponseEntity<List<Project>> getProjectsByWorkScope(@RequestParam String workScope) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByWorkScope(
+            @RequestParam int page,
+            @RequestParam String workScope) {
 
-        List<Project> projects = projectService.findProjectsByWorkScope(workScope);
+        ProjectPagingResponseDTO projects = projectService.findProjectsByWorkScopeWithPaging(page, workScope);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "근무 형태별 프로젝트 의뢰 목록 조회", description = "근무 형태 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 근무 형태별 프로젝트 의뢰 목록 조회", description = "Pagination으로 근무 형태 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/work-type")
-    public ResponseEntity<List<Project>> getProjectsByWorkType(@RequestParam String workType) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByWorkType(
+            @RequestParam int page,
+            @RequestParam String workType) {
 
-        List<Project> projects = projectService.findProjectsByWorkType(workType);
+        ProjectPagingResponseDTO projects =
+                projectService.findProjectsByWorkTypeWithPaging(page, workType);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "진행 분류별 프로젝트 의뢰 목록 조회", description = "진행 분류 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 진행 분류별 프로젝트 의뢰 목록 조회", description = "Pagination으로 진행 분류 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/progress-classfication")
-    public ResponseEntity<List<Project>> getProjectsByProgressClassification(@RequestParam String progressClassification) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByProgressClassification(
+            @RequestParam int page,
+            @RequestParam String progressClassification) {
 
-        List<Project> projects = projectService.findProjectsByProgressClassification(progressClassification);
+        ProjectPagingResponseDTO projects =
+                projectService.findProjectsByProgressClassificationWithPaging(page, progressClassification);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "프로젝트 주제(제목)별 프로젝트 의뢰 목록 조회", description = "프로젝트 주제(제목) 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 프로젝트 주제(제목)별 프로젝트 의뢰 목록 조회", description = "Pagination으로 프로젝트 주제(제목) 범위에 대한 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/title")
-    public ResponseEntity<List<Project>> getProjectsByTitleContainingIgnoreCase(@RequestParam String title) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByTitleContainingIgnoreCase(
+            @RequestParam int page,
+            @RequestParam String title) {
 
-        List<Project> projects = projectService.findProjectsByTitleContainingIgnoreCase(title);
+        ProjectPagingResponseDTO projects =
+                projectService.findProjectsByTitleContainingIgnoreCaseWithPaging(page, title);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "특정 기간 내의 프로젝트 의뢰 목록 조회", description = "시작날짜 또는 끝 날짜를 포함하는 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 특정 기간 내의 프로젝트 의뢰 목록 조회", description = "Pagination으로 시작날짜 또는 끝 날짜를 포함하는 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/date-range")
-    public ResponseEntity<List<Project>> getProjectsBetweenDates(
-            @RequestParam LocalDateTime startDateTime, @RequestParam LocalDateTime endDateTime) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsBetweenDates(
+            @RequestParam int page,
+            @RequestParam LocalDateTime startDateTime,
+            @RequestParam LocalDateTime endDateTime) {
 
-        List<Project> projects = projectService.findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
-                        startDateTime, endDateTime);
+        ProjectPagingResponseDTO projects =
+                projectService.findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqualWithPaging(
+                        page, startDateTime, endDateTime);
         return ResponseEntity.ok(projects);
     }
 
-    @Operation(summary = "원하는 직군별 프로젝트 의뢰 목록 조회", description = "원하는 직군 숫자보다 많이 모집하는 모든 프로젝트 의뢰를 조회합니다.")
+    @Operation(summary = "Pagination으로 원하는 직군별 프로젝트 의뢰 목록 조회", description = "Pagination으로 원하는 직군 숫자보다 많이 모집하는 모든 프로젝트 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰 목록이 성공적으로 조회됨")
     })
     @GetMapping("/required")
-    public ResponseEntity<List<Project>> getProjectsByTitleContainingIgnoreCase(
-            @RequestParam int requiredClient, @RequestParam int requiredServer, @RequestParam int requiredDesign,
-            @RequestParam int requiredPlanner, @RequestParam int requiredAIEngineer) {
+    public ResponseEntity<ProjectPagingResponseDTO> getProjectsByTitleContainingIgnoreCase(
+            @RequestParam int page, @RequestParam int requiredClient, @RequestParam int requiredServer,
+            @RequestParam int requiredDesign, @RequestParam int requiredPlanner, @RequestParam int requiredAIEngineer) {
 
-        List<Project> projects = projectService.findProjectsWithLargerRequirements(
-                requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
+        ProjectPagingResponseDTO projects = projectService.findProjectsWithLargerRequirementsWithPaging(
+                page, requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
         );
         return ResponseEntity.ok(projects);
     }

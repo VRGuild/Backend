@@ -1,21 +1,28 @@
 package com.mtvs.devlinkbackend.project.service;
 
+import com.mtvs.devlinkbackend.project.dto.ProjectPagingResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
 import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
 import com.mtvs.devlinkbackend.project.dto.ProjectVectorRegistRequestDTO;
 import com.mtvs.devlinkbackend.project.entity.Project;
 import com.mtvs.devlinkbackend.project.repository.ProjectRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ProjectService {
+
+    private static final int pageSize = 15;
+
     private final ProjectRepository projectRepository;
 
     public ProjectService(ProjectRepository projectRepository) {
@@ -47,37 +54,55 @@ public class ProjectService {
         return projectRepository.findById(projectId).orElse(null);
     }
 
-    public List<Project> findProjectsByAccountId(String accountId) {
-        return projectRepository.findProjectsByAccountId(accountId);
+    public ProjectPagingResponseDTO findProjectsByAccountIdWithPaging(int page, String accountId) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsByAccountId(accountId, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsByWorkScope(String workScope) {
-        return projectRepository.findProjectsByWorkScope(workScope);
+    public ProjectPagingResponseDTO findProjectsByWorkScopeWithPaging(int page, String workScope) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsByWorkScope(workScope, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsByWorkType(String workType) {
-        return projectRepository.findProjectsByWorkType(workType);
+    public ProjectPagingResponseDTO findProjectsByWorkTypeWithPaging(int page, String workType) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsByWorkType(workType, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsByProgressClassification(String progressClassification) {
-        return projectRepository.findProjectsByProgressClassification(progressClassification);
+    public ProjectPagingResponseDTO findProjectsByProgressClassificationWithPaging(
+            int page,String progressClassification) {
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsByProgressClassification(progressClassification, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsByTitleContainingIgnoreCase(String title) {
-        return projectRepository.findProjectsByTitleContainingIgnoreCase(title);
+    public ProjectPagingResponseDTO findProjectsByTitleContainingIgnoreCaseWithPaging(int page, String title) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsByTitleContainingIgnoreCase(title, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
-            LocalDateTime starDateTime, LocalDateTime endDateTime) {
-        return projectRepository.findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(starDateTime, endDateTime);
+    public ProjectPagingResponseDTO findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqualWithPaging(
+            int page, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.
+                findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(starDateTime, endDateTime, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
-    public List<Project> findProjectsWithLargerRequirements(
-            Integer requiredClient, Integer requiredServer, Integer requiredDesign,
-            Integer requiredPlanner, Integer requiredAIEngineer) {
+    public ProjectPagingResponseDTO findProjectsWithLargerRequirementsWithPaging(
+            int page, Integer requiredClient, Integer requiredServer,
+            Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer) {
 
-        return projectRepository.findProjectsWithLargerRequirements(
-                requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Project> projectPage = projectRepository.findProjectsWithLargerRequirements(
+                requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer, pageable);
+        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
     public Map<String, Integer> findProjectVectorByProjectId(Long projectId) {
