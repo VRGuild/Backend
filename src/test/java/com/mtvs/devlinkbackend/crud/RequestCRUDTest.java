@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,69 @@ public class RequestCRUDTest {
 
     private static Stream<Arguments> newRequest() {
         return Stream.of(
-                Arguments.of(new RequestRegistRequestDTO("의뢰0", "내용0", LocalDateTime.now(), LocalDateTime.now()), "계정0"),
-                Arguments.of(new RequestRegistRequestDTO("의뢰00", "내용00", LocalDateTime.now(), LocalDateTime.now()), "계정00")
+                Arguments.of(new RequestRegistRequestDTO(
+                        "업무범위0",
+                        "근무형태0",
+                        "진행분류0",
+                        "회사이름0",
+                        "의뢰0",
+                        "내용0",
+                        3,
+                        3,
+                        3,
+                        3,
+                        3,
+                        LocalDateTime.now(),
+                        LocalDateTime.now()), "계정0"),
+                Arguments.of(new RequestRegistRequestDTO(
+                        "업무범위1",
+                        "근무형태1",
+                        "진행분류1",
+                        "회사이름1",
+                        "의뢰1",
+                        "내용1",
+                        2,
+                        3,
+                        1,
+                        1,
+                        3,
+                        LocalDateTime.now(),
+                        LocalDateTime.now()), "계정00")
         );
     }
 
     private static Stream<Arguments> modifiedRequest() {
         return Stream.of(
-                Arguments.of(new RequestUpdateRequestDTO(1L,"의뢰0", "내용0",  LocalDateTime.now(), LocalDateTime.now()), "계정1"),
-                Arguments.of(new RequestUpdateRequestDTO(2L,"의뢰00" , "내용00",  LocalDateTime.now(), LocalDateTime.now()), "계정1")
+                Arguments.of(new RequestUpdateRequestDTO(
+                        1L,
+                        "업무범위0",
+                        "근무형태0",
+                        "진행분류0",
+                        "회사이름0",
+                        "의뢰0",
+                        "내용0",
+                        2,
+                        3,
+                        1,
+                        1,
+                        3,
+                        LocalDateTime.now(),
+                        LocalDateTime.now()), "계정1"),
+                Arguments.of(new RequestUpdateRequestDTO(
+                        2L,
+                        "업무범위1",
+                        "근무형태1",
+                        "진행분류1",
+                        "회사이름1",
+                        "의뢰1",
+                        "내용1",
+                        2,
+                        3,
+                        1,
+                        1,
+                        3,
+                        LocalDateTime.now(),
+                        LocalDateTime.now()), "계정1")
         );
     }
 
@@ -79,5 +134,55 @@ public class RequestCRUDTest {
     public void testDeleteRequest(long requestId) {
         Assertions.assertDoesNotThrow(() ->
                 requestService.deleteRequest(requestId));
+    }
+
+    @DisplayName("업무 범위에 따른 의뢰 조회 테스트")
+    @ValueSource( strings = {"업무범위1", "업무범위2"})
+    @ParameterizedTest
+    @Order(2)
+    public void testFindRequestsByWorkScope(String workScope) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println("Request = " + requestService.findRequestsByWorkScope(workScope)));
+    }
+
+    @DisplayName("근무 형태에 따른 의뢰 조회 테스트")
+    @ValueSource( strings = {"근무형태1", "근무형태2"})
+    @ParameterizedTest
+    @Order(2)
+    public void testFindRequestsByWorkType(String workType) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println("Request = " + requestService.findRequestsByWorkType(workType)));
+    }
+
+    @DisplayName("진행 분류에 따른 의뢰 조회 테스트")
+    @ValueSource( strings = {"진행분류1", "진행분류2"})
+    @ParameterizedTest
+    @Order(2)
+    public void testFindRequestsByProgressClassification(String progressClassification) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println("Request = " + requestService.
+                        findRequestsByProgressClassification(progressClassification)));
+    }
+
+    @DisplayName("프로젝트 주제(제목)에 따른 의뢰 조회 테스트")
+    @ValueSource( strings = {"제목1", "제목2"})
+    @ParameterizedTest
+    @Order(2)
+    public void testFindRequestsByTitleContainingIgnoreCase(String title) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println("Request = " + requestService.findRequestsByTitleContainingIgnoreCase(title)));
+    }
+
+    @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
+    @CsvSource({"2,2,3,1,3", "3,2,1,1,3"})
+    @ParameterizedTest
+    @Order(2)
+    public void testFindRequestsWithLargerRequirements(Integer requiredClient, Integer requiredServer,
+                                                       Integer requiredDesign, Integer requiredPlanner,
+                                                       Integer requiredAIEngineer) {
+        Assertions.assertDoesNotThrow(() ->
+                System.out.println("Request = " + requestService.findRequestsWithLargerRequirements(
+                        requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
+                )));
     }
 }
