@@ -13,7 +13,7 @@ import static org.springframework.http.HttpHeaders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CorsRequestTest {
+public class CorsProjectTest {
     @Autowired
     private MockMvc mockMvc;
 
