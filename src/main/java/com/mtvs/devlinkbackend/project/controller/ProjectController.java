@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.controller;
 
+import com.mtvs.devlinkbackend.project.dto.ProjectVectorRegistRequestDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
 import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
@@ -142,6 +144,19 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+    @Operation(summary = "PK로 프로젝트 의뢰의 Vector 정보 조회", description = "PK에 맞는 프로젝트가 가진 Vector 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Vector 정보가 성공적으로 조회됨")
+    })
+    @GetMapping("/{projectId}/vector")
+    public ResponseEntity<Map<String, Integer>> getProjectVectorByProjectId(
+            @PathVariable(name = "projectId") Long projectId) {
+
+        Map<String, Integer> foundProjectVector = projectService.findProjectVectorByProjectId(projectId);
+        return ResponseEntity.ok(foundProjectVector);
+    }
+
+
     @Operation(summary = "프로젝트 의뢰 업데이트", description = "기존 프로젝트 의뢰를 업데이트합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 의뢰가 성공적으로 업데이트됨"),
@@ -155,6 +170,23 @@ public class ProjectController {
         try {
             String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
             Project updatedProject = projectService.updateProject(requestDTO, accountId);
+            return ResponseEntity.ok(updatedProject);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @Operation(summary = "프로젝트 의뢰 업데이트", description = "기존 프로젝트 의뢰를 업데이트합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로젝트 의뢰가 성공적으로 업데이트됨"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 또는 권한 없음")
+    })
+    @PatchMapping("/vector")
+    public ResponseEntity<Project> updateProject(
+            @RequestBody ProjectVectorRegistRequestDTO projectVectorRegistRequestDTO) {
+
+        try {
+            Project updatedProject = projectService.updateProjectVector(projectVectorRegistRequestDTO);
             return ResponseEntity.ok(updatedProject);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

@@ -3,6 +3,7 @@ package com.mtvs.devlinkbackend.oauth2.entity;
 import com.mtvs.devlinkbackend.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 @Entity(name = "UserPartner")
 @DiscriminatorValue("UserPartner") // purpose 값으로 지정
 @Getter @Setter
+@NoArgsConstructor
 public class UserPartner extends User {
     @Column(name = "NICKNAME")
     private String nickname;
@@ -33,7 +35,7 @@ public class UserPartner extends User {
     private String experience;
 
     @ElementCollection
-    @CollectionTable(name = "SKILL", joinColumns = @JoinColumn(name = "SKILL_ID"))
+    @CollectionTable(name = "SKILL", joinColumns = @JoinColumn(name = "USER_ID"))
     @MapKeyColumn(name = "SKILL_NAME")
     @Column(name = "SKILL_PROFICIENCY")
     private Map<String, Integer> skillSet;

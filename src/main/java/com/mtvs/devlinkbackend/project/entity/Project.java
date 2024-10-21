@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Table(name = "PROJECT")
 @Entity(name = "Project")
@@ -76,6 +77,12 @@ public class Project {
     @UpdateTimestamp
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
+
+    @ElementCollection
+    @CollectionTable(name = "PROJECT_VECTOR", joinColumns = @JoinColumn(name = "PROJECT_ID"))
+    @MapKeyColumn(name = "AXIS")
+    @Column(name = "VALUE")
+    private Map<String, Integer> projectVector;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -157,5 +164,9 @@ public class Project {
 
     public void setEndDateTime(LocalDateTime endDateTime) {
         this.endDateTime = endDateTime;
+    }
+
+    public void setProjectVector(Map<String, Integer> projectVector) {
+        this.projectVector = projectVector;
     }
 }
