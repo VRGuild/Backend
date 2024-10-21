@@ -37,6 +37,7 @@ public class UserCharacterService {
         return userCharacter;
     }
 
+    @Transactional
     public void deleteCharacterByAccountId(String accountId) {
         userCharacterRepository.deleteByAccountId(accountId);
     }
