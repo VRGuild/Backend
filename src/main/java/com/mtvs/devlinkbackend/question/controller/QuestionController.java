@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.question.controller;
 
+import com.mtvs.devlinkbackend.question.dto.QuestionPagingResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
 import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
@@ -78,9 +79,9 @@ public class QuestionController {
             @ApiResponse(responseCode = "400", description = "잘못된 헤더 또는 파라미터 전달"),
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
-    public ResponseEntity<List<Question>> getAllQuestionsWithPaging(@RequestParam int page) {
-        List<Question> questions = questionService.findAllQuestionsWithPaging(page);
-        return ResponseEntity.ok(questions);
+    public ResponseEntity<QuestionPagingResponseDTO> getAllQuestionsWithPaging(@RequestParam int page) {
+        QuestionPagingResponseDTO questionPagingResponseDTO = questionService.findAllQuestionsWithPaging(page);
+        return ResponseEntity.ok(questionPagingResponseDTO);
     }
 
     // Retrieve questions by account ID with pagination
@@ -94,13 +95,13 @@ public class QuestionController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @GetMapping("/account")
-    public ResponseEntity<List<Question>> getQuestionsByAccountIdWithPaging(
+    public ResponseEntity<QuestionPagingResponseDTO> getQuestionsByAccountIdWithPaging(
             @RequestParam int page,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Question> questions = questionService.findQuestionsByAccountIdWithPaging(page, accountId);
-        return ResponseEntity.ok(questions);
+    QuestionPagingResponseDTO questionPagingResponseDTO = questionService.findQuestionsByAccountIdWithPaging(page, accountId);
+        return ResponseEntity.ok(questionPagingResponseDTO);
     }
 
     // Update a question by ID

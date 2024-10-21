@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.question.service;
 
+import com.mtvs.devlinkbackend.question.dto.QuestionPagingResponseDTO;
 import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
 import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.entity.Question;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
-    private static int pageSize = 20;
+    private static final int pageSize = 15;
 
     public QuestionService(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
@@ -41,17 +42,17 @@ public class QuestionService {
     }
 
     // findAll with pagination
-    public List<Question> findAllQuestionsWithPaging(int page) {
+    public QuestionPagingResponseDTO findAllQuestionsWithPaging(int page) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         Page<Question> questionPage = questionRepository.findAll(pageable);
-        return questionPage.getContent(); // Returns the list of questions
+        return new QuestionPagingResponseDTO(questionPage.getContent(), questionPage.getTotalPages()); // Returns the list of questions
     }
 
     // findQuestionsByAccountId with pagination
-    public List<Question> findQuestionsByAccountIdWithPaging(int page, String accountId) {
+    public QuestionPagingResponseDTO findQuestionsByAccountIdWithPaging(int page, String accountId) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         Page<Question> questionPage = questionRepository.findQuestionsByAccountId(accountId, pageable);
-        return questionPage.getContent(); // Returns the list of questions for the given accountId
+        return new QuestionPagingResponseDTO(questionPage.getContent(), questionPage.getTotalPages()); // Returns the list of questions for the given accountId
     }
 
     public List<Question> findAllQuestions() {
