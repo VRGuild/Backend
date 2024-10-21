@@ -70,7 +70,51 @@ public class RequestController {
         return ResponseEntity.ok(requests);
     }
 
-    @Operation(summary = "특정 기간 내의 의뢰 목록 조회", description = "시작과 끝 날짜 사이의 모든 의뢰를 조회합니다.")
+    @Operation(summary = "업무 범위별 의뢰 목록 조회", description = "특정 업무 범위에 대한 모든 의뢰를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
+    })
+    @GetMapping("/work-scope")
+    public ResponseEntity<List<Request>> getRequestsByWorkScope(@RequestParam String workScope) {
+
+        List<Request> requests = requestService.findRequestsByWorkScope(workScope);
+        return ResponseEntity.ok(requests);
+    }
+
+    @Operation(summary = "근무 형태별 의뢰 목록 조회", description = "근무 형태 범위에 대한 모든 의뢰를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
+    })
+    @GetMapping("/work-type")
+    public ResponseEntity<List<Request>> getRequestsByWorkType(@RequestParam String workType) {
+
+        List<Request> requests = requestService.findRequestsByWorkType(workType);
+        return ResponseEntity.ok(requests);
+    }
+
+    @Operation(summary = "진행 분류별 의뢰 목록 조회", description = "진행 분류 범위에 대한 모든 의뢰를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
+    })
+    @GetMapping("/progress-classfication")
+    public ResponseEntity<List<Request>> getRequestsByProgressClassification(@RequestParam String progressClassification) {
+
+        List<Request> requests = requestService.findRequestsByProgressClassification(progressClassification);
+        return ResponseEntity.ok(requests);
+    }
+
+    @Operation(summary = "프로젝트 주제(제목)별 의뢰 목록 조회", description = "프로젝트 주제(제목) 범위에 대한 모든 의뢰를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
+    })
+    @GetMapping("/title")
+    public ResponseEntity<List<Request>> getRequestsByTitleContainingIgnoreCase(@RequestParam String title) {
+
+        List<Request> requests = requestService.findRequestsByTitleContainingIgnoreCase(title);
+        return ResponseEntity.ok(requests);
+    }
+
+    @Operation(summary = "특정 기간 내의 의뢰 목록 조회", description = "시작날짜 또는 끝 날짜를 포함하는 모든 의뢰를 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
     })
@@ -78,8 +122,23 @@ public class RequestController {
     public ResponseEntity<List<Request>> getRequestsBetweenDates(
             @RequestParam LocalDateTime startDateTime, @RequestParam LocalDateTime endDateTime) {
 
-        List<Request> requests =
-                requestService.findAllRequestsBetweenStarDateTimeAndEndDateTime(startDateTime, endDateTime);
+        List<Request> requests = requestService.findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
+                        startDateTime, endDateTime);
+        return ResponseEntity.ok(requests);
+    }
+
+    @Operation(summary = "원하는 직군별 의뢰 목록 조회", description = "원하는 직군 숫자보다 많이 모집하는 모든 의뢰를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "의뢰 목록이 성공적으로 조회됨")
+    })
+    @GetMapping("/required")
+    public ResponseEntity<List<Request>> getRequestsByTitleContainingIgnoreCase(
+            @RequestParam int requiredClient, @RequestParam int requiredServer, @RequestParam int requiredDesign,
+            @RequestParam int requiredPlanner, @RequestParam int requiredAIEngineer) {
+
+        List<Request> requests = requestService.findRequestsWithLargerRequirements(
+                requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
+        );
         return ResponseEntity.ok(requests);
     }
 
