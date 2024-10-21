@@ -68,7 +68,7 @@ public class CommentCRUDTest {
     @Order(3)
     public void testFindCommentsByRequestId(long requestId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Comment = " + commentService.findCommentsByRequestId(requestId)));
+                System.out.println("Comment = " + commentService.findCommentsByProjectId(requestId)));
     }
 
     @DisplayName("코멘트 수정 테스트")

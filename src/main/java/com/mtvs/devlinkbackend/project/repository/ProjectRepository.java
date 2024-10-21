@@ -1,6 +1,6 @@
-package com.mtvs.devlinkbackend.request.repository;
+package com.mtvs.devlinkbackend.project.repository;
 
-import com.mtvs.devlinkbackend.request.entity.Request;
+import com.mtvs.devlinkbackend.project.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface RequestRepository extends JpaRepository<Request, Long> {
-    List<Request> findRequestsByAccountId(String accountId);
+public interface ProjectRepository extends JpaRepository<Project, Long> {
+    List<Project> findProjectsByAccountId(String accountId);
 
-    List<Request> findRequestsByWorkScope(String workScope);
+    List<Project> findProjectsByWorkScope(String workScope);
 
-    List<Request> findRequestsByWorkType(String workType);
+    List<Project> findProjectsByWorkType(String workType);
 
-    List<Request> findRequestsByProgressClassification(String progressClassification);
+    List<Project> findProjectsByProgressClassification(String progressClassification);
 
-    List<Request> findRequestsByTitleContainingIgnoreCase(String title);
+    List<Project> findProjectsByTitleContainingIgnoreCase(String title);
 
-    List<Request> findRequestsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
+    List<Project> findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     // required 값들이 넘겨준 값보다 큰 row를 조회하는 쿼리
     @Query("SELECT r FROM Request r WHERE " +
@@ -30,7 +30,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "(:requiredDesign IS NULL OR r.requiredDesign > :requiredDesign) AND " +
             "(:requiredPlanner IS NULL OR r.requiredPlanner > :requiredPlanner) AND " +
             "(:requiredAIEngineer IS NULL OR r.requiredAIEngineer > :requiredAIEngineer)")
-    List<Request> findRequestsWithLargerRequirements(
+    List<Project> findProjectsWithLargerRequirements(
             @Param("requiredClient") Integer requiredClient,
             @Param("requiredServer") Integer requiredServer,
             @Param("requiredDesign") Integer requiredDesign,

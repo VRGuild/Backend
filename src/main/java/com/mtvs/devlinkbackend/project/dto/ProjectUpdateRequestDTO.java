@@ -1,20 +1,16 @@
-package com.mtvs.devlinkbackend.request.dto;
+package com.mtvs.devlinkbackend.project.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RequestRegistRequestDTO {
+public class ProjectUpdateRequestDTO {
+    private Long requestId;
     private String workScope;
     private String workType;
     private String progressClassification;

@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.request.entity;
+package com.mtvs.devlinkbackend.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mtvs.devlinkbackend.comment.entity.Comment;
@@ -18,11 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Getter
-public class Request {
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REQUEST_ID")
-    private Long requestId;
+    @Column(name = "PROJECT_ID")
+    private Long projectId;
 
     @Column(name = "WORK_SCOPE")
     private String workScope;
@@ -77,11 +77,11 @@ public class Request {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
-    public Request(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String accountId) {
+    public Project(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String accountId) {
         this.title = title;
         this.content = content;
         this.startDateTime = startDateTime;
@@ -89,7 +89,7 @@ public class Request {
         this.accountId = accountId;
     }
 
-    public Request(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer estimatedCost, String accountId) {
+    public Project(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer estimatedCost, String accountId) {
         this.workScope = workScope;
         this.workType = workType;
         this.progressClassification = progressClassification;

@@ -55,7 +55,7 @@ public class CommentController {
     @ApiResponse(responseCode = "200", description = "댓글 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/request/{requestId}")
     public ResponseEntity<List<Comment>> findCommentsByRequestId(@PathVariable Long requestId) {
-        List<Comment> comments = commentService.findCommentsByRequestId(requestId);
+        List<Comment> comments = commentService.findCommentsByProjectId(requestId);
         return ResponseEntity.ok(comments);
     }
 

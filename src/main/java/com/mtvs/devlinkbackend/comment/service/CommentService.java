@@ -4,8 +4,8 @@ import com.mtvs.devlinkbackend.comment.dto.CommentRegistRequestDTO;
 import com.mtvs.devlinkbackend.comment.dto.CommentUpdateRequestDTO;
 import com.mtvs.devlinkbackend.comment.entity.Comment;
 import com.mtvs.devlinkbackend.comment.repository.CommentRepository;
-import com.mtvs.devlinkbackend.request.entity.Request;
-import com.mtvs.devlinkbackend.request.repository.RequestRepository;
+import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +15,20 @@ import java.util.Optional;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final RequestRepository requestRepository;
+    private final ProjectRepository projectRepository;
 
-    public CommentService(CommentRepository commentRepository, RequestRepository requestRepository) {
+    public CommentService(CommentRepository commentRepository, ProjectRepository projectRepository) {
         this.commentRepository = commentRepository;
-        this.requestRepository = requestRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Transactional
     public Comment registComment(CommentRegistRequestDTO commentRegistRequestDTO, String accountId) {
-        Request request = requestRepository.findById(commentRegistRequestDTO.getRequestId()).orElse(null);
+        Project project = projectRepository.findById(commentRegistRequestDTO.getRequestId()).orElse(null);
         return commentRepository.save(new Comment(
                 commentRegistRequestDTO.getContent(),
                 accountId,
-                request
+                project
         ));
     }
 
@@ -36,8 +36,8 @@ public class CommentService {
         return commentRepository.findById(commentId).orElse(null);
     }
 
-    public List<Comment> findCommentsByRequestId(Long requestId) {
-        return commentRepository.findCommentsByRequest_RequestId(requestId);
+    public List<Comment> findCommentsByProjectId(Long requestId) {
+        return commentRepository.findCommentsByProject_ProjectId(requestId);
     }
 
     public List<Comment> findCommentsByAccountId(String accountId) {

@@ -1,8 +1,8 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.request.dto.RequestRegistRequestDTO;
-import com.mtvs.devlinkbackend.request.dto.RequestUpdateRequestDTO;
-import com.mtvs.devlinkbackend.request.service.RequestService;
+import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
+import com.mtvs.devlinkbackend.project.service.ProjectService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -20,13 +20,13 @@ import java.util.stream.Stream;
 
 @SpringBootTest
 @Transactional
-public class RequestCRUDTest {
+public class ProjectCRUDTest {
     @Autowired
-    private RequestService requestService;
+    private ProjectService projectService;
 
     private static Stream<Arguments> newRequest() {
         return Stream.of(
-                Arguments.of(new RequestRegistRequestDTO(
+                Arguments.of(new ProjectRegistRequestDTO(
                         "업무범위0",
                         "근무형태0",
                         "진행분류0",
@@ -41,7 +41,7 @@ public class RequestCRUDTest {
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         1000000), "계정0"),
-                Arguments.of(new RequestRegistRequestDTO(
+                Arguments.of(new ProjectRegistRequestDTO(
                         "업무범위1",
                         "근무형태1",
                         "진행분류1",
@@ -61,7 +61,7 @@ public class RequestCRUDTest {
 
     private static Stream<Arguments> modifiedRequest() {
         return Stream.of(
-                Arguments.of(new RequestUpdateRequestDTO(
+                Arguments.of(new ProjectUpdateRequestDTO(
                         1L,
                         "업무범위0",
                         "근무형태0",
@@ -77,7 +77,7 @@ public class RequestCRUDTest {
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         1000000), "계정1"),
-                Arguments.of(new RequestUpdateRequestDTO(
+                Arguments.of(new ProjectUpdateRequestDTO(
                         2L,
                         "업무범위1",
                         "근무형태1",
@@ -100,8 +100,8 @@ public class RequestCRUDTest {
     @ParameterizedTest
     @MethodSource("newRequest")
     @Order(0)
-    public void testCreateRequest(RequestRegistRequestDTO requestRegistRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> requestService.registRequest(requestRegistRequestDTO, accountId));
+    public void testCreateRequest(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() -> projectService.registProject(projectRegistRequestDTO, accountId));
     }
 
     @DisplayName("PK로 의뢰 조회 테스트")
@@ -110,7 +110,7 @@ public class RequestCRUDTest {
     @Order(1)
     public void testFindRequestByRequestId(long questionId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestByRequestId(questionId)));
+                System.out.println("Request = " + projectService.findProjectByRequestId(questionId)));
     }
 
     @DisplayName("계정 ID에 따른 의뢰 paging 조회 테스트")
@@ -119,16 +119,16 @@ public class RequestCRUDTest {
     @Order(2)
     public void testFindRequestsByAccountId(String accountId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestsByAccountId(accountId)));
+                System.out.println("Request = " + projectService.findProjectsByAccountId(accountId)));
     }
 
     @DisplayName("의뢰 수정 테스트")
     @MethodSource("modifiedRequest")
     @ParameterizedTest
     @Order(3)
-    public void testUpdateRequest(RequestUpdateRequestDTO RequestUpdateRequestDTO, String accountId) {
+    public void testUpdateRequest(ProjectUpdateRequestDTO ProjectUpdateRequestDTO, String accountId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println(requestService.updateRequest(RequestUpdateRequestDTO, accountId)));
+                System.out.println(projectService.updateProject(ProjectUpdateRequestDTO, accountId)));
     }
 
     @DisplayName("의뢰 삭제 테스트")
@@ -137,7 +137,7 @@ public class RequestCRUDTest {
     @Order(4)
     public void testDeleteRequest(long requestId) {
         Assertions.assertDoesNotThrow(() ->
-                requestService.deleteRequest(requestId));
+                projectService.deleteProject(requestId));
     }
 
     @DisplayName("업무 범위에 따른 의뢰 조회 테스트")
@@ -146,7 +146,7 @@ public class RequestCRUDTest {
     @Order(2)
     public void testFindRequestsByWorkScope(String workScope) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestsByWorkScope(workScope)));
+                System.out.println("Request = " + projectService.findProjectsByWorkScope(workScope)));
     }
 
     @DisplayName("근무 형태에 따른 의뢰 조회 테스트")
@@ -155,7 +155,7 @@ public class RequestCRUDTest {
     @Order(2)
     public void testFindRequestsByWorkType(String workType) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestsByWorkType(workType)));
+                System.out.println("Request = " + projectService.findProjectsByWorkType(workType)));
     }
 
     @DisplayName("진행 분류에 따른 의뢰 조회 테스트")
@@ -164,8 +164,8 @@ public class RequestCRUDTest {
     @Order(2)
     public void testFindRequestsByProgressClassification(String progressClassification) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.
-                        findRequestsByProgressClassification(progressClassification)));
+                System.out.println("Request = " + projectService.
+                        findProjectsByProgressClassification(progressClassification)));
     }
 
     @DisplayName("프로젝트 주제(제목)에 따른 의뢰 조회 테스트")
@@ -174,7 +174,7 @@ public class RequestCRUDTest {
     @Order(2)
     public void testFindRequestsByTitleContainingIgnoreCase(String title) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestsByTitleContainingIgnoreCase(title)));
+                System.out.println("Request = " + projectService.findRequestsByTitleContainingIgnoreCase(title)));
     }
 
     @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
@@ -185,7 +185,7 @@ public class RequestCRUDTest {
                                                        Integer requiredDesign, Integer requiredPlanner,
                                                        Integer requiredAIEngineer) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + requestService.findRequestsWithLargerRequirements(
+                System.out.println("Request = " + projectService.findProjectsWithLargerRequirements(
                         requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
                 )));
     }
