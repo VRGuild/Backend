@@ -4,6 +4,7 @@ import com.mtvs.devlinkbackend.support.dto.SupportRegistRequestDTO;
 import com.mtvs.devlinkbackend.support.entity.Support;
 import com.mtvs.devlinkbackend.support.repository.SupportRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class SupportService {
         this.supportRepository = supportRepository;
     }
 
+    @Transactional
     public Support createSupport(SupportRegistRequestDTO supportRegistRequestDTO) {
         return supportRepository.save(new Support(
                 supportRegistRequestDTO.getProjectId(),

@@ -3,11 +3,13 @@ package com.mtvs.devlinkbackend.support.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Table(name = "SUPPORT")
 @Entity(name = "Support")
 @NoArgsConstructor
 @Getter
+@ToString
 public class Support {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
