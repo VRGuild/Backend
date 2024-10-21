@@ -174,7 +174,7 @@ public class ProjectCRUDTest {
     @Order(2)
     public void testFindRequestsByTitleContainingIgnoreCase(String title) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findRequestsByTitleContainingIgnoreCase(title)));
+                System.out.println("Request = " + projectService.findProjectsByTitleContainingIgnoreCase(title)));
     }
 
     @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
