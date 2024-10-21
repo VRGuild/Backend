@@ -24,12 +24,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     // required 값들이 넘겨준 값보다 큰 row를 조회하는 쿼리
-    @Query("SELECT r FROM Request r WHERE " +
-            "(:requiredClient IS NULL OR r.requiredClient > :requiredClient) AND " +
-            "(:requiredServer IS NULL OR r.requiredServer > :requiredServer) AND " +
-            "(:requiredDesign IS NULL OR r.requiredDesign > :requiredDesign) AND " +
-            "(:requiredPlanner IS NULL OR r.requiredPlanner > :requiredPlanner) AND " +
-            "(:requiredAIEngineer IS NULL OR r.requiredAIEngineer > :requiredAIEngineer)")
+    @Query("SELECT p FROM Project p WHERE " +
+            "(:requiredClient IS NULL OR p.requiredClient > :requiredClient) AND " +
+            "(:requiredServer IS NULL OR p.requiredServer > :requiredServer) AND " +
+            "(:requiredDesign IS NULL OR p.requiredDesign > :requiredDesign) AND " +
+            "(:requiredPlanner IS NULL OR p.requiredPlanner > :requiredPlanner) AND " +
+            "(:requiredAIEngineer IS NULL OR p.requiredAIEngineer > :requiredAIEngineer)")
     List<Project> findProjectsWithLargerRequirements(
             @Param("requiredClient") Integer requiredClient,
             @Param("requiredServer") Integer requiredServer,
