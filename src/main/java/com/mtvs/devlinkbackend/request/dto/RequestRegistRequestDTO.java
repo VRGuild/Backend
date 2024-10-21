@@ -28,4 +28,5 @@ public class RequestRegistRequestDTO {
     private Integer requiredAIEngineer;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    private Integer estimatedCost;
 }

@@ -39,7 +39,8 @@ public class RequestCRUDTest {
                         3,
                         3,
                         LocalDateTime.now(),
-                        LocalDateTime.now()), "계정0"),
+                        LocalDateTime.now(),
+                        1000000), "계정0"),
                 Arguments.of(new RequestRegistRequestDTO(
                         "업무범위1",
                         "근무형태1",
@@ -53,7 +54,8 @@ public class RequestCRUDTest {
                         1,
                         3,
                         LocalDateTime.now(),
-                        LocalDateTime.now()), "계정00")
+                        LocalDateTime.now(),
+                        1000000), "계정00")
         );
     }
 
@@ -73,7 +75,8 @@ public class RequestCRUDTest {
                         1,
                         3,
                         LocalDateTime.now(),
-                        LocalDateTime.now()), "계정1"),
+                        LocalDateTime.now(),
+                        1000000), "계정1"),
                 Arguments.of(new RequestUpdateRequestDTO(
                         2L,
                         "업무범위1",
@@ -88,7 +91,8 @@ public class RequestCRUDTest {
                         1,
                         3,
                         LocalDateTime.now(),
-                        LocalDateTime.now()), "계정1")
+                        LocalDateTime.now(),
+                        1000000), "계정1")
         );
     }
 

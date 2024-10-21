@@ -63,6 +63,9 @@ public class Request {
     @Column(name = "END_DATETIME")
     private LocalDateTime endDateTime;
 
+    @Column(name = "ESTIMATED_COST")
+    private Integer estimatedCost;
+
     @Column(name = "ACCOUNT_ID", nullable = false)
     private String accountId;
 
@@ -86,7 +89,7 @@ public class Request {
         this.accountId = accountId;
     }
 
-    public Request(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDateTime startDateTime, LocalDateTime endDateTime, String accountId) {
+    public Request(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer estimatedCost, String accountId) {
         this.workScope = workScope;
         this.workType = workType;
         this.progressClassification = progressClassification;
@@ -100,6 +103,7 @@ public class Request {
         this.requiredAIEngineer = requiredAIEngineer;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        this.estimatedCost = estimatedCost;
         this.accountId = accountId;
     }
 
@@ -133,6 +137,10 @@ public class Request {
 
     public void setRequiredAIEngineer(Integer requiredAIEngineer) {
         this.requiredAIEngineer = requiredAIEngineer;
+    }
+
+    public void setEstimatedCost(Integer estimatedCost) {
+        this.estimatedCost = estimatedCost;
     }
 
     public void setTitle(String title) {

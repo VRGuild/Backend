@@ -35,6 +35,7 @@ public class RequestService {
                 requestRegistRequestDTO.getRequiredAIEngineer(),
                 requestRegistRequestDTO.getStartDateTime(),
                 requestRegistRequestDTO.getEndDateTime(),
+                requestRegistRequestDTO.getEstimatedCost(),
                 accountId
         ));
     }
@@ -94,6 +95,7 @@ public class RequestService {
                 foundRequest.setRequiredAIEngineer(requestUpdateRequestDTO.getRequiredAIEngineer());
                 foundRequest.setStartDateTime(requestUpdateRequestDTO.getStartDateTime());
                 foundRequest.setEndDateTime(requestUpdateRequestDTO.getEndDateTime());
+                foundRequest.setEstimatedCost(requestUpdateRequestDTO.getEstimatedCost());
                 return foundRequest;
             }
             else throw new IllegalArgumentException("잘못된 accountId로 Request ID : "
