@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.channel.dto;
+package com.mtvs.devlinkbackend.channel.dto.request;
 
 import com.mtvs.devlinkbackend.channel.entity.PositionType;
 import lombok.*;
@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Data
-public class ChannelUpdateRequestDTO {
-    private String channelId;
+public class ChannelRegistRequestDTO {
     private List<PositionType> positionTypes;
 }

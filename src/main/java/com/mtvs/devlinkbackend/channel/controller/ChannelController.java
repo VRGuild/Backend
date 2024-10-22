@@ -1,14 +1,13 @@
 package com.mtvs.devlinkbackend.channel.controller;
 
-import com.mtvs.devlinkbackend.channel.dto.ChannelRegistRequestDTO;
-import com.mtvs.devlinkbackend.channel.dto.ChannelUpdateRequestDTO;
-import com.mtvs.devlinkbackend.channel.entity.Channel;
+import com.mtvs.devlinkbackend.channel.dto.response.ChannelListResponseDTO;
+import com.mtvs.devlinkbackend.channel.dto.request.ChannelRegistRequestDTO;
+import com.mtvs.devlinkbackend.channel.dto.response.ChannelSingleResponseDTO;
+import com.mtvs.devlinkbackend.channel.dto.request.ChannelUpdateRequestDTO;
 import com.mtvs.devlinkbackend.channel.service.ChannelService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/channel")
@@ -23,40 +22,39 @@ public class ChannelController {
 
     // 새 채널 생성
     @PostMapping
-    public ResponseEntity<Channel> createChannel(
+    public ResponseEntity<ChannelSingleResponseDTO> createChannel(
             @RequestBody ChannelRegistRequestDTO channelRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        Channel savedChannel = channelService.saveChannel(channelRegistRequestDTO, accountId);
+        ChannelSingleResponseDTO savedChannel = channelService.saveChannel(channelRegistRequestDTO, accountId);
         return ResponseEntity.ok(savedChannel);
     }
 
     // 모든 채널 조회
     @GetMapping
-    public ResponseEntity<List<Channel>> getAllChannels() {
-        List<Channel> channels = channelService.findAllChannels();
+    public ResponseEntity<ChannelListResponseDTO> getAllChannels() {
+        ChannelListResponseDTO channels = channelService.findAllChannels();
         return ResponseEntity.ok(channels);
     }
 
     // 특정 채널 조회
     @GetMapping("/{channelId}")
-    public ResponseEntity<Channel> getChannelById(@PathVariable String channelId) {
-        return channelService.findChannelByChannelId(channelId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ChannelSingleResponseDTO> getChannelById(@PathVariable String channelId) {
+        ChannelSingleResponseDTO channel = channelService.findChannelByChannelId(channelId);
+        return channel != null ? ResponseEntity.ok(channel) : ResponseEntity.notFound().build();
     }
 
     // 채널 업데이트
     @PatchMapping
-    public ResponseEntity<Channel> updateChannel(
+    public ResponseEntity<ChannelSingleResponseDTO> updateChannel(
             @RequestBody ChannelUpdateRequestDTO channelUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
-            Channel updatedChannel = channelService.updateChannel(channelUpdateRequestDTO, accountId);
-            return ResponseEntity.ok(updatedChannel);
+            ChannelSingleResponseDTO updatedChannelDTO = channelService.updateChannel(channelUpdateRequestDTO, accountId);
+            return ResponseEntity.ok(updatedChannelDTO);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
