@@ -1,11 +1,11 @@
 package com.mtvs.devlinkbackend.project.controller;
 
-import com.mtvs.devlinkbackend.project.dto.ProjectPagingResponseDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectVectorRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectPagingResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectVectorRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectSingleResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
-import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectUpdateRequestDTO;
 import com.mtvs.devlinkbackend.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,12 +35,13 @@ public class ProjectController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터")
     })
     @PostMapping
-    public ResponseEntity<Project> registerProject(
+    public ResponseEntity<ProjectSingleResponseDTO> registerProject(
             @RequestBody ProjectRegistRequestDTO requestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
+        System.out.println(requestDTO);
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        Project newProject = projectService.registProject(requestDTO, accountId);
+        ProjectSingleResponseDTO newProject = projectService.registProject(requestDTO, accountId);
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
     }
 
@@ -51,8 +51,8 @@ public class ProjectController {
             @ApiResponse(responseCode = "404", description = "프로젝트 의뢰를 찾을 수 없음")
     })
     @GetMapping("/{projectId}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long projectId) {
-        Project project = projectService.findProjectByProjectId(projectId);
+    public ResponseEntity<ProjectSingleResponseDTO> getProjectById(@PathVariable Long projectId) {
+        ProjectSingleResponseDTO project = projectService.findProjectByProjectId(projectId);
         if (project != null) {
             return ResponseEntity.ok(project);
         } else {
@@ -179,13 +179,13 @@ public class ProjectController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 또는 권한 없음")
     })
     @PatchMapping
-    public ResponseEntity<Project> updateProject(
+    public ResponseEntity<ProjectSingleResponseDTO> updateProject(
             @RequestBody ProjectUpdateRequestDTO requestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) {
 
         try {
             String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-            Project updatedProject = projectService.updateProject(requestDTO, accountId);
+            ProjectSingleResponseDTO updatedProject = projectService.updateProject(requestDTO, accountId);
             return ResponseEntity.ok(updatedProject);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -198,11 +198,11 @@ public class ProjectController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 또는 권한 없음")
     })
     @PatchMapping("/vector")
-    public ResponseEntity<Project> updateProject(
+    public ResponseEntity<ProjectSingleResponseDTO> updateProject(
             @RequestBody ProjectVectorRegistRequestDTO projectVectorRegistRequestDTO) {
 
         try {
-            Project updatedProject = projectService.updateProjectVector(projectVectorRegistRequestDTO);
+            ProjectSingleResponseDTO updatedProject = projectService.updateProjectVector(projectVectorRegistRequestDTO);
             return ResponseEntity.ok(updatedProject);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

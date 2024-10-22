@@ -1,9 +1,10 @@
 package com.mtvs.devlinkbackend.project.service;
 
-import com.mtvs.devlinkbackend.project.dto.ProjectPagingResponseDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectVectorRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectPagingResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectUpdateRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectVectorRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectSingleResponseDTO;
 import com.mtvs.devlinkbackend.project.entity.Project;
 import com.mtvs.devlinkbackend.project.repository.ProjectRepository;
 import org.springframework.data.domain.Page;
@@ -30,8 +31,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project registProject(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
-        return projectRepository.save(new Project(
+    public ProjectSingleResponseDTO registProject(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
+        return new ProjectSingleResponseDTO(projectRepository.save(new Project(
                 projectRegistRequestDTO.getWorkScope(),
                 projectRegistRequestDTO.getWorkType(),
                 projectRegistRequestDTO.getProgressClassification(),
@@ -47,11 +48,11 @@ public class ProjectService {
                 projectRegistRequestDTO.getEndDateTime(),
                 projectRegistRequestDTO.getEstimatedCost(),
                 accountId
-        ));
+        )));
     }
 
-    public Project findProjectByProjectId(Long projectId) {
-        return projectRepository.findById(projectId).orElse(null);
+    public ProjectSingleResponseDTO findProjectByProjectId(Long projectId) {
+        return new ProjectSingleResponseDTO(projectRepository.findById(projectId).orElse(null));
     }
 
     public ProjectPagingResponseDTO findProjectsByAccountIdWithPaging(int page, String accountId) {
@@ -110,7 +111,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project updateProject(ProjectUpdateRequestDTO projectUpdateRequestDTO, String accountId) {
+    public ProjectSingleResponseDTO updateProject(ProjectUpdateRequestDTO projectUpdateRequestDTO, String accountId) {
         Optional<Project> request = projectRepository.findById(projectUpdateRequestDTO.getRequestId());
         if (request.isPresent()) {
             Project foundProject = request.get();
@@ -128,7 +129,7 @@ public class ProjectService {
                 foundProject.setStartDateTime(projectUpdateRequestDTO.getStartDateTime());
                 foundProject.setEndDateTime(projectUpdateRequestDTO.getEndDateTime());
                 foundProject.setEstimatedCost(projectUpdateRequestDTO.getEstimatedCost());
-                return foundProject;
+                return new ProjectSingleResponseDTO(foundProject);
             }
             else throw new IllegalArgumentException("잘못된 accountId로 Request ID : "
                     + projectUpdateRequestDTO.getRequestId() + "를 수정 시도");
@@ -137,13 +138,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project updateProjectVector(ProjectVectorRegistRequestDTO projectVectorRegistRequestDTO) {
+    public ProjectSingleResponseDTO updateProjectVector(ProjectVectorRegistRequestDTO projectVectorRegistRequestDTO) {
         Optional<Project> project = projectRepository.findById(projectVectorRegistRequestDTO.getProjectId());
         if(project.isPresent()) {
             Project foundProject = project.get();
             if(foundProject.getProjectVector().keySet().containsAll(List.of("x","y","z"))) {
                 foundProject.setProjectVector(projectVectorRegistRequestDTO.getProjectVector());
-                return foundProject;
+                return new ProjectSingleResponseDTO(foundProject);
             } else
                 throw new IllegalArgumentException("잘못된 vector key를 넣고 있음 | vector = " +
                         projectVectorRegistRequestDTO.getProjectVector());

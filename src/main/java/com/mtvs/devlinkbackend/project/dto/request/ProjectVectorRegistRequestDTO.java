@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.project.dto;
+package com.mtvs.devlinkbackend.project.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

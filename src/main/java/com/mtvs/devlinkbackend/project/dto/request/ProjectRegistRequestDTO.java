@@ -1,16 +1,14 @@
-package com.mtvs.devlinkbackend.project.dto;
+package com.mtvs.devlinkbackend.project.dto.request;
 
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProjectUpdateRequestDTO {
-    private Long requestId;
+public class ProjectRegistRequestDTO {
     private String workScope;
     private String workType;
     private String progressClassification;

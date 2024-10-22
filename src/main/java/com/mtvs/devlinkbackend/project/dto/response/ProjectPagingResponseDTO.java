@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.project.dto;
+package com.mtvs.devlinkbackend.project.dto.response;
 
 import com.mtvs.devlinkbackend.project.entity.Project;
 import lombok.*;

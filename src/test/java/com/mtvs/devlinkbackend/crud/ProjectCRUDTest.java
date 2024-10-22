@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.project.dto.ProjectRegistRequestDTO;
-import com.mtvs.devlinkbackend.project.dto.ProjectUpdateRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.request.ProjectUpdateRequestDTO;
 import com.mtvs.devlinkbackend.project.service.ProjectService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -114,12 +114,12 @@ public class ProjectCRUDTest {
     }
 
     @DisplayName("계정 ID에 따른 의뢰 paging 조회 테스트")
-    @ValueSource( strings = {"계정1", "계정2"})
+    @CsvSource({"0, 계정1", "0, 계정2"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsByAccountId(String accountId) {
+    public void testFindRequestsByAccountId(int page, String accountId) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByAccountIdWithPaging(accountId)));
+                System.out.println("Request = " + projectService.findProjectsByAccountIdWithPaging(page, accountId)));
     }
 
     @DisplayName("의뢰 수정 테스트")
@@ -141,52 +141,53 @@ public class ProjectCRUDTest {
     }
 
     @DisplayName("업무 범위에 따른 의뢰 조회 테스트")
-    @ValueSource( strings = {"업무범위1", "업무범위2"})
+    @CsvSource({"0, 업무범위1", "0, 업무범위2"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsByWorkScope(String workScope) {
+    public void testFindRequestsByWorkScope(int page, String workScope) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByWorkScope(workScope)));
+                System.out.println("Request = " + projectService.findProjectsByWorkScopeWithPaging(page, workScope)));
     }
 
     @DisplayName("근무 형태에 따른 의뢰 조회 테스트")
-    @ValueSource( strings = {"근무형태1", "근무형태2"})
+    @CsvSource({"0, 근무형태1", "0, 근무형태2"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsByWorkType(String workType) {
+    public void testFindRequestsByWorkType(int page, String workType) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByWorkTypeWithPaging(workType)));
+                System.out.println("Request = " + projectService.findProjectsByWorkTypeWithPaging(page, workType)));
     }
 
     @DisplayName("진행 분류에 따른 의뢰 조회 테스트")
-    @ValueSource( strings = {"진행분류1", "진행분류2"})
+    @CsvSource({"0, 진행분류1", "0, 진행분류2"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsByProgressClassification(String progressClassification) {
+    public void testFindRequestsByProgressClassification(int page, String progressClassification) {
         Assertions.assertDoesNotThrow(() ->
                 System.out.println("Request = " + projectService.
-                        findProjectsByProgressClassification(progressClassification)));
+                        findProjectsByProgressClassificationWithPaging(page, progressClassification)));
     }
 
     @DisplayName("프로젝트 주제(제목)에 따른 의뢰 조회 테스트")
-    @ValueSource( strings = {"제목1", "제목2"})
+    @CsvSource({"0, 제목1", "0, 제목2"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsByTitleContainingIgnoreCase(String title) {
+    public void testFindRequestsByTitleContainingIgnoreCase(int page, String title) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByTitleContainingIgnoreCaseWithPaging(title)));
+                System.out.println("Request = " + projectService
+                        .findProjectsByTitleContainingIgnoreCaseWithPaging(page, title)));
     }
 
     @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
-    @CsvSource({"2,2,3,1,3", "3,2,1,1,3"})
+    @CsvSource({"0,2,2,3,1,3", "0,3,2,1,1,3"})
     @ParameterizedTest
     @Order(2)
-    public void testFindRequestsWithLargerRequirements(Integer requiredClient, Integer requiredServer,
-                                                       Integer requiredDesign, Integer requiredPlanner,
-                                                       Integer requiredAIEngineer) {
+    public void testFindRequestsWithLargerRequirements(int page, Integer requiredClient,
+                                                       Integer requiredServer, Integer requiredDesign,
+                                                       Integer requiredPlanner, Integer requiredAIEngineer) {
         Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsWithLargerRequirements(
-                        requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
+                System.out.println("Request = " + projectService.findProjectsWithLargerRequirementsWithPaging(
+                        page, requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
                 )));
     }
 }
