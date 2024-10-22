@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.question.dto;
+package com.mtvs.devlinkbackend.question.dto.request;
 
 import lombok.*;
 
@@ -6,8 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class QuestionUpdateRequestDTO {
-    private long questionId;
+public class QuestionRegistRequestDTO {
     private String title;
     private String content;
 }

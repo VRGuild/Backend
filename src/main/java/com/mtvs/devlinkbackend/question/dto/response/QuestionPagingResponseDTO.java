@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.question.dto;
+package com.mtvs.devlinkbackend.question.dto.response;
 
 import com.mtvs.devlinkbackend.question.entity.Question;
 import lombok.*;

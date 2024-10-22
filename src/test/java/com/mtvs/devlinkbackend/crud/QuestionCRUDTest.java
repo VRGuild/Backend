@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionRegistRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.service.QuestionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

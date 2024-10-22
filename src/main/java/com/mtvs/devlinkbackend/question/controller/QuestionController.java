@@ -1,9 +1,9 @@
 package com.mtvs.devlinkbackend.question.controller;
 
-import com.mtvs.devlinkbackend.question.dto.QuestionPagingResponseDTO;
+import com.mtvs.devlinkbackend.question.dto.response.QuestionPagingResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionRegistRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.entity.Question;
 import com.mtvs.devlinkbackend.question.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/question")

@@ -1,8 +1,8 @@
 package com.mtvs.devlinkbackend.question.service;
 
-import com.mtvs.devlinkbackend.question.dto.QuestionPagingResponseDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionRegistRequestDTO;
-import com.mtvs.devlinkbackend.question.dto.QuestionUpdateRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.response.QuestionPagingResponseDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionRegistRequestDTO;
+import com.mtvs.devlinkbackend.question.dto.request.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.entity.Question;
 import com.mtvs.devlinkbackend.question.repository.QuestionRepository;
 import org.springframework.data.domain.Page;
