@@ -1,17 +1,16 @@
 package com.mtvs.devlinkbackend.ether.controller;
 
+import com.mtvs.devlinkbackend.ether.dto.response.EtherListResponseDTO;
+import com.mtvs.devlinkbackend.ether.dto.response.EtherSingleResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.ether.dto.EtherRegistRequestDTO;
-import com.mtvs.devlinkbackend.ether.dto.EtherUpdateRequestDTO;
-import com.mtvs.devlinkbackend.ether.entity.Ether;
+import com.mtvs.devlinkbackend.ether.dto.request.EtherRegistRequestDTO;
+import com.mtvs.devlinkbackend.ether.dto.request.EtherUpdateRequestDTO;
 import com.mtvs.devlinkbackend.ether.service.EtherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/ether")
@@ -31,12 +30,12 @@ public class EtherController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @PostMapping
-    public ResponseEntity<Ether> registEther(
+    public ResponseEntity<EtherSingleResponseDTO> registEther(
             @RequestBody EtherRegistRequestDTO etherRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        Ether newEther = etherService.registEther(etherRegistRequestDTO, accountId);
+        EtherSingleResponseDTO newEther = etherService.registEther(etherRegistRequestDTO, accountId);
         return ResponseEntity.ok(newEther);
     }
 
@@ -47,8 +46,8 @@ public class EtherController {
             @ApiResponse(responseCode = "404", description = "Ether를 찾을 수 없음")
     })
     @GetMapping("/{etherId}")
-    public ResponseEntity<Ether> findEtherByEtherId(@PathVariable Long etherId) {
-        Ether ether = etherService.findEtherByEtherId(etherId);
+    public ResponseEntity<EtherSingleResponseDTO> findEtherByEtherId(@PathVariable Long etherId) {
+        EtherSingleResponseDTO ether = etherService.findEtherByEtherId(etherId);
         return ether != null ? ResponseEntity.ok(ether) : ResponseEntity.notFound().build();
     }
 
@@ -58,11 +57,11 @@ public class EtherController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @GetMapping("/account")
-    public ResponseEntity<List<Ether>> findEthersByAccountId(
+    public ResponseEntity<EtherListResponseDTO> findEthersByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Ether> ethers = etherService.findEthersByAccountId(accountId);
+        EtherListResponseDTO ethers = etherService.findEthersByAccountId(accountId);
         return ResponseEntity.ok(ethers);
     }
 
@@ -72,8 +71,8 @@ public class EtherController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @GetMapping("/reason/{reason}")
-    public ResponseEntity<List<Ether>> findEthersByReason(@PathVariable String reason) {
-        List<Ether> ethers = etherService.findEthersByReason(reason);
+    public ResponseEntity<EtherListResponseDTO> findEthersByReason(@PathVariable String reason) {
+        EtherListResponseDTO ethers = etherService.findEthersByReason(reason);
         return ResponseEntity.ok(ethers);
     }
 
@@ -84,9 +83,9 @@ public class EtherController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @PatchMapping
-    public ResponseEntity<Ether> updateEther(@RequestBody EtherUpdateRequestDTO etherUpdateRequestDTO) {
+    public ResponseEntity<EtherSingleResponseDTO> updateEther(@RequestBody EtherUpdateRequestDTO etherUpdateRequestDTO) {
         try {
-            Ether updatedEther = etherService.updateEther(etherUpdateRequestDTO);
+            EtherSingleResponseDTO updatedEther = etherService.updateEther(etherUpdateRequestDTO);
             return ResponseEntity.ok(updatedEther);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);

@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.ether.dto;
+package com.mtvs.devlinkbackend.ether.dto.request;
 
 import lombok.*;
 
