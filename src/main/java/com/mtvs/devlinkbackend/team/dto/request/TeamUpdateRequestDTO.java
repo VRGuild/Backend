@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.team.dto;
+package com.mtvs.devlinkbackend.team.dto.request;
 
 import lombok.*;
 
@@ -9,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TeamRegistRequestDTO {
+public class TeamUpdateRequestDTO {
+    private Long teamId;
     private String teamName;
     private String introduction;
     private List<String> memberList;

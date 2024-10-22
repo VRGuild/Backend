@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.team.dto;
+package com.mtvs.devlinkbackend.team.dto.request;
 
 import lombok.*;
 
