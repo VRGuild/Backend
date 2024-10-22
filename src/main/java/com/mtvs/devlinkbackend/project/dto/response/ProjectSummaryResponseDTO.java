@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.project.dto.response;
 
-import com.mtvs.devlinkbackend.project.entity.ProjectSummary;
+import com.mtvs.devlinkbackend.project.repository.projection.ProjectSummary;
 import lombok.*;
 
 import java.util.List;
