@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.support.dto.SupportRegistRequestDTO;
+import com.mtvs.devlinkbackend.support.dto.request.SupportRegistRequestDTO;
+import com.mtvs.devlinkbackend.support.dto.response.SupportListResponseDTO;
+import com.mtvs.devlinkbackend.support.dto.response.SupportSingleResponseDTO;
 import com.mtvs.devlinkbackend.support.entity.Support;
 import com.mtvs.devlinkbackend.support.repository.SupportRepository;
 import com.mtvs.devlinkbackend.support.service.SupportService;
@@ -45,37 +47,37 @@ public class SupportCRUDTest {
         SupportRegistRequestDTO supportRegistRequestDTO = new SupportRegistRequestDTO(1L, 2L);
 
         // when
-        Support createdSupport = supportService.createSupport(supportRegistRequestDTO);
+        SupportSingleResponseDTO createdSupport = supportService.createSupport(supportRegistRequestDTO);
 
         // then
         assertNotNull(createdSupport, "Created support should not be null");
-        assertEquals(support1.getProjectId(), createdSupport.getProjectId(), "Project ID should match");
-        assertEquals(support1.getTeamId(), createdSupport.getTeamId(), "Team ID should match");
-        assertEquals("waiting", createdSupport.getSupportConfirmation(), "Status should be 'waiting'");
+        assertEquals(support1.getProjectId(), createdSupport.getData().getProjectId(), "Project ID should match");
+        assertEquals(support1.getTeamId(), createdSupport.getData().getTeamId(), "Team ID should match");
+        assertEquals("waiting", createdSupport.getData().getSupportConfirmation(), "Status should be 'waiting'");
     }
 
     @Test
     public void testFindSupportsByProjectId() {
         // when
-        List<Support> foundSupports = supportService.findSupportsByProjectId(1L);
+        SupportListResponseDTO foundSupports = supportService.findSupportsByProjectId(1L);
 
         // then
         assertNotNull(foundSupports, "Found supports should not be null");
-        assertEquals(2, foundSupports.size(), "The size of found supports should be 2");
-        assertEquals(support1.getProjectId(), foundSupports.get(0).getProjectId(), "First support project ID should match");
-        assertEquals(support2.getTeamId(), foundSupports.get(1).getTeamId(), "Second support team ID should match");
+        assertEquals(2, foundSupports.getData().size(), "The size of found supports should be 2");
+        assertEquals(support1.getProjectId(), foundSupports.getData().get(0).getProjectId(), "First support project ID should match");
+        assertEquals(support2.getTeamId(), foundSupports.getData().get(1).getTeamId(), "Second support team ID should match");
     }
 
     @Test
     public void testFindSupportsByTeamId() {
         // when
-        List<Support> foundSupports = supportService.findSupportsByTeamId(2L);
+        SupportListResponseDTO foundSupports = supportService.findSupportsByTeamId(2L);
 
         // then
         assertNotNull(foundSupports, "Found supports should not be null");
-        assertEquals(1, foundSupports.size(), "The size of found supports should be 1");
-        assertEquals(support1.getTeamId(), foundSupports.get(0).getTeamId(), "Support team ID should match");
-        assertEquals(support1.getSupportConfirmation(), foundSupports.get(0).getSupportConfirmation(), "Support status should match");
+        assertEquals(1, foundSupports.getData().size(), "The size of found supports should be 1");
+        assertEquals(support1.getTeamId(), foundSupports.getData().get(0).getTeamId(), "Support team ID should match");
+        assertEquals(support1.getSupportConfirmation(), foundSupports.getData().get(0).getSupportConfirmation(), "Support status should match");
     }
 
     @Test
@@ -85,10 +87,10 @@ public class SupportCRUDTest {
 
         // when
         supportService.deleteSupport(supportId);
-        List<Support> foundSupports = supportService.findSupportsByProjectId(1L);
+        SupportListResponseDTO foundSupports = supportService.findSupportsByProjectId(1L);
         System.out.println(foundSupports);
 
         // then
-        assertEquals(1, foundSupports.size());
+        assertEquals(1, foundSupports.getData().size());
     }
 }

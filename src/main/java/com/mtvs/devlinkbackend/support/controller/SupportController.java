@@ -1,7 +1,8 @@
 package com.mtvs.devlinkbackend.support.controller;
 
-import com.mtvs.devlinkbackend.support.dto.SupportRegistRequestDTO;
-import com.mtvs.devlinkbackend.support.entity.Support;
+import com.mtvs.devlinkbackend.support.dto.response.SupportListResponseDTO;
+import com.mtvs.devlinkbackend.support.dto.request.SupportRegistRequestDTO;
+import com.mtvs.devlinkbackend.support.dto.response.SupportSingleResponseDTO;
 import com.mtvs.devlinkbackend.support.service.SupportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/support")
@@ -32,8 +31,8 @@ public class SupportController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
     })
     @PostMapping
-    public ResponseEntity<Support> createSupport(@RequestBody SupportRegistRequestDTO supportRegistRequestDTO) {
-        Support createdSupport = supportService.createSupport(supportRegistRequestDTO);
+    public ResponseEntity<SupportSingleResponseDTO> createSupport(@RequestBody SupportRegistRequestDTO supportRegistRequestDTO) {
+        SupportSingleResponseDTO createdSupport = supportService.createSupport(supportRegistRequestDTO);
         return new ResponseEntity<>(createdSupport, HttpStatus.CREATED);
     }
 
@@ -48,8 +47,8 @@ public class SupportController {
             @ApiResponse(responseCode = "404", description = "해당 프로젝트를 찾을 수 없음")
     })
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Support>> getSupportsByProjectId(@PathVariable Long projectId) {
-        List<Support> supports = supportService.findSupportsByProjectId(projectId);
+    public ResponseEntity<SupportListResponseDTO> getSupportsByProjectId(@PathVariable Long projectId) {
+        SupportListResponseDTO supports = supportService.findSupportsByProjectId(projectId);
         return new ResponseEntity<>(supports, HttpStatus.OK);
     }
 
@@ -64,8 +63,8 @@ public class SupportController {
             @ApiResponse(responseCode = "404", description = "해당 팀을 찾을 수 없음")
     })
     @GetMapping("/team/{teamId}")
-    public ResponseEntity<List<Support>> getSupportsByTeamId(@PathVariable Long teamId) {
-        List<Support> supports = supportService.findSupportsByTeamId(teamId);
+    public ResponseEntity<SupportListResponseDTO> getSupportsByTeamId(@PathVariable Long teamId) {
+        SupportListResponseDTO supports = supportService.findSupportsByTeamId(teamId);
         return new ResponseEntity<>(supports, HttpStatus.OK);
     }
 
