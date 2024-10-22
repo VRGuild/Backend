@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.comment.dto.CommentRegistRequestDTO;
-import com.mtvs.devlinkbackend.comment.dto.CommentUpdateRequestDTO;
+import com.mtvs.devlinkbackend.comment.dto.request.CommentRegistRequestDTO;
+import com.mtvs.devlinkbackend.comment.dto.request.CommentUpdateRequestDTO;
 import com.mtvs.devlinkbackend.comment.service.CommentService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

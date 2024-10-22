@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.comment.dto;
+package com.mtvs.devlinkbackend.comment.dto.request;
 
 import lombok.*;
 
