@@ -1,8 +1,9 @@
 package com.mtvs.devlinkbackend.comment.controller;
 
-import com.mtvs.devlinkbackend.comment.dto.CommentRegistRequestDTO;
-import com.mtvs.devlinkbackend.comment.dto.CommentUpdateRequestDTO;
-import com.mtvs.devlinkbackend.comment.entity.Comment;
+import com.mtvs.devlinkbackend.comment.dto.response.CommentListResponseDTO;
+import com.mtvs.devlinkbackend.comment.dto.request.CommentRegistRequestDTO;
+import com.mtvs.devlinkbackend.comment.dto.response.CommentSingleResponseDTO;
+import com.mtvs.devlinkbackend.comment.dto.request.CommentUpdateRequestDTO;
 import com.mtvs.devlinkbackend.comment.service.CommentService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,8 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -31,12 +30,12 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "해당 요청을 찾을 수 없습니다.")
     })
     @PostMapping
-    public ResponseEntity<Comment> registComment(
+    public ResponseEntity<CommentSingleResponseDTO> registComment(
             @RequestBody CommentRegistRequestDTO commentRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        Comment comment = commentService.registComment(commentRegistRequestDTO, accountId);
+        CommentSingleResponseDTO comment = commentService.registComment(commentRegistRequestDTO, accountId);
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
@@ -46,27 +45,27 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "해당 댓글을 찾을 수 없습니다.")
     })
     @GetMapping("/{commentId}")
-    public ResponseEntity<Comment> findCommentByCommentId(@PathVariable Long commentId) {
-        Comment comment = commentService.findCommentByCommentId(commentId);
+    public ResponseEntity<CommentSingleResponseDTO> findCommentByCommentId(@PathVariable Long commentId) {
+        CommentSingleResponseDTO comment = commentService.findCommentByCommentId(commentId);
         return comment != null ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "요청 ID로 댓글 조회", description = "특정 요청에 연관된 모든 댓글을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "댓글 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/request/{requestId}")
-    public ResponseEntity<List<Comment>> findCommentsByRequestId(@PathVariable Long requestId) {
-        List<Comment> comments = commentService.findCommentsByProjectId(requestId);
+    public ResponseEntity<CommentListResponseDTO> findCommentsByRequestId(@PathVariable Long requestId) {
+        CommentListResponseDTO comments = commentService.findCommentsByProjectId(requestId);
         return ResponseEntity.ok(comments);
     }
 
     @Operation(summary = "사용자 ID로 댓글 조회", description = "특정 사용자가 작성한 모든 댓글을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "사용자의 댓글 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/account")
-    public ResponseEntity<List<Comment>> findCommentsByAccountId(
+    public ResponseEntity<CommentListResponseDTO> findCommentsByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Comment> comments = commentService.findCommentsByAccountId(accountId);
+        CommentListResponseDTO comments = commentService.findCommentsByAccountId(accountId);
         return ResponseEntity.ok(comments);
     }
 
@@ -77,12 +76,12 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "해당 댓글을 찾을 수 없습니다.")
     })
     @PatchMapping
-    public ResponseEntity<Comment> updateComment(
+    public ResponseEntity<CommentSingleResponseDTO> updateComment(
             @RequestBody CommentUpdateRequestDTO commentUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        Comment updatedComment = commentService.updateComment(commentUpdateRequestDTO, accountId);
+        CommentSingleResponseDTO updatedComment = commentService.updateComment(commentUpdateRequestDTO, accountId);
         return ResponseEntity.ok(updatedComment);
     }
 

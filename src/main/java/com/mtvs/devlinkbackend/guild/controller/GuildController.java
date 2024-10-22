@@ -1,17 +1,16 @@
 package com.mtvs.devlinkbackend.guild.controller;
 
+import com.mtvs.devlinkbackend.guild.dto.request.GuildMemberModifyRequestDTO;
+import com.mtvs.devlinkbackend.guild.dto.request.GuildRegistRequestDTO;
+import com.mtvs.devlinkbackend.guild.dto.request.GuildUpdateRequestDTO;
+import com.mtvs.devlinkbackend.guild.dto.response.GuildListResponseDTO;
+import com.mtvs.devlinkbackend.guild.dto.response.GuildSingleResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.guild.dto.GuildMemberModifyRequestDTO;
-import com.mtvs.devlinkbackend.guild.dto.GuildRegistRequestDTO;
-import com.mtvs.devlinkbackend.guild.dto.GuildUpdateRequestDTO;
-import com.mtvs.devlinkbackend.guild.entity.Guild;
 import com.mtvs.devlinkbackend.guild.service.GuildService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/guild")
@@ -31,7 +30,7 @@ public class GuildController {
             @ApiResponse(responseCode = "400", description = "길드 생성 요청이 잘못되었습니다.")
     })
     @PostMapping
-    public Guild createGuild(
+    public GuildSingleResponseDTO createGuild(
             @RequestBody GuildRegistRequestDTO guildRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
@@ -45,21 +44,21 @@ public class GuildController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @GetMapping("/{guildId}")
-    public Guild findGuildByGuildId(@PathVariable Long guildId) {
+    public GuildSingleResponseDTO findGuildByGuildId(@PathVariable Long guildId) {
         return guildService.findGuildByGuildId(guildId);
     }
 
     @Operation(summary = "길드 이름 검색", description = "이름이 특정 문자열을 포함하는 길드 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "길드 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/search")
-    public List<Guild> findGuildsByGuildNameContaining(@RequestParam String guildName) {
+    public GuildListResponseDTO findGuildsByGuildNameContaining(@RequestParam String guildName) {
         return guildService.findGuildsByGuildNameContaining(guildName);
     }
 
     @Operation(summary = "사용자가 소유자인 길드 조회", description = "사용자가 소유자인 길드를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "길드 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/owner")
-    public List<Guild> findGuildsByOwnerId(
+    public GuildListResponseDTO findGuildsByOwnerId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String ownerId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
@@ -69,7 +68,7 @@ public class GuildController {
     @Operation(summary = "사용자가 멤버인 길드 조회", description = "사용자가 멤버인 길드를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "길드 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/member")
-    public List<Guild> findGuildsByMemberIdContaining(
+    public GuildListResponseDTO findGuildsByMemberIdContaining(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String memberId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
@@ -83,7 +82,7 @@ public class GuildController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @PatchMapping
-    public Guild updateGuild(
+    public GuildSingleResponseDTO updateGuild(
             @RequestBody GuildUpdateRequestDTO guildUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
@@ -98,7 +97,7 @@ public class GuildController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @PostMapping("/member")
-    public Guild addMemberToGuild(
+    public GuildSingleResponseDTO addMemberToGuild(
             @RequestBody GuildMemberModifyRequestDTO guildMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
@@ -113,7 +112,7 @@ public class GuildController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @DeleteMapping("/member")
-    public Guild removeMemberFromGuild(
+    public GuildSingleResponseDTO removeMemberFromGuild(
             @RequestBody GuildMemberModifyRequestDTO guildMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 

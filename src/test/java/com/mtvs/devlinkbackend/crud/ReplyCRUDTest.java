@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.reply.dto.ReplyRegistRequestDTO;
-import com.mtvs.devlinkbackend.reply.dto.ReplyUpdateRequestDTO;
+import com.mtvs.devlinkbackend.reply.dto.request.ReplyRegistRequestDTO;
+import com.mtvs.devlinkbackend.reply.dto.request.ReplyUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.service.ReplyService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

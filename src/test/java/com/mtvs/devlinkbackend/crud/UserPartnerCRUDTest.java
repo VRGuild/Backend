@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserPartnerRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.service.UserPartnerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.channel.dto.ChannelRegistRequestDTO;
-import com.mtvs.devlinkbackend.channel.dto.ChannelUpdateRequestDTO;
+import com.mtvs.devlinkbackend.channel.dto.request.ChannelRegistRequestDTO;
+import com.mtvs.devlinkbackend.channel.dto.request.ChannelUpdateRequestDTO;
 import com.mtvs.devlinkbackend.channel.entity.PositionType;
 import com.mtvs.devlinkbackend.channel.service.ChannelService;
 import org.junit.jupiter.api.Assertions;

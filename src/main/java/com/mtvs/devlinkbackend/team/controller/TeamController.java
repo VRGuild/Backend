@@ -1,10 +1,11 @@
 package com.mtvs.devlinkbackend.team.controller;
 
+import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.response.TeamListResponseDTO;
+import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
-import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
-import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
-import com.mtvs.devlinkbackend.team.entity.Team;
 import com.mtvs.devlinkbackend.team.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,8 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/team")
@@ -33,8 +32,10 @@ public class TeamController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터입니다.")
     })
     @PostMapping
-    public ResponseEntity<Team> registTeam(@RequestBody TeamRegistRequestDTO teamRegistRequestDTO, @RequestParam String accountId) {
-        Team team = teamService.registTeam(teamRegistRequestDTO, accountId);
+    public ResponseEntity<TeamSingleReponseDTO> registTeam(
+            @RequestBody TeamRegistRequestDTO teamRegistRequestDTO, @RequestParam String accountId) {
+
+        TeamSingleReponseDTO team = teamService.registTeam(teamRegistRequestDTO, accountId);
         return new ResponseEntity<>(team, HttpStatus.CREATED);
     }
 
@@ -44,10 +45,10 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "팀을 찾을 수 없습니다.")
     })
     @GetMapping("/{teamId}")
-    public ResponseEntity<Team> getTeamById(
+    public ResponseEntity<TeamSingleReponseDTO> getTeamById(
             @PathVariable Long teamId) {
 
-        Team team = teamService.findTeamByTeamId(teamId);
+        TeamSingleReponseDTO team = teamService.findTeamByTeamId(teamId);
         if (team != null) {
             return ResponseEntity.ok(team);
         } else {
@@ -61,11 +62,11 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "주어진 프로젝트 매니저 ID에 대한 팀이 없습니다.")
     })
     @GetMapping("/manager")
-    public ResponseEntity<List<Team>> getTeamsByPmId(
+    public ResponseEntity<TeamListResponseDTO> getTeamsByPmId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String pmId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Team> teams = teamService.findTeamsByPmId(pmId);
+        TeamListResponseDTO teams = teamService.findTeamsByPmId(pmId);
         return ResponseEntity.ok(teams);
     }
 
@@ -74,10 +75,10 @@ public class TeamController {
             @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")
     })
     @GetMapping("/search")
-    public ResponseEntity<List<Team>> getTeamsByTeamNameContaining(
+    public ResponseEntity<TeamListResponseDTO> getTeamsByTeamNameContaining(
             @RequestParam String teamName) {
 
-        List<Team> teams = teamService.findTeamsByTeamNameContaining(teamName);
+        TeamListResponseDTO teams = teamService.findTeamsByTeamNameContaining(teamName);
         return ResponseEntity.ok(teams);
     }
 
@@ -86,11 +87,11 @@ public class TeamController {
             @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")
     })
     @GetMapping("/members/search")
-    public ResponseEntity<List<Team>> getTeamsByMemberIdContaining(
+    public ResponseEntity<TeamListResponseDTO> getTeamsByMemberIdContaining(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String memberId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Team> teams = teamService.findTeamsByMemberIdContaining(memberId);
+        TeamListResponseDTO teams = teamService.findTeamsByMemberIdContaining(memberId);
         return ResponseEntity.ok(teams);
     }
 
@@ -101,12 +102,12 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "팀을 찾을 수 없습니다.")
     })
     @PatchMapping
-    public ResponseEntity<Team> updateTeam(
+    public ResponseEntity<TeamSingleReponseDTO> updateTeam(
             @RequestBody TeamUpdateRequestDTO teamUpdateRequestDTO,
             @RequestParam String accountId) {
 
         try {
-            Team updatedTeam = teamService.updateTeam(teamUpdateRequestDTO, accountId);
+            TeamSingleReponseDTO updatedTeam = teamService.updateTeam(teamUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedTeam);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -120,7 +121,7 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @PostMapping("/member")
-    public Team addMemberToTeam(
+    public TeamSingleReponseDTO addMemberToTeam(
             @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
@@ -135,7 +136,7 @@ public class TeamController {
             @ApiResponse(responseCode = "404", description = "길드를 찾을 수 없습니다.")
     })
     @DeleteMapping("/member")
-    public Team removeMemberFromTeam(
+    public TeamSingleReponseDTO removeMemberFromTeam(
             @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 

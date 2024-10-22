@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.ether.dto.EtherRegistRequestDTO;
-import com.mtvs.devlinkbackend.ether.dto.EtherUpdateRequestDTO;
+import com.mtvs.devlinkbackend.ether.dto.request.EtherRegistRequestDTO;
+import com.mtvs.devlinkbackend.ether.dto.request.EtherUpdateRequestDTO;
 import com.mtvs.devlinkbackend.ether.service.EtherService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,17 +1,16 @@
 package com.mtvs.devlinkbackend.reply.controller;
 
+import com.mtvs.devlinkbackend.reply.dto.response.ReplyListResponseDTO;
+import com.mtvs.devlinkbackend.reply.dto.response.ReplySingleResponseDTO;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.reply.dto.ReplyRegistRequestDTO;
-import com.mtvs.devlinkbackend.reply.dto.ReplyUpdateRequestDTO;
-import com.mtvs.devlinkbackend.reply.entity.Reply;
+import com.mtvs.devlinkbackend.reply.dto.request.ReplyRegistRequestDTO;
+import com.mtvs.devlinkbackend.reply.dto.request.ReplyUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.service.ReplyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reply")
@@ -32,12 +31,12 @@ public class ReplyController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @PostMapping
-    public ResponseEntity<Reply> registReply(
+    public ResponseEntity<ReplySingleResponseDTO> registReply(
             @RequestBody ReplyRegistRequestDTO replyRegistRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithAuth(authorizationHeader);
-        Reply reply = replyService.registReply(replyRegistRequestDTO, accountId);
+        ReplySingleResponseDTO reply = replyService.registReply(replyRegistRequestDTO, accountId);
         return ResponseEntity.ok(reply);
     }
 
@@ -48,8 +47,8 @@ public class ReplyController {
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     })
     @GetMapping("/{replyId}")
-    public ResponseEntity<Reply> findReplyByReplyId(@PathVariable Long replyId) {
-        Reply reply = replyService.findReplyByReplyId(replyId);
+    public ResponseEntity<ReplySingleResponseDTO> findReplyByReplyId(@PathVariable Long replyId) {
+        ReplySingleResponseDTO reply = replyService.findReplyByReplyId(replyId);
         return reply != null ? ResponseEntity.ok(reply) : ResponseEntity.notFound().build();
     }
 
@@ -60,8 +59,8 @@ public class ReplyController {
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     })
     @GetMapping("/question/{questionId}")
-    public ResponseEntity<List<Reply>> findRepliesByQuestionId(@PathVariable Long questionId) {
-        List<Reply> replies = replyService.findRepliesByQuestionId(questionId);
+    public ResponseEntity<ReplyListResponseDTO> findRepliesByQuestionId(@PathVariable Long questionId) {
+        ReplyListResponseDTO replies = replyService.findRepliesByQuestionId(questionId);
         return ResponseEntity.ok(replies);
     }
 
@@ -72,11 +71,11 @@ public class ReplyController {
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음")
     })
     @GetMapping("/account")
-    public ResponseEntity<List<Reply>> findRepliesByAccountId(
+    public ResponseEntity<ReplyListResponseDTO> findRepliesByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        List<Reply> replies = replyService.findRepliesByAccountId(accountId);
+        ReplyListResponseDTO replies = replyService.findRepliesByAccountId(accountId);
         return ResponseEntity.ok(replies);
     }
 
@@ -87,13 +86,13 @@ public class ReplyController {
             @ApiResponse(responseCode = "401", description = "인증되지 않음")
     })
     @PatchMapping
-    public ResponseEntity<Reply> updateReply(
+    public ResponseEntity<ReplySingleResponseDTO> updateReply(
             @RequestBody ReplyUpdateRequestDTO replyUpdateRequestDTO,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
-            Reply updatedReply = replyService.updateReply(replyUpdateRequestDTO, accountId);
+            ReplySingleResponseDTO updatedReply = replyService.updateReply(replyUpdateRequestDTO, accountId);
             return ResponseEntity.ok(updatedReply);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);

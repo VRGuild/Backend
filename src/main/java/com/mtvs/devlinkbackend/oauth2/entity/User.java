@@ -21,7 +21,7 @@ public class User {
     @Column(name = "ACCOUNT_ID", unique = true)
     private String accountId;
 
-    @Column(name = "PURPOSE", insertable = false, updatable = false) // "UserClient", "UserPartners" 둘 중 한개
+    @Column(name = "PURPOSE", insertable = false, updatable = false) // "UserClient", "UserPartner" 둘 중 한개
     private String purpose;
 
     @Column(name = "CHARACTER_ID", unique = true)

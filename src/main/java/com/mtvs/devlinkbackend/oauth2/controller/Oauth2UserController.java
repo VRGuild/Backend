@@ -2,10 +2,9 @@ package com.mtvs.devlinkbackend.oauth2.controller;
 
 import com.mtvs.devlinkbackend.oauth2.service.UserService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.oauth2.dto.EpicGamesCallbackRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.EpicGamesCallbackRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.User;
 import com.mtvs.devlinkbackend.oauth2.service.EpicGamesTokenService;
-import com.mtvs.devlinkbackend.oauth2.service.UserPartnerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

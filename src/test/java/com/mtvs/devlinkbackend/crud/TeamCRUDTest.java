@@ -1,8 +1,8 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.team.dto.TeamMemberModifyRequestDTO;
-import com.mtvs.devlinkbackend.team.dto.TeamRegistRequestDTO;
-import com.mtvs.devlinkbackend.team.dto.TeamUpdateRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
+import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;
 import com.mtvs.devlinkbackend.team.service.TeamService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
