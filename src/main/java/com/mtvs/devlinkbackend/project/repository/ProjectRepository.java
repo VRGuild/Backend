@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.repository;
 
+import com.mtvs.devlinkbackend.project.entity.ProjectSummary;
 import com.mtvs.devlinkbackend.project.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
