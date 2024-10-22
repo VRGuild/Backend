@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientGroupRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientGroupRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.service.UserClientGroupService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

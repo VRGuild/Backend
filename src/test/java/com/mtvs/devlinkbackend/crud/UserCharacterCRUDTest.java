@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.character.dto.UserCharacterRegistRequestDTO;
-import com.mtvs.devlinkbackend.character.dto.UserCharacterUpdateRequestDTO;
+import com.mtvs.devlinkbackend.character.dto.request.UserCharacterRegistRequestDTO;
+import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;

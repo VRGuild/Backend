@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientIndividualRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientIndividualRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientIndividualListResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientIndividualSingleResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientIndividual;
 import com.mtvs.devlinkbackend.oauth2.service.UserClientIndividualService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
@@ -29,12 +31,12 @@ public class UserClientIndividualController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
     })
     @PostMapping
-    public ResponseEntity<UserClientIndividual> convertUserToUserClientIndividual(
+    public ResponseEntity<UserClientIndividualSingleResponseDTO> convertUserToUserClientIndividual(
             @RequestBody UserClientIndividualRequestDTO userClientIndividualRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientIndividual userClientIndividual =
+        UserClientIndividualSingleResponseDTO userClientIndividual =
                 userClientIndividualService.registUserClientIndividual(
                         userClientIndividualRequestDTO, accountId);
         return ResponseEntity.ok(userClientIndividual);
@@ -46,11 +48,11 @@ public class UserClientIndividualController {
             @ApiResponse(responseCode = "404", description = "UserClientIndividual을 찾을 수 없음")
     })
     @GetMapping
-    public ResponseEntity<UserClientIndividual> findUserClientIndividualByAuthorizationHeader(
+    public ResponseEntity<UserClientIndividualSingleResponseDTO> findUserClientIndividualByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientIndividual userClientIndividual =
+        UserClientIndividualSingleResponseDTO userClientIndividual =
                 userClientIndividualService.findUserClientIndividualByAccountId(accountId);
         return ResponseEntity.ok(userClientIndividual);
     }
@@ -60,8 +62,8 @@ public class UserClientIndividualController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientIndividuals를 조회함")
     })
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<UserClientIndividual>> findUserClientIndividualsByNameContainingIgnoreCase(@PathVariable String name) {
-        List<UserClientIndividual> userClientIndividuals =
+    public ResponseEntity<UserClientIndividualListResponseDTO> findUserClientIndividualsByNameContainingIgnoreCase(@PathVariable String name) {
+        UserClientIndividualListResponseDTO userClientIndividuals =
                 userClientIndividualService.findUserClientIndividualsByNameContainingIgnoreCase(name);
         return ResponseEntity.ok(userClientIndividuals);
     }
@@ -71,8 +73,8 @@ public class UserClientIndividualController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientIndividuals를 조회함")
     })
     @GetMapping("/phone/{phone}")
-    public ResponseEntity<List<UserClientIndividual>> findUserClientIndividualsByPhone(@PathVariable String phone) {
-        List<UserClientIndividual> userClientIndividuals =
+    public ResponseEntity<UserClientIndividualListResponseDTO> findUserClientIndividualsByPhone(@PathVariable String phone) {
+        UserClientIndividualListResponseDTO userClientIndividuals =
                 userClientIndividualService.findUserClientIndividualsByPhone(phone);
         return ResponseEntity.ok(userClientIndividuals);
     }
@@ -83,12 +85,12 @@ public class UserClientIndividualController {
             @ApiResponse(responseCode = "404", description = "UserClientIndividual을 찾을 수 없음")
     })
     @PatchMapping
-    public ResponseEntity<UserClientIndividual> updateUserClientIndividual(
+    public ResponseEntity<UserClientIndividualSingleResponseDTO> updateUserClientIndividual(
             @RequestBody UserClientIndividualRequestDTO userClientIndividualRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientIndividual userClientIndividual =
+        UserClientIndividualSingleResponseDTO userClientIndividual =
                 userClientIndividualService.updateUserClientIndividual(
                         userClientIndividualRequestDTO, accountId);
         return ResponseEntity.ok(userClientIndividual);

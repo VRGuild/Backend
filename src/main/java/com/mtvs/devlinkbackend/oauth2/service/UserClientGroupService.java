@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientGroupRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientGroupRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientGroupListResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientGroupSingleResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientGroup;
 import com.mtvs.devlinkbackend.oauth2.repository.UserClientGroupRepository;
 import org.springframework.stereotype.Service;
@@ -17,40 +19,41 @@ public class UserClientGroupService {
     }
 
     @Transactional
-    public UserClientGroup registUserClientGroup(UserClientGroupRequestDTO userClientGroupRequestDTO,
-                                                 String accountId) {
-        return userClientGroupRepository.save(new UserClientGroup(
+    public UserClientGroupSingleResponseDTO registUserClientGroup(UserClientGroupRequestDTO userClientGroupRequestDTO,
+                                                                  String accountId) {
+        return new UserClientGroupSingleResponseDTO(userClientGroupRepository.save(new UserClientGroup(
                 accountId,
                 userClientGroupRequestDTO.getPurpose(),
                 userClientGroupRequestDTO.getClientType(),
                 userClientGroupRequestDTO.getGroupName(),
                 userClientGroupRequestDTO.getManagerName(),
                 userClientGroupRequestDTO.getManagerPhone()
-        ));
+        )));
     }
-    public UserClientGroup findUserClientGroupByAccountId(String accountId) {
-        return userClientGroupRepository.findUserClientGroupByAccountId(accountId);
+    public UserClientGroupSingleResponseDTO findUserClientGroupByAccountId(String accountId) {
+        return new UserClientGroupSingleResponseDTO(userClientGroupRepository.findUserClientGroupByAccountId(accountId));
 
     };
-    public List<UserClientGroup> findByManagerNameContainingIgnoreCase(String managerName) {
-        return userClientGroupRepository.findByManagerNameContainingIgnoreCase(managerName);
+    public UserClientGroupListResponseDTO findByManagerNameContainingIgnoreCase(String managerName) {
+        return new UserClientGroupListResponseDTO(
+                userClientGroupRepository.findByManagerNameContainingIgnoreCase(managerName));
 
     };
-    public List<UserClientGroup> findByGroupNameContainingIgnoreCase(String groupName) {
-        return userClientGroupRepository.findByGroupNameContainingIgnoreCase(groupName);
+    public UserClientGroupListResponseDTO findByGroupNameContainingIgnoreCase(String groupName) {
+        return new UserClientGroupListResponseDTO(userClientGroupRepository.findByGroupNameContainingIgnoreCase(groupName));
 
     };
-    public List<UserClientGroup> findByClientType(String clientType) {
-        return userClientGroupRepository.findByClientType(clientType);
+    public UserClientGroupListResponseDTO findByClientType(String clientType) {
+        return new UserClientGroupListResponseDTO(userClientGroupRepository.findByClientType(clientType));
 
     };
-    public List<UserClientGroup> findByManagerPhone(String managerPhone) {
-        return userClientGroupRepository.findByManagerPhone(managerPhone);
+    public UserClientGroupListResponseDTO findByManagerPhone(String managerPhone) {
+        return new UserClientGroupListResponseDTO(userClientGroupRepository.findByManagerPhone(managerPhone));
 
     };
 
     @Transactional
-    public UserClientGroup updateUserClientGroup(UserClientGroupRequestDTO userClientGroupRequestDTO,
+    public UserClientGroupSingleResponseDTO updateUserClientGroup(UserClientGroupRequestDTO userClientGroupRequestDTO,
                                                  String accountId) {
 
         UserClientGroup userClientGroup = userClientGroupRepository.findUserClientGroupByAccountId(accountId);
@@ -62,7 +65,7 @@ public class UserClientGroupService {
         userClientGroup.setManagerName(userClientGroup.getManagerName());
         userClientGroup.setManagerPhone(userClientGroup.getManagerPhone());
 
-        return userClientGroup;
+        return new UserClientGroupSingleResponseDTO(userClientGroup);
     }
 
     public void deleteByAccountId(String accountId) {

@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.service;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserPartnerRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerListResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerSingleResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
 import com.mtvs.devlinkbackend.oauth2.repository.UserPartnersRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,10 @@ public class UserPartnerService {
     }
 
     @Transactional
-    public UserPartner registUserPartner(UserPartnerRequestDTO userPartnerRequestDTO,
-                                         String accountId) {
+    public UserPartnerSingleResponseDTO registUserPartner(UserPartnerRequestDTO userPartnerRequestDTO,
+                                                          String accountId) {
 
-        return userPartnersRepository.save(new UserPartner(
+        return new UserPartnerSingleResponseDTO(userPartnersRepository.save(new UserPartner(
                 accountId,
                 userPartnerRequestDTO.getPurpose(),
                 userPartnerRequestDTO.getNickname(),
@@ -31,31 +33,32 @@ public class UserPartnerService {
                 userPartnerRequestDTO.getExperience(),
                 userPartnerRequestDTO.getSkillSet(),
                 userPartnerRequestDTO.getMessage()
-        ));
+        )));
     }
 
-    public UserPartner findUserPartnerByAccountId(String accountId) {
-        return userPartnersRepository.findUserPartnerByAccountId(accountId);
+    public UserPartnerSingleResponseDTO findUserPartnerByAccountId(String accountId) {
+        return new UserPartnerSingleResponseDTO(userPartnersRepository.findUserPartnerByAccountId(accountId));
     };
 
-    public List<UserPartner> findUserPartnersByNameContainingIgnoreCase(String name) {
-        return userPartnersRepository.findUserPartnersByNameContainingIgnoreCase(name);
+    public UserPartnerListResponseDTO findUserPartnersByNameContainingIgnoreCase(String name) {
+        return new UserPartnerListResponseDTO(userPartnersRepository.findUserPartnersByNameContainingIgnoreCase(name));
     };
 
-    public List<UserPartner> findUserPartnersByNicknameContainingIgnoreCase(String nickname) {
-        return userPartnersRepository.findUserPartnersByNicknameContainingIgnoreCase(nickname);
+    public UserPartnerListResponseDTO findUserPartnersByNicknameContainingIgnoreCase(String nickname) {
+        return new UserPartnerListResponseDTO(
+                userPartnersRepository.findUserPartnersByNicknameContainingIgnoreCase(nickname));
     };
 
-    public List<UserPartner> findUserPartnersByEmail(String email) {
-        return userPartnersRepository.findUserPartnersByEmail(email);
+    public UserPartnerListResponseDTO findUserPartnersByEmail(String email) {
+        return new UserPartnerListResponseDTO(userPartnersRepository.findUserPartnersByEmail(email));
     };
 
-    public UserPartner findUserPartnerByPhone(String phone) {
-        return userPartnersRepository.findUserPartnerByPhone(phone);
+    public UserPartnerSingleResponseDTO findUserPartnerByPhone(String phone) {
+        return new UserPartnerSingleResponseDTO(userPartnersRepository.findUserPartnerByPhone(phone));
     };
 
     @Transactional
-    public UserPartner updateUserPartner(UserPartnerRequestDTO userPartnerRequestDTO,
+    public UserPartnerSingleResponseDTO updateUserPartner(UserPartnerRequestDTO userPartnerRequestDTO,
                                          String accountId) {
 
         UserPartner userPartner = userPartnersRepository.findUserPartnerByAccountId(accountId);
@@ -71,7 +74,7 @@ public class UserPartnerService {
         userPartner.setSkillSet(userPartnerRequestDTO.getSkillSet());
         userPartner.setMesssage(userPartnerRequestDTO.getMessage());
 
-        return userPartner;
+        return new UserPartnerSingleResponseDTO(userPartner);
     }
 
     public void deleteByAccountId(String accountId) {

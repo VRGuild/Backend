@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserPartnerRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserPartnerRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerListResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerSingleResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
 import com.mtvs.devlinkbackend.oauth2.service.UserPartnerService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
@@ -29,12 +31,12 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
     })
     @PostMapping
-    public ResponseEntity<UserPartner> convertUserToUserPartner(
+    public ResponseEntity<UserPartnerSingleResponseDTO> convertUserToUserPartner(
             @RequestBody UserPartnerRequestDTO userPartnerRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserPartner userPartner = userPartnerService.registUserPartner(userPartnerRequestDTO, accountId);
+        UserPartnerSingleResponseDTO userPartner = userPartnerService.registUserPartner(userPartnerRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -44,11 +46,11 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "404", description = "UserPartner를 찾을 수 없음")
     })
     @GetMapping
-    public ResponseEntity<UserPartner> findUserPartnerByAccountId(
+    public ResponseEntity<UserPartnerSingleResponseDTO> findUserPartnerByAccountId(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserPartner userPartner = userPartnerService.findUserPartnerByAccountId(accountId);
+        UserPartnerSingleResponseDTO userPartner = userPartnerService.findUserPartnerByAccountId(accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -57,8 +59,8 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserPartners를 조회함")
     })
     @GetMapping("/name/{name}")
-    public ResponseEntity<List<UserPartner>> findUserPartnersByNameContainingIgnoreCase(@PathVariable String name) {
-        List<UserPartner> userPartners = userPartnerService.findUserPartnersByNameContainingIgnoreCase(name);
+    public ResponseEntity<UserPartnerListResponseDTO> findUserPartnersByNameContainingIgnoreCase(@PathVariable String name) {
+        UserPartnerListResponseDTO userPartners = userPartnerService.findUserPartnersByNameContainingIgnoreCase(name);
         return ResponseEntity.ok(userPartners);
     }
 
@@ -67,8 +69,8 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserPartners를 조회함")
     })
     @GetMapping("/nickname/{nickname}")
-    public ResponseEntity<List<UserPartner>> findUserPartnersByNicknameContainingIgnoreCase(@PathVariable String nickname) {
-        List<UserPartner> userPartners = userPartnerService.findUserPartnersByNicknameContainingIgnoreCase(nickname);
+    public ResponseEntity<UserPartnerListResponseDTO> findUserPartnersByNicknameContainingIgnoreCase(@PathVariable String nickname) {
+        UserPartnerListResponseDTO userPartners = userPartnerService.findUserPartnersByNicknameContainingIgnoreCase(nickname);
         return ResponseEntity.ok(userPartners);
     }
 
@@ -77,8 +79,8 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserPartners를 조회함")
     })
     @GetMapping("/email/{email}")
-    public ResponseEntity<List<UserPartner>> findUserPartnersByEmail(@PathVariable String email) {
-        List<UserPartner> userPartners = userPartnerService.findUserPartnersByEmail(email);
+    public ResponseEntity<UserPartnerListResponseDTO> findUserPartnersByEmail(@PathVariable String email) {
+        UserPartnerListResponseDTO userPartners = userPartnerService.findUserPartnersByEmail(email);
         return ResponseEntity.ok(userPartners);
     }
 
@@ -87,8 +89,8 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserPartner를 조회함")
     })
     @GetMapping("/phone/{phone}")
-    public ResponseEntity<UserPartner> findUserPartnerByPhone(@PathVariable String phone) {
-        UserPartner userPartner = userPartnerService.findUserPartnerByPhone(phone);
+    public ResponseEntity<UserPartnerSingleResponseDTO> findUserPartnerByPhone(@PathVariable String phone) {
+        UserPartnerSingleResponseDTO userPartner = userPartnerService.findUserPartnerByPhone(phone);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -98,12 +100,12 @@ public class UserPartnerController {
             @ApiResponse(responseCode = "404", description = "UserPartner를 찾을 수 없음")
     })
     @PatchMapping
-    public ResponseEntity<UserPartner> updateUserPartner(
+    public ResponseEntity<UserPartnerSingleResponseDTO> updateUserPartner(
             @RequestBody UserPartnerRequestDTO userPartnerRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserPartner userPartner = userPartnerService.updateUserPartner(userPartnerRequestDTO, accountId);
+        UserPartnerSingleResponseDTO userPartner = userPartnerService.updateUserPartner(userPartnerRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 

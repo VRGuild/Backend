@@ -1,5 +1,6 @@
-package com.mtvs.devlinkbackend.oauth2.dto;
+package com.mtvs.devlinkbackend.oauth2.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -17,6 +18,10 @@ public class UserPartnerRequestDTO {
     private String phone;
     private List<String> portfolioList;
     private String experience;
+    @Schema(
+            description = "기술 숙련도에 대한 정보. Key는 기술 이름이고, Value는 해당 기술의 숙련도입니다.",
+            example = "{ \"Java\": 5, \"Spring\": 4, \"Docker\": 3 }"
+    )
     private Map<String, Integer> skillSet;
     private String message;
 }

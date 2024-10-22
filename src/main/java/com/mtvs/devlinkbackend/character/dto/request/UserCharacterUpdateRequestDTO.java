@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.character.dto;
+package com.mtvs.devlinkbackend.character.dto.request;
 
 import lombok.*;
 
@@ -8,6 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserCharacterRegistRequestDTO {
+public class UserCharacterUpdateRequestDTO {
+    private Long characterId;
     private List<Integer> status;
 }

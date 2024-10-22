@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.oauth2.controller;
 
-import com.mtvs.devlinkbackend.oauth2.dto.UserClientGroupRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientGroupRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientGroupListResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.dto.response.UserClientGroupSingleResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.entity.UserClientGroup;
 import com.mtvs.devlinkbackend.oauth2.service.UserClientGroupService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
@@ -29,12 +31,12 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
     })
     @PostMapping
-    public ResponseEntity<UserClientGroup> convertUserToUserClientGroup(
+    public ResponseEntity<UserClientGroupSingleResponseDTO> convertUserToUserClientGroup(
             @RequestBody UserClientGroupRequestDTO userClientGroupRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientGroup userClientGroup = 
+        UserClientGroupSingleResponseDTO userClientGroup =
                 userClientGroupService.registUserClientGroup(userClientGroupRequestDTO, accountId);
         return ResponseEntity.ok(userClientGroup);
     }
@@ -45,11 +47,11 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "404", description = "UserClientGroup을 찾을 수 없음")
     })
     @GetMapping
-    public ResponseEntity<UserClientGroup> findUserClientGroupByAuthorizationHeader(
+    public ResponseEntity<UserClientGroupSingleResponseDTO> findUserClientGroupByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientGroup userClientGroup = userClientGroupService.findUserClientGroupByAccountId(accountId);
+        UserClientGroupSingleResponseDTO userClientGroup = userClientGroupService.findUserClientGroupByAccountId(accountId);
         return ResponseEntity.ok(userClientGroup);
     }
 
@@ -58,8 +60,8 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
     @GetMapping("/manager-name/{managerName}")
-    public ResponseEntity<List<UserClientGroup>> findByManagerNameContainingIgnoreCase(@PathVariable String managerName) {
-        List<UserClientGroup> userClientGroups = userClientGroupService.findByManagerNameContainingIgnoreCase(managerName);
+    public ResponseEntity<UserClientGroupListResponseDTO> findByManagerNameContainingIgnoreCase(@PathVariable String managerName) {
+        UserClientGroupListResponseDTO userClientGroups = userClientGroupService.findByManagerNameContainingIgnoreCase(managerName);
         return ResponseEntity.ok(userClientGroups);
     }
 
@@ -68,8 +70,8 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
     @GetMapping("/group-name/{groupName}")
-    public ResponseEntity<List<UserClientGroup>> findByGroupNameContainingIgnoreCase(@PathVariable String groupName) {
-        List<UserClientGroup> userClientGroups = userClientGroupService.findByGroupNameContainingIgnoreCase(groupName);
+    public ResponseEntity<UserClientGroupListResponseDTO> findByGroupNameContainingIgnoreCase(@PathVariable String groupName) {
+        UserClientGroupListResponseDTO userClientGroups = userClientGroupService.findByGroupNameContainingIgnoreCase(groupName);
         return ResponseEntity.ok(userClientGroups);
     }
 
@@ -78,8 +80,8 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
     @GetMapping("/client-type/{clientType}")
-    public ResponseEntity<List<UserClientGroup>> findByClientType(@PathVariable String clientType) {
-        List<UserClientGroup> userClientGroups = userClientGroupService.findByClientType(clientType);
+    public ResponseEntity<UserClientGroupListResponseDTO> findByClientType(@PathVariable String clientType) {
+        UserClientGroupListResponseDTO userClientGroups = userClientGroupService.findByClientType(clientType);
         return ResponseEntity.ok(userClientGroups);
     }
 
@@ -88,8 +90,8 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "200", description = "성공적으로 UserClientGroups를 조회함")
     })
     @GetMapping("/manager-phone/{managerPhone}")
-    public ResponseEntity<List<UserClientGroup>> findByManagerPhone(@PathVariable String managerPhone) {
-        List<UserClientGroup> userClientGroups = userClientGroupService.findByManagerPhone(managerPhone);
+    public ResponseEntity<UserClientGroupListResponseDTO> findByManagerPhone(@PathVariable String managerPhone) {
+        UserClientGroupListResponseDTO userClientGroups = userClientGroupService.findByManagerPhone(managerPhone);
         return ResponseEntity.ok(userClientGroups);
     }
 
@@ -99,12 +101,12 @@ public class UserClientGroupController {
             @ApiResponse(responseCode = "404", description = "UserClientGroup을 찾을 수 없음")
     })
     @PatchMapping
-    public ResponseEntity<UserClientGroup> updateUserClientGroup(
+    public ResponseEntity<UserClientGroupSingleResponseDTO> updateUserClientGroup(
             @RequestBody UserClientGroupRequestDTO userClientGroupRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserClientGroup userClientGroup =
+        UserClientGroupSingleResponseDTO userClientGroup =
                 userClientGroupService.updateUserClientGroup(userClientGroupRequestDTO, accountId);
         return ResponseEntity.ok(userClientGroup);
     }
