@@ -2,6 +2,8 @@ package com.mtvs.devlinkbackend.comment.repository;
 
 import com.mtvs.devlinkbackend.comment.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,4 +12,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findCommentsByAccountId(String accountId);
     List<Comment> findCommentsByProject_ProjectId(Long requestId);
+
+    @Query("SELECT c.commentId FROM Comment c WHERE c.project.projectId = :projectId")
+    List<Long> findCommentIdsByProjectId(@Param("projectId") Long projectId);
 }
