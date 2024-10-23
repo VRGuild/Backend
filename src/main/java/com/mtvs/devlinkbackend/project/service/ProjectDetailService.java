@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.service;
 
+import com.mtvs.devlinkbackend.comment.entity.Comment;
 import com.mtvs.devlinkbackend.comment.repository.CommentRepository;
 import com.mtvs.devlinkbackend.project.dto.response.ProjectDetailResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.response.ProjectSummaryResponseDTO;
@@ -30,9 +31,9 @@ public class ProjectDetailService {
 
     public ProjectDetailResponseDTO findProjectDetailByProjectId(Long projectId) {
         ProjectIdAndContent projectIdAndContents = projectRepository.findProjectIdAndContentByProjectId(projectId);
-        List<Long> commentIdList = commentRepository.findCommentIdsByProjectId(projectId);
+        List<Comment> commentList = commentRepository.findCommentIdsByProjectId(projectId);
         List<Long> supportedTeamIdList = supportRepository.findTeamIdByProjectId(projectId);
 
-        return new ProjectDetailResponseDTO(projectIdAndContents, commentIdList, supportedTeamIdList);
+        return new ProjectDetailResponseDTO(projectIdAndContents, commentList, supportedTeamIdList);
     }
 }
