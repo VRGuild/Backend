@@ -1,6 +1,8 @@
 package com.mtvs.devlinkbackend.project.repository;
 
 import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.repository.projection.ProjectIdAndContent;
+import com.mtvs.devlinkbackend.project.repository.projection.ProjectSummary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
@@ -46,4 +49,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             @Param("requiredAIEngineer") Integer requiredAIEngineer,
             Pageable pageable
     );
+
+    List<ProjectSummary> findAllBy();
+
+    ProjectIdAndContent findProjectIdAndContentByProjectId(Long projectId);
 }
