@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +60,10 @@ public class Project {
     private Integer requiredAIEngineer;
 
     @Column(name = "START_DATETIME")
-    private LocalDateTime startDateTime;
+    private LocalDate startDateTime;
 
     @Column(name = "END_DATETIME")
-    private LocalDateTime endDateTime;
+    private LocalDate endDateTime;
 
     @Column(name = "ESTIMATED_COST")
     private Integer estimatedCost;
@@ -88,7 +89,7 @@ public class Project {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
-    public Project(String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String accountId) {
+    public Project(String title, String content, LocalDate startDateTime, LocalDate endDateTime, String accountId) {
         this.title = title;
         this.content = content;
         this.startDateTime = startDateTime;
@@ -96,7 +97,7 @@ public class Project {
         this.accountId = accountId;
     }
 
-    public Project(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDateTime startDateTime, LocalDateTime endDateTime, Integer estimatedCost, String accountId) {
+    public Project(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDate startDateTime, LocalDate endDateTime, Integer estimatedCost, String accountId) {
         this.workScope = workScope;
         this.workType = workType;
         this.progressClassification = progressClassification;
@@ -158,11 +159,11 @@ public class Project {
         this.content = content;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
+    public void setStartDateTime(LocalDate startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
+    public void setEndDateTime(LocalDate endDateTime) {
         this.endDateTime = endDateTime;
     }
 

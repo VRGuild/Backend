@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     // 시작일과 종료일 기준으로 프로젝트 조회 (페이징 추가)
     Page<Project> findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqual(
-            LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
+            LocalDate startDateTime, LocalDate endDateTime, Pageable pageable);
 
     // required 값들이 넘겨준 값보다 큰 row를 조회하는 쿼리 (페이징 추가)
     @Query("SELECT p FROM Project p WHERE " +

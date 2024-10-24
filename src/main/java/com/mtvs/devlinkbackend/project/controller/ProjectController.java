@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -136,8 +136,8 @@ public class ProjectController {
     @GetMapping("/date-range")
     public ResponseEntity<ProjectPagingResponseDTO> getProjectsBetweenDates(
             @RequestParam int page,
-            @RequestParam LocalDateTime startDateTime,
-            @RequestParam LocalDateTime endDateTime) {
+            @RequestParam LocalDate startDateTime,
+            @RequestParam LocalDate endDateTime) {
 
         ProjectPagingResponseDTO projects =
                 projectService.findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqualWithPaging(

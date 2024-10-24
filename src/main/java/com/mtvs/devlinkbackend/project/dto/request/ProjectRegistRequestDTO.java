@@ -2,7 +2,7 @@ package com.mtvs.devlinkbackend.project.dto.request;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter @Setter
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class ProjectRegistRequestDTO {
     private Integer requiredDesign;
     private Integer requiredPlanner;
     private Integer requiredAIEngineer;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalDate startDateTime;
+    private LocalDate endDateTime;
     private Integer estimatedCost;
 }

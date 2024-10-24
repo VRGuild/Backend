@@ -14,7 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,7 +88,7 @@ public class ProjectService {
     }
 
     public ProjectPagingResponseDTO findProjectsByStartDateTimeLessThanEqualOrEndDateTimeGreaterThanEqualWithPaging(
-            int page, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+            int page, LocalDate starDateTime, LocalDate endDateTime) {
 
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         Page<Project> projectPage = projectRepository.
@@ -112,7 +112,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectSingleResponseDTO updateProject(ProjectUpdateRequestDTO projectUpdateRequestDTO, String accountId) {
-        Optional<Project> request = projectRepository.findById(projectUpdateRequestDTO.getRequestId());
+        Optional<Project> request = projectRepository.findById(projectUpdateRequestDTO.getProjectId());
         if (request.isPresent()) {
             Project foundProject = request.get();
             if(foundProject.getAccountId().equals(accountId)) {
@@ -132,7 +132,7 @@ public class ProjectService {
                 return new ProjectSingleResponseDTO(foundProject);
             }
             else throw new IllegalArgumentException("잘못된 accountId로 Request ID : "
-                    + projectUpdateRequestDTO.getRequestId() + "를 수정 시도");
+                    + projectUpdateRequestDTO.getProjectId() + "를 수정 시도");
         }
         else throw new IllegalArgumentException("잘못된 requestId로 수정 시도");
     }
