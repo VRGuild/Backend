@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
@@ -38,8 +39,8 @@ public class ProjectCRUDTest {
                         3,
                         3,
                         3,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
+                        LocalDate.of(2024, 10, 22),
+                        LocalDate.of(2024, 10, 26),
                         1000000), "계정0"),
                 Arguments.of(new ProjectRegistRequestDTO(
                         "업무범위1",
@@ -53,8 +54,8 @@ public class ProjectCRUDTest {
                         1,
                         1,
                         3,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
+                        LocalDate.of(2022, 10, 10),
+                        LocalDate.of(2022, 10, 22),
                         1000000), "계정00")
         );
     }
@@ -74,9 +75,9 @@ public class ProjectCRUDTest {
                         1,
                         1,
                         3,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        1000000), "계정1"),
+                        LocalDate.of(2024, 10, 22),
+                        LocalDate.of(2024, 10, 26),
+                        1000000), "1"),
                 Arguments.of(new ProjectUpdateRequestDTO(
                         2L,
                         "업무범위1",
@@ -90,9 +91,9 @@ public class ProjectCRUDTest {
                         1,
                         1,
                         3,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        1000000), "계정1")
+                        LocalDate.of(2024, 10, 22),
+                        LocalDate.of(2024, 10, 26),
+                        1000000), "1")
         );
     }
 
