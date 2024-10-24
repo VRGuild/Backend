@@ -29,6 +29,7 @@ public class UserPartnerService {
                 userPartnerRequestDTO.getName(),
                 userPartnerRequestDTO.getEmail(),
                 userPartnerRequestDTO.getPhone(),
+                userPartnerRequestDTO.getGithubLink(),
                 userPartnerRequestDTO.getPortfolioList(),
                 userPartnerRequestDTO.getExperience(),
                 userPartnerRequestDTO.getSkillSet(),
@@ -69,10 +70,11 @@ public class UserPartnerService {
         userPartner.setName(userPartnerRequestDTO.getName());
         userPartner.setEmail(userPartnerRequestDTO.getEmail());
         userPartner.setPhone(userPartnerRequestDTO.getPhone());
+        userPartner.setGithubLink(userPartnerRequestDTO.getGithubLink());
         userPartner.setPortfolioList(userPartnerRequestDTO.getPortfolioList());
         userPartner.setExperience(userPartnerRequestDTO.getExperience());
         userPartner.setSkillSet(userPartnerRequestDTO.getSkillSet());
-        userPartner.setMesssage(userPartnerRequestDTO.getMessage());
+        userPartner.setMessage(userPartnerRequestDTO.getMessage());
 
         return new UserPartnerSingleResponseDTO(userPartner);
     }

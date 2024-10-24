@@ -16,6 +16,7 @@ public class UserPartnerRequestDTO {
     private String name;
     private String email;
     private String phone;
+    private String githubLink;
     private List<String> portfolioList;
     private String experience;
     @Schema(
