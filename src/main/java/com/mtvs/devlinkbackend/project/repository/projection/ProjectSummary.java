@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.repository.projection;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -15,8 +16,8 @@ public interface ProjectSummary {
     Integer getRequiredDesign();
     Integer getRequiredPlanner();
     Integer getRequiredAIEngineer();
-    LocalDateTime getStartDateTime();
-    LocalDateTime getEndDateTime();
+    LocalDate getStartDateTime();
+    LocalDate getEndDateTime();
     Integer getEstimatedCost();
     String getAccountId();
     LocalDateTime getCreatedAt();
