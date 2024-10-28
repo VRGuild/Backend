@@ -3,12 +3,14 @@ package com.mtvs.devlinkbackend.oauth2.service;
 import com.mtvs.devlinkbackend.oauth2.dto.request.UserPartnerRequestDTO;
 import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerListResponseDTO;
 import com.mtvs.devlinkbackend.oauth2.dto.response.UserPartnerSingleResponseDTO;
+import com.mtvs.devlinkbackend.oauth2.entity.Skill;
 import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
 import com.mtvs.devlinkbackend.oauth2.repository.UserPartnersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserPartnerService {
@@ -22,7 +24,7 @@ public class UserPartnerService {
     public UserPartnerSingleResponseDTO registUserPartner(UserPartnerRequestDTO userPartnerRequestDTO,
                                                           String accountId) {
 
-        return new UserPartnerSingleResponseDTO(userPartnersRepository.save(new UserPartner(
+        UserPartner userPartner = new UserPartner(
                 accountId,
                 userPartnerRequestDTO.getPurpose(),
                 userPartnerRequestDTO.getNickname(),
@@ -32,9 +34,18 @@ public class UserPartnerService {
                 userPartnerRequestDTO.getGithubLink(),
                 userPartnerRequestDTO.getPortfolioList(),
                 userPartnerRequestDTO.getExperience(),
-                userPartnerRequestDTO.getSkillSet(),
                 userPartnerRequestDTO.getMessage()
-        )));
+        );
+
+        List<Skill> skills = userPartnerRequestDTO.getSkill().stream()
+                .map(skillDTO -> new Skill(skillDTO.getSkillCategory(), skillDTO.getSkillName(), Integer.parseInt(skillDTO.getSkillLevel())))
+                .peek(skill -> skill.setUserPartner(userPartner)) // 각 Skill 엔티티에 UserPartner 설정
+                .toList();
+
+        userPartner.setSkillSet(skills);
+
+
+        return new UserPartnerSingleResponseDTO(userPartnersRepository.save(userPartner));
     }
 
     public UserPartnerSingleResponseDTO findUserPartnerByAccountId(String accountId) {
@@ -73,10 +84,21 @@ public class UserPartnerService {
         userPartner.setGithubLink(userPartnerRequestDTO.getGithubLink());
         userPartner.setPortfolioList(userPartnerRequestDTO.getPortfolioList());
         userPartner.setExperience(userPartnerRequestDTO.getExperience());
-        userPartner.setSkillSet(userPartnerRequestDTO.getSkillSet());
         userPartner.setMessage(userPartnerRequestDTO.getMessage());
 
-        return new UserPartnerSingleResponseDTO(userPartner);
+        // 기존 Skill 삭제 (orphanRemoval=true 옵션이 설정되어 있다면 자동 삭제됨)
+        userPartner.getSkillSet().clear();
+
+        // 새로운 Skill 리스트 설정
+        List<Skill> newSkills = userPartnerRequestDTO.getSkill().stream()
+                .map(skillDTO -> new Skill(skillDTO.getSkillCategory(), skillDTO.getSkillName(), Integer.parseInt(skillDTO.getSkillLevel())))
+                .peek(skill -> skill.setUserPartner(userPartner)) // 각 Skill 엔티티에 UserPartner 설정
+                .toList();
+
+        userPartner.setSkillSet(newSkills);
+
+
+        return new UserPartnerSingleResponseDTO(userPartnersRepository.save(userPartner));
     }
 
     public void deleteByAccountId(String accountId) {

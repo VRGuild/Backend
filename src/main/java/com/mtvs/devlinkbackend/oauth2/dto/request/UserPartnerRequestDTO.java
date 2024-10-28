@@ -20,9 +20,9 @@ public class UserPartnerRequestDTO {
     private List<String> portfolioList;
     private String experience;
     @Schema(
-            description = "기술 숙련도에 대한 정보. Key는 기술 이름이고, Value는 해당 기술의 숙련도입니다.",
-            example = "{ \"Java\": 5, \"Spring\": 4, \"Docker\": 3 }"
+            description = "기술 숙련도에 대한 정보. skillCategory는 AI, Server와 같은 대분류이고, " +
+                    "skillName은 기술 이름이고, skillLevel는 해당 기술의 숙련도입니다."
     )
-    private Map<String, Integer> skillSet;
+    private List<SkillRequestDTO> skill;
     private String message;
 }

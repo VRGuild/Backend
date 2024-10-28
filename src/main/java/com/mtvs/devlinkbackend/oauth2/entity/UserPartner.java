@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mtvs.devlinkbackend.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,16 +38,21 @@ public class UserPartner extends User {
     @Column(name = "EXPERIENCE", columnDefinition = "TEXT") // 경력 기술
     private String experience;
 
-    @ElementCollection
-    @CollectionTable(name = "SKILL", joinColumns = @JoinColumn(name = "USER_ID"))
-    @MapKeyColumn(name = "SKILL_NAME")
-    @Column(name = "SKILL_PROFICIENCY")
-    private Map<String, Integer> skillSet;
+    @Column(name = "EXP_POINTS")
+    private Long expPoints;
+
+    @OneToMany(mappedBy = "userPartner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Skill> skillSet;
+
+    @OneToMany(mappedBy = "userPartner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Stat> statSet;
 
     @Column(name = "MESSAGE", columnDefinition = "TEXT") // 하고 싶은 말
     private String message;
 
-    public UserPartner(String accountId, String purpose, String nickname, String name, String email, String phone,String githubLink, List<String> portfolioList, String experience, Map<String, Integer> skillSet, String message) {
+    public UserPartner(String accountId, String purpose, String nickname, String name, String email, String phone,String githubLink, List<String> portfolioList, String experience, String message) {
         super(accountId, purpose);
         this.nickname = nickname;
         this.name = name;
@@ -55,7 +61,6 @@ public class UserPartner extends User {
         this.githubLink = githubLink;
         this.portfolioList = portfolioList;
         this.experience = experience;
-        this.skillSet = skillSet;
         this.message = message;
     }
 }
