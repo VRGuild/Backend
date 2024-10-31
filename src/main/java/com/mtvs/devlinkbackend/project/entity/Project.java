@@ -26,9 +26,6 @@ public class Project {
     @Column(name = "PROJECT_ID")
     private Long projectId;
 
-    @Column(name = "WORK_SCOPE")
-    private String workScope;
-
     @Column(name = "WORK_TYPE")
     private String workType;
 
@@ -41,7 +38,7 @@ public class Project {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "CONTENT", nullable = false)
+    @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "REQUIRED_CLIENT")
@@ -97,8 +94,7 @@ public class Project {
         this.accountId = accountId;
     }
 
-    public Project(String workScope, String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDate startDateTime, LocalDate endDateTime, Integer estimatedCost, String accountId) {
-        this.workScope = workScope;
+    public Project(String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDate startDateTime, LocalDate endDateTime, Integer estimatedCost, String accountId) {
         this.workType = workType;
         this.progressClassification = progressClassification;
         this.companyName = companyName;
@@ -113,10 +109,6 @@ public class Project {
         this.endDateTime = endDateTime;
         this.estimatedCost = estimatedCost;
         this.accountId = accountId;
-    }
-
-    public void setWorkScope(String workScope) {
-        this.workScope = workScope;
     }
 
     public void setWorkType(String workType) {

@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class ProjectRegistRequestDTO {
-    private String workScope;
     private String workType;
     private String progressClassification;
     private String companyName;
