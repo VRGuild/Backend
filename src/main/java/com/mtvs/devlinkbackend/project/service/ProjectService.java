@@ -33,7 +33,6 @@ public class ProjectService {
     @Transactional
     public ProjectSingleResponseDTO registProject(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
         return new ProjectSingleResponseDTO(projectRepository.save(new Project(
-                projectRegistRequestDTO.getWorkScope(),
                 projectRegistRequestDTO.getWorkType(),
                 projectRegistRequestDTO.getProgressClassification(),
                 projectRegistRequestDTO.getCompanyName(),
@@ -58,12 +57,6 @@ public class ProjectService {
     public ProjectPagingResponseDTO findProjectsByAccountIdWithPaging(int page, String accountId) {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         Page<Project> projectPage = projectRepository.findProjectsByAccountId(accountId, pageable);
-        return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
-    }
-
-    public ProjectPagingResponseDTO findProjectsByWorkScopeWithPaging(int page, String workScope) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
-        Page<Project> projectPage = projectRepository.findProjectsByWorkScope(workScope, pageable);
         return new ProjectPagingResponseDTO(projectPage.getContent(), projectPage.getTotalPages());
     }
 
@@ -116,7 +109,6 @@ public class ProjectService {
         if (request.isPresent()) {
             Project foundProject = request.get();
             if(foundProject.getAccountId().equals(accountId)) {
-                foundProject.setWorkScope(projectUpdateRequestDTO.getWorkScope());
                 foundProject.setWorkType(projectUpdateRequestDTO.getWorkType());
                 foundProject.setProgressClassification(projectUpdateRequestDTO.getProgressClassification());
                 foundProject.setTitle(projectUpdateRequestDTO.getTitle());

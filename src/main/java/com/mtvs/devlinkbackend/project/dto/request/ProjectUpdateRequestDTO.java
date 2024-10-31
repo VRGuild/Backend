@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @ToString
 public class ProjectUpdateRequestDTO {
     private Long projectId;
-    private String workScope;
     private String workType;
     private String progressClassification;
     private String companyName;
