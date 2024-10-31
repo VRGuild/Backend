@@ -19,9 +19,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     // AccountId로 프로젝트 조회 (페이징 추가)
     Page<Project> findProjectsByAccountId(String accountId, Pageable pageable);
 
-    // WorkScope로 프로젝트 조회 (페이징 추가)
-    Page<Project> findProjectsByWorkScope(String workScope, Pageable pageable);
-
     // WorkType으로 프로젝트 조회 (페이징 추가)
     Page<Project> findProjectsByWorkType(String workType, Pageable pageable);
 
