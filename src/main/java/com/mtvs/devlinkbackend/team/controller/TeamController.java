@@ -33,8 +33,9 @@ public class TeamController {
     })
     @PostMapping
     public ResponseEntity<TeamSingleReponseDTO> registTeam(
-            @RequestBody TeamRegistRequestDTO teamRegistRequestDTO, @RequestParam String accountId) {
+            @RequestBody TeamRegistRequestDTO teamRegistRequestDTO, @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         TeamSingleReponseDTO team = teamService.registTeam(teamRegistRequestDTO, accountId);
         return new ResponseEntity<>(team, HttpStatus.CREATED);
     }
@@ -104,7 +105,9 @@ public class TeamController {
     @PatchMapping
     public ResponseEntity<TeamSingleReponseDTO> updateTeam(
             @RequestBody TeamUpdateRequestDTO teamUpdateRequestDTO,
-            @RequestParam String accountId) {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
 
         try {
             TeamSingleReponseDTO updatedTeam = teamService.updateTeam(teamUpdateRequestDTO, accountId);
@@ -126,6 +129,7 @@ public class TeamController {
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        System.out.println(teamMemberModifyRequestDTO);
         return teamService.addMemberToTeam(teamMemberModifyRequestDTO, accountId);
     }
 
