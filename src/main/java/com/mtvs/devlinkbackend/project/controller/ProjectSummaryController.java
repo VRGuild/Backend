@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.project.controller;
 
 import com.mtvs.devlinkbackend.project.dto.response.ProjectDetailResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectSummaryPagingResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.response.ProjectSummaryResponseDTO;
 import com.mtvs.devlinkbackend.project.service.ProjectDetailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +27,28 @@ public class ProjectSummaryController {
     @GetMapping("/summary")
     public ResponseEntity<ProjectSummaryResponseDTO> findAllSummary() {
         ProjectSummaryResponseDTO summary = projectDetailService.findAllProjectSummary();
+        return summary != null ? ResponseEntity.ok(summary) : ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Pagination으로 전체 프로젝트 요약 조회", description = "Pagination으로 전체 프로젝트 요약을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공적으로 조회됨"),
+            @ApiResponse(responseCode = "404", description = "찾을 수 없음")
+    })
+    @GetMapping("/summary/pagination")
+    public ResponseEntity<ProjectSummaryPagingResponseDTO> findAllSummary(@RequestParam int page) {
+        ProjectSummaryPagingResponseDTO summary = projectDetailService.findAllProjectSummaryWithPagination(page);
+        return summary != null ? ResponseEntity.ok(summary) : ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Pagination으로 전체 프로젝트 요약 조회", description = "Pagination으로 전체 프로젝트 요약을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공적으로 조회됨"),
+            @ApiResponse(responseCode = "404", description = "찾을 수 없음")
+    })
+    @GetMapping("/summary/home")
+    public ResponseEntity<ProjectSummaryPagingResponseDTO> findAllSummaryInHome() {
+        ProjectSummaryPagingResponseDTO summary = projectDetailService.findAllProjectPreviewInHome();
         return summary != null ? ResponseEntity.ok(summary) : ResponseEntity.notFound().build();
     }
 

@@ -50,5 +50,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<ProjectSummary> findAllBy();
 
+    Page<ProjectSummary> findAllBy(Pageable pageable);
+
     ProjectIdAndContent findProjectIdAndContentByProjectId(Long projectId);
 }
