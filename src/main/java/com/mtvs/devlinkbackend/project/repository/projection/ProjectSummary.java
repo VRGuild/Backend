@@ -6,7 +6,6 @@ import java.util.Map;
 
 public interface ProjectSummary {
     Long getProjectId();
-    String getWorkScope();
     String getWorkType();
     String getProgressClassification();
     String getCompanyName();
