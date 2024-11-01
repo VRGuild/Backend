@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DevRepository extends JpaRepository<Dev, Long> {
-    void deleteDevByUser_EpicAccountId(String epicAccountId);
+    void deleteByUserId(Long userId);
 }

@@ -31,13 +31,11 @@ public class User {
     @Column(name = "CHARACTER_ID", unique = true)
     private Long characterId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEV_ID")
-    private Dev dev;
+    @Column(name = "DEV_ID")
+    private Long devId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BUSINESS_ID")
-    private Business business;
+    @Column(name = "BUSINESS_ID")
+    private Long businessId;
 
     @Column(name = "NICKNAME")
     private String nickname;

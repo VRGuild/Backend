@@ -42,15 +42,14 @@ public class Business {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @OneToOne(mappedBy = "business", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private User user;
+    @Column(name = "USER_ID")
+    private Long userId;
 
-    public Business(String businessName, String businessLogoUrl, String managerName, String managerPhone, User user) {
+    public Business(String businessName, String businessLogoUrl, String managerName, String managerPhone, Long userId) {
         this.businessName = businessName;
         this.businessLogoUrl = businessLogoUrl;
         this.managerName = managerName;
         this.managerPhone = managerPhone;
-        this.user = user;
+        this.userId = userId;
     }
 }

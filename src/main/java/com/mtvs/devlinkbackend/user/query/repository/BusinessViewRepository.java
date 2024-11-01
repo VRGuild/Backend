@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface BusinessViewRepository extends JpaRepository<Business, Long> {
-    Business findBusinessByUser_EpicAccountId(String epicAccountId);
+    Business findBusinessByUserId(Long usreId);
 
     List<Business> findBusinessByManagerNameContainingIgnoreCase(String managerName);
 

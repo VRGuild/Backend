@@ -62,11 +62,10 @@ public class Dev {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @OneToOne(mappedBy = "dev", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private User user;
+    @Column(name = "USER_ID")
+    private Long userId;
 
-    public Dev(String devName, String devEmail, String devPhone, String githubLink, List<String> portfolioList, String career, String tag, String hope, User user) {
+    public Dev(String devName, String devEmail, String devPhone, String githubLink, List<String> portfolioList, String career, String tag, String hope, Long userId) {
         this.devName = devName;
         this.devEmail = devEmail;
         this.devPhone = devPhone;
@@ -75,7 +74,7 @@ public class Dev {
         this.career = career;
         this.tag = tag;
         this.hope = hope;
-        this.user = user;
+        this.userId = userId;
     }
 }
 

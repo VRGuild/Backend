@@ -7,6 +7,8 @@ import com.mtvs.devlinkbackend.user.command.model.entity.Dev;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.command.repository.DevRepository;
 import com.mtvs.devlinkbackend.user.command.repository.UserRepository;
+import com.mtvs.devlinkbackend.user.query.repository.DevViewRepository;
+import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +19,20 @@ import java.util.List;
 public class EpicDevService {
     private final DevRepository devRepository;
     private final UserRepository userRepository;
+    private final UserViewRepository userViewRepository;
+    private final DevViewRepository devViewRepository;
 
-    public EpicDevService(DevRepository devRepository, UserRepository userRepository) {
+    public EpicDevService(DevRepository devRepository, UserRepository userRepository, UserViewRepository userViewRepository, DevViewRepository devViewRepository) {
         this.devRepository = devRepository;
         this.userRepository = userRepository;
+        this.userViewRepository = userViewRepository;
+        this.devViewRepository = devViewRepository;
     }
 
     @Transactional
     public UserPartnerSingleResponseDTO registUserPartner(DevRequestDTO devRequestDTO,
                                                           String accountId) {
-        User user = userRepository.findUserByEpicAccountId(accountId);
+        User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null) {
             user = new User(
                     accountId,
@@ -35,6 +41,7 @@ public class EpicDevService {
                     devRequestDTO.getNickname()
             );
         }
+        User savedUser = userRepository.save(user);
 
         Dev dev = new Dev(
                 devRequestDTO.getDevName(),
@@ -45,7 +52,7 @@ public class EpicDevService {
                 devRequestDTO.getCareer(),
                 devRequestDTO.getTag(),
                 devRequestDTO.getHope(),
-                user
+                savedUser.getUserId()
         );
 
         List<CategoryInfo> categoryInfoList = devRequestDTO.getCategoryNameList()
@@ -53,7 +60,9 @@ public class EpicDevService {
                 .peek(categoryInfo -> categoryInfo.setDev(dev)).toList();
 
         dev.setCategoryInfoList(categoryInfoList);
-        user.setDev(dev);
+        Dev savedDev = devRepository.save(dev);
+
+        user.setDevId(savedDev.getDevId());
 
         userRepository.save(user);
 
@@ -65,9 +74,11 @@ public class EpicDevService {
     public UserPartnerSingleResponseDTO updateUserPartner(DevRequestDTO devRequestDTO,
                                                           String accountId) {
 
-        Dev dev = devRepository.findDevByUser_EpicAccountId(accountId);
-        User user = userRepository.findUserByEpicAccountId(accountId);
-        if(dev == null || user == null)
+        User user = userViewRepository.findUserByEpicAccountId(accountId);
+        if (user == null)
+            throw new IllegalArgumentException("잘못된 계정으로 파트너스 정보 수정 시도");
+        Dev dev = devViewRepository.findDevByUserId(user.getUserId());
+        if(dev == null)
             throw new IllegalArgumentException("잘못된 계정으로 파트너스 정보 수정 시도");
 
         user.setNickname(devRequestDTO.getNickname());
@@ -86,6 +97,9 @@ public class EpicDevService {
     }
 
     public void deleteByAccountId(String accountId) {
-        devRepository.deleteDevByUser_EpicAccountId(accountId);
+        User user = userViewRepository.findUserByEpicAccountId(accountId);
+        if (user == null)
+            throw new IllegalArgumentException("잘못된 계정으로 그룹 정보 수정 시도");
+        devRepository.deleteByUserId(user.getUserId());
     }
 }

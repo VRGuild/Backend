@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface DevViewRepository extends JpaRepository<Dev, Long> {
-    Dev findDevByUser_EpicAccountId(String epicAccountId);
+    Dev findDevByUserId(Long userId);
 
     Dev findDevByDevPhone(String devPhone);
 

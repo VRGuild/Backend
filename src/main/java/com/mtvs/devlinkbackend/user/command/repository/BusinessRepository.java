@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BusinessRepository extends JpaRepository<Business, Long> {
-    void deleteByUser_EpicAccountId(String epicAccountId);
+    void deleteByUserId(Long userId);
 }
