@@ -21,14 +21,14 @@ spring:
             user-name-attribute: sub
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://125.132.216.190:15531/devlink
+    url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
   data:
     mongodb:
-      host: 125.132.216.190
-      port: 15532
-      database: devlink
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT}
+      database: ${MONGO_DATABASE}
       username: ${MONGO_USERNAME}
       password: ${MONGO_PASSWORD}
   jpa:
