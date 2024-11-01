@@ -3,8 +3,6 @@ name: Auto delploy Docker
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
 
 jobs:
   build-and-push-image:
@@ -71,16 +69,16 @@ jobs:
           region: ${{ secrets.AWS_REGION }}    ## ap-northeast-2
           deployment_package: deploy/deploy.zip
           wait_for_environment_recovery: 200
-        env:
-          MYSQL_URL: ${{ secrets.MYSQL_URL }}
-          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
-          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-          MONGO_HOST: ${{ secrets.MONGO_HOST }}
-          MONGO_PORT: ${{ secrets.MONGO_PORT }}
-          MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
-          EPIC_GAMES_CLIENT_ID: ${{ secrets.EPIC_GAMES_CLIENT_ID }}
-          EPIC_GAMES_CLIENT_SECRET: ${{ secrets.EPIC_GAMES_CLIENT_SECRET }}
-          EPIC_GAMES_DEPLOYMENT_ID: ${{ secrets.EPIC_GAMES_DEPLOYMENT_ID }}
+          environment_variables: |
+            MYSQL_URL=${{ secrets.MYSQL_URL }}
+            MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MONGO_USERNAME=${{ secrets.MONGO_USERNAME }}
+            MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
+            MONGO_HOST=${{ secrets.MONGO_HOST }}
+            MONGO_PORT=${{ secrets.MONGO_PORT }}
+            MONGO_DATABASE=${{ secrets.MONGO_DATABASE }}
+            EPIC_GAMES_CLIENT_ID=${{ secrets.EPIC_GAMES_CLIENT_ID }}
+            EPIC_GAMES_CLIENT_SECRET=${{ secrets.EPIC_GAMES_CLIENT_SECRET }}
+            EPIC_GAMES_DEPLOYMENT_ID=${{ secrets.EPIC_GAMES_DEPLOYMENT_ID }}
 
