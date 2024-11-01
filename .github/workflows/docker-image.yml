@@ -80,4 +80,7 @@ jobs:
           MONGO_HOST: ${{ secrets.MONGO_HOST }}
           MONGO_PORT: ${{ secrets.MONGO_PORT }}
           MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+          EPIC_GAMES_CLIENT_ID: ${{ secrets.EPIC_GAMES_CLIENT_ID }}
+          EPIC_GAMES_CLIENT_SECRET: ${{ secrets.EPIC_GAMES_CLIENT_SECRET }}
+          EPIC_GAMES_DEPLOYMENT_ID: ${{ secrets.EPIC_GAMES_DEPLOYMENT_ID }}
 
