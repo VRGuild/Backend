@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.request.BusinessRequestDTO;
-import com.mtvs.devlinkbackend.oauth2.service.EpicBusinessService;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.BusinessRequestDTO;
+import com.mtvs.devlinkbackend.user.command.service.EpicBusinessService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
