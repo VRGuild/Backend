@@ -1,7 +1,5 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientIndividualRequestDTO;
-import com.mtvs.devlinkbackend.oauth2.service.UserClientIndividualService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

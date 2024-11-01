@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.dto.response;
 
-import com.mtvs.devlinkbackend.oauth2.entity.UserPartner;
+import com.mtvs.devlinkbackend.oauth2.entity.Dev;
 import lombok.*;
 
 @Getter @Setter
@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserPartnerSingleResponseDTO {
-    private UserPartner data;
+    private Dev data;
 }

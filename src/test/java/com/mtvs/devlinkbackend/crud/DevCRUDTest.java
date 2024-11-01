@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.request.UserPartnerRequestDTO;
-import com.mtvs.devlinkbackend.oauth2.service.UserPartnerService;
+import com.mtvs.devlinkbackend.oauth2.dto.request.DevRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.service.EpicDevService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,14 +20,14 @@ import java.util.stream.Stream;
 
 @SpringBootTest
 @Transactional
-public class UserPartnerCRUDTest {
+public class DevCRUDTest {
 
     @Autowired
-    private UserPartnerService userPartnerService;
+    private EpicDevService epicDevService;
 
     private static Stream<Arguments> registUserPartner() {
         return Stream.of(
-                Arguments.of(new UserPartnerRequestDTO(
+                Arguments.of(new DevRequestDTO(
                         "UserClientPartner",
                         "닉네임3",
                         "이름3",
@@ -39,7 +39,7 @@ public class UserPartnerCRUDTest {
                         Map.of("Java",3),
                         "하고싶은말3"
                 ), "계정3"),
-                Arguments.of(new UserPartnerRequestDTO(
+                Arguments.of(new DevRequestDTO(
                         "UserClientPartner",
                         "닉네임4",
                         "이름4",
@@ -56,7 +56,7 @@ public class UserPartnerCRUDTest {
 
     private static Stream<Arguments> modifyUserPartner() {
         return Stream.of(
-                Arguments.of(new UserPartnerRequestDTO(
+                Arguments.of(new DevRequestDTO(
                         "UserClientPartner",
                         "닉네임1",
                         "이름1",
@@ -68,7 +68,7 @@ public class UserPartnerCRUDTest {
                         Map.of("Java",3),
                         "하고싶은말1"
                 ), "계정1"),
-                Arguments.of(new UserPartnerRequestDTO(
+                Arguments.of(new DevRequestDTO(
                         "UserClientPartner",
                         "닉네임2",
                         "이름2",
@@ -85,7 +85,7 @@ public class UserPartnerCRUDTest {
 
     @BeforeEach
     public void setUp() {
-        userPartnerService.registUserPartner(new UserPartnerRequestDTO(
+        epicDevService.registUserPartner(new DevRequestDTO(
                 "UserClientPartner",
                 "닉네임1",
                 "이름1",
@@ -97,7 +97,7 @@ public class UserPartnerCRUDTest {
                 Map.of("Java",3),
                 "하고싶은말1"
         ), "계정1");
-        userPartnerService.registUserPartner(new UserPartnerRequestDTO(
+        epicDevService.registUserPartner(new DevRequestDTO(
                 "UserClientPartner",
                 "닉네임2",
                 "이름2",
@@ -115,8 +115,8 @@ public class UserPartnerCRUDTest {
     @DisplayName("UserPartner 등록")
     @MethodSource("registUserPartner")
     @ParameterizedTest
-    public void testRegistUserPartner(UserPartnerRequestDTO userPartnerRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.registUserPartner(userPartnerRequestDTO, accountId));
+    public void testRegistUserPartner(DevRequestDTO devRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() -> epicDevService.registUserPartner(devRequestDTO, accountId));
     }
 
     @Order(2)
@@ -124,7 +124,7 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testFindUserPartnerByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.findUserPartnerByAccountId(accountId));
+        Assertions.assertDoesNotThrow(() -> epicDevService.findUserPartnerByAccountId(accountId));
     }
 
     @Order(3)
@@ -132,7 +132,7 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"이름1", "이름2"})
     @ParameterizedTest
     public void testFindUserPartnersByNameContainingIgnoreCase(String name) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.findUserPartnersByNameContainingIgnoreCase(name));
+        Assertions.assertDoesNotThrow(() -> epicDevService.findUserPartnersByNameContainingIgnoreCase(name));
     }
 
     @Order(4)
@@ -140,7 +140,7 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"닉네임1", "닉네임2"})
     @ParameterizedTest
     public void testFindUserPartnersByNicknameContainingIgnoreCase(String nickname) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.findUserPartnersByNicknameContainingIgnoreCase(nickname));
+        Assertions.assertDoesNotThrow(() -> epicDevService.findUserPartnersByNicknameContainingIgnoreCase(nickname));
     }
 
     @Order(5)
@@ -148,7 +148,7 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testFindUserPartnersByEmail(String email) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.findUserPartnersByEmail(email));
+        Assertions.assertDoesNotThrow(() -> epicDevService.findUserPartnersByEmail(email));
     }
 
     @Order(6)
@@ -156,15 +156,15 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"핸드폰1", "핸드폰2"})
     @ParameterizedTest
     public void testFindUserPartnerByPhone(String phone) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.findUserPartnerByPhone(phone));
+        Assertions.assertDoesNotThrow(() -> epicDevService.findUserPartnerByPhone(phone));
     }
 
     @Order(7)
     @DisplayName("UserPartner 수정")
     @MethodSource("modifyUserPartner")
     @ParameterizedTest
-    public void testUpdateUserPartner(UserPartnerRequestDTO userPartnerRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.updateUserPartner(userPartnerRequestDTO, accountId));
+    public void testUpdateUserPartner(DevRequestDTO devRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() -> epicDevService.updateUserPartner(devRequestDTO, accountId));
     }
 
     @Order(8)
@@ -172,6 +172,6 @@ public class UserPartnerCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testDeleteByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> userPartnerService.deleteByAccountId(accountId));
+        Assertions.assertDoesNotThrow(() -> epicDevService.deleteByAccountId(accountId));
     }
 }

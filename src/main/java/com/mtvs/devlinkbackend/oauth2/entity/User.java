@@ -1,31 +1,54 @@
 package com.mtvs.devlinkbackend.oauth2.entity;
 
+import com.mtvs.devlinkbackend.util.LongListConverter;
+import com.mtvs.devlinkbackend.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Table(name = "USER")
 @Entity(name = "User")
-@Getter
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "purpose")
+@Getter @Setter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long userId;
 
-    @Column(name = "ACCOUNT_ID", unique = true)
-    private String accountId;
+    @Column(name = "EPIC_ACCOUNT_ID", unique = true)
+    private String epicAccountId;
 
-    @Column(name = "PURPOSE", insertable = false, updatable = false) // "UserClient", "UserPartner" 둘 중 한개
-    private String purpose;
+    @Column(name = "STEAM_ACCOUNT_ID", unique = true)
+    private String steamAccountId;
 
     @Column(name = "CHARACTER_ID", unique = true)
     private Long characterId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DEV_ID")
+    private Dev dev;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BUSINESS_ID")
+    private Business business;
+
+    @Column(name = "NICKNAME")
+    private String nickname;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "CHANNEL_LIST", columnDefinition = "TEXT")
+    private List<String> channelList;
+
+    @Convert(converter = LongListConverter.class)
+    @Column(name = "EXPERIENCE_LIST", columnDefinition = "TEXT")
+    private List<Long> experienceList;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -35,15 +58,14 @@ public class User {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    public User() {}
-
-    public User(String accountId) {
-        this.accountId = accountId;
+    public User(String epicAccountId) {
+        this.epicAccountId = epicAccountId;
     }
 
-    public User(String accountId, String purpose) {
-        this.userId = userId;
-        this.accountId = accountId;
-        this.purpose = purpose;
+    public User(String epicAccountId, String steamAccountId, Long characterId, String nickname) {
+        this.epicAccountId = epicAccountId;
+        this.steamAccountId = steamAccountId;
+        this.characterId = characterId;
+        this.nickname = nickname;
     }
 }

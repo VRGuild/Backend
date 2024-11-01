@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.oauth2.dto.request.UserClientGroupRequestDTO;
-import com.mtvs.devlinkbackend.oauth2.service.UserClientGroupService;
+import com.mtvs.devlinkbackend.oauth2.dto.request.BusinessRequestDTO;
+import com.mtvs.devlinkbackend.oauth2.service.EpicBusinessService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,20 +17,20 @@ import java.util.stream.Stream;
 
 @SpringBootTest
 @Transactional
-public class UserClientGroupCRUDTest {
+public class BusinessCRUDTest {
     @Autowired
-    private UserClientGroupService userClientGroupService;
+    private EpicBusinessService epicBusinessService;
 
     private static Stream<Arguments> registUserClientGroup() {
         return Stream.of(
-                Arguments.of(new UserClientGroupRequestDTO(
+                Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
                         "그룹이름3",
                         "담당자이름3",
                         "담당자핸드폰번호3"
                 ), "계정3"),
-                Arguments.of(new UserClientGroupRequestDTO(
+                Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀2",
                         "그룹이름4",
@@ -42,14 +42,14 @@ public class UserClientGroupCRUDTest {
 
     private static Stream<Arguments> modifyUserClientGroup() {
         return Stream.of(
-                Arguments.of(new UserClientGroupRequestDTO(
+                Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
                         "그룹이름2",
                         "담당자이름2",
                         "담당자핸드폰번호2"
                 ), "계정1"),
-                Arguments.of(new UserClientGroupRequestDTO(
+                Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
                         "그룹이름1",
@@ -61,14 +61,14 @@ public class UserClientGroupCRUDTest {
 
     @BeforeEach
     public void setUp() {
-        userClientGroupService.registUserClientGroup(new UserClientGroupRequestDTO(
+        epicBusinessService.registUserClientGroup(new BusinessRequestDTO(
                 "UserClientGroup",
                 "팀",
                 "그룹이름1",
                 "담당자이름1",
                 "담당자핸드폰번호1"
         ), "계정1");
-        userClientGroupService.registUserClientGroup(new UserClientGroupRequestDTO(
+        epicBusinessService.registUserClientGroup(new BusinessRequestDTO(
                 "UserClientGroup",
                 "팀",
                 "그룹이름2",
@@ -81,8 +81,8 @@ public class UserClientGroupCRUDTest {
     @DisplayName("UserClientGroup 등록")
     @MethodSource("registUserClientGroup")
     @ParameterizedTest
-    public void testRegistUserClientGroup(UserClientGroupRequestDTO UserClientGroupRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.registUserClientGroup(UserClientGroupRequestDTO, accountId));
+    public void testRegistUserClientGroup(BusinessRequestDTO BusinessRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.registUserClientGroup(BusinessRequestDTO, accountId));
     }
 
     @Order(2)
@@ -90,7 +90,7 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testFindUserClientGroupByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.findUserClientGroupByAccountId(accountId));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.findUserClientGroupByAccountId(accountId));
     }
 
     @Order(3)
@@ -98,7 +98,7 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"담당자이름1", "담당자이름2"})
     @ParameterizedTest
     public void findByManagerNameContainingIgnoreCase(String managerName) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.findByManagerNameContainingIgnoreCase(managerName));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByManagerNameContainingIgnoreCase(managerName));
     }
 
     @Order(4)
@@ -106,7 +106,7 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"그룹이름1", "그룹이름2"})
     @ParameterizedTest
     public void testFindByGroupNameContainingIgnoreCase(String groupName) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.findByGroupNameContainingIgnoreCase(groupName));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByGroupNameContainingIgnoreCase(groupName));
     }
 
     @Order(5)
@@ -114,7 +114,7 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"팀", "법인"})
     @ParameterizedTest
     public void testFindUserClientGroupsByEmail(String clientType) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.findByClientType(clientType));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByClientType(clientType));
     }
 
     @Order(6)
@@ -122,15 +122,15 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"담당자핸드폰1", "담당자핸드폰2"})
     @ParameterizedTest
     public void testFindUserClientGroupByPhone(String managerPhone) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.findByManagerPhone(managerPhone));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByManagerPhone(managerPhone));
     }
 
     @Order(7)
     @DisplayName("UserClientGroup 수정")
     @MethodSource("modifyUserClientGroup")
     @ParameterizedTest
-    public void testUpdateUserClientGroup(UserClientGroupRequestDTO UserClientGroupRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.updateUserClientGroup(UserClientGroupRequestDTO, accountId));
+    public void testUpdateUserClientGroup(BusinessRequestDTO BusinessRequestDTO, String accountId) {
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.updateUserClientGroup(BusinessRequestDTO, accountId));
     }
 
     @Order(8)
@@ -138,6 +138,6 @@ public class UserClientGroupCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testDeleteByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> userClientGroupService.deleteByAccountId(accountId));
+        Assertions.assertDoesNotThrow(() -> epicBusinessService.deleteByAccountId(accountId));
     }
 }

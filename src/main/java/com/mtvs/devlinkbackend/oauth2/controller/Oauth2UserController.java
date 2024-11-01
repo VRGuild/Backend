@@ -91,7 +91,9 @@ public class Oauth2UserController {
     @GetMapping("/login")
     public ResponseEntity<?> authLogin(
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
-        User user = userService.findUserByAuthorizationHeader(authorizationHeader);
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        User user = userService.findUserByEpicAccountId(accountId);
 
         // 222 : 해당 User는 이미 서비스를 사용한 경험이 있음
         // 260 : 해당 User가 처음 서비스를 사용

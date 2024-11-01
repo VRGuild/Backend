@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.oauth2.dto.response;
 
-import com.mtvs.devlinkbackend.oauth2.entity.UserClientGroup;
+import com.mtvs.devlinkbackend.oauth2.entity.Business;
 import lombok.*;
 
 @Getter
@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserClientGroupSingleResponseDTO {
-    private UserClientGroup data;
+    private Business data;
 }
