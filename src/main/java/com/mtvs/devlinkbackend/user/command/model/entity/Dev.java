@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.user.command.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mtvs.devlinkbackend.util.StringListConverter;
 import jakarta.persistence.*;
@@ -39,17 +38,18 @@ public class Dev {
 
     @Convert(converter = StringListConverter.class)
     @Column(name = "PORTFOLIO_LIST", columnDefinition = "TEXT")
-    private List<String> portfolioList;
+    private List<String> portfolioUrlList;
 
     @Column(name = "CAREER", columnDefinition = "TEXT") // 경력 기술
     private String career;
 
     @OneToMany(mappedBy = "dev", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<CategoryInfo> categoryInfoList;
+    private List<SkillCategoryInfo> skillCategoryList;
 
-    @Column(name = "TAG")
-    private String tag;
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "TAG", columnDefinition = "TEXT")
+    private List<String> tag;
 
     @Column(name = "HOPE")
     private String hope;
@@ -65,12 +65,12 @@ public class Dev {
     @Column(name = "USER_ID")
     private Long userId;
 
-    public Dev(String devName, String devEmail, String devPhone, String githubLink, List<String> portfolioList, String career, String tag, String hope, Long userId) {
+    public Dev(String devName, String devEmail, String devPhone, String githubLink, List<String> portfolioUrlList, String career, List<String> tag, String hope, Long userId) {
         this.devName = devName;
         this.devEmail = devEmail;
         this.devPhone = devPhone;
         this.githubLink = githubLink;
-        this.portfolioList = portfolioList;
+        this.portfolioUrlList = portfolioUrlList;
         this.career = career;
         this.tag = tag;
         this.hope = hope;

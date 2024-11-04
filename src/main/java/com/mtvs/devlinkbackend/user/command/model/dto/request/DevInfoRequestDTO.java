@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.user.command.model.dto.request;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -8,16 +9,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DevRequestDTO {
-    private Long characterId;
-    private String nickname;
+public class DevInfoRequestDTO {
     private String devName;
     private String devEmail;
     private String devPhone;
     private String githubLink;
-    private List<String> portfolioList;
+    private MultipartFile[] portfolioList;
     private String career;
     private List<String> categoryNameList;
-    private String tag;
+    private List<String> tag;
     private String hope;
 }

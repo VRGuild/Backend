@@ -1,6 +1,7 @@
-package com.mtvs.devlinkbackend.user.command.model.entity;
+package com.mtvs.devlinkbackend.evaluation.command.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mtvs.devlinkbackend.user.command.model.entity.SkillCategoryInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,9 +37,9 @@ public class Evaluation {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_INFO_ID", nullable = false)
+    @JoinColumn(name = "SKILL_CATEGORY_INFO_ID", nullable = false)
     @JsonIgnore
-    private CategoryInfo categoryInfo;
+    private SkillCategoryInfo skillCategoryInfo;
 
     public Evaluation(Long userId, String cause, Integer point, LocalDateTime createdAt) {
         this.userId = userId;

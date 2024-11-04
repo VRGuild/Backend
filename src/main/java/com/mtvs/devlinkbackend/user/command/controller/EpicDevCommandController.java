@@ -1,7 +1,8 @@
 package com.mtvs.devlinkbackend.user.command.controller;
 
-import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRequestDTO;
-import com.mtvs.devlinkbackend.user.query.model.dto.response.UserPartnerSingleResponseDTO;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRegistRequestDTO;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.DevUpdateRequestDTO;
+import com.mtvs.devlinkbackend.user.query.model.dto.response.DevSingleResponseDTO;
 import com.mtvs.devlinkbackend.user.command.service.EpicDevService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user/epic/dev")
+@RequestMapping("/api/epic/developer")
 public class EpicDevCommandController {
     private final EpicDevService epicDevService;
     private final JwtUtil jwtUtil;
@@ -27,12 +28,12 @@ public class EpicDevCommandController {
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
     })
     @PostMapping
-    public ResponseEntity<UserPartnerSingleResponseDTO> registerDev(
-            @RequestBody DevRequestDTO devRequestDTO,
+    public ResponseEntity<DevSingleResponseDTO> registerDev(
+            @RequestBody DevRegistRequestDTO devRegistRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserPartnerSingleResponseDTO userPartner = epicDevService.registUserPartner(devRequestDTO, accountId);
+        DevSingleResponseDTO userPartner = epicDevService.registDev(devRegistRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 
@@ -42,12 +43,12 @@ public class EpicDevCommandController {
             @ApiResponse(responseCode = "404", description = "찾을 수 없음")
     })
     @PatchMapping
-    public ResponseEntity<UserPartnerSingleResponseDTO> update(
-            @RequestBody DevRequestDTO devRequestDTO,
+    public ResponseEntity<DevSingleResponseDTO> update(
+            @RequestBody DevUpdateRequestDTO devUpdateRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserPartnerSingleResponseDTO userPartner = epicDevService.updateUserPartner(devRequestDTO, accountId);
+        DevSingleResponseDTO userPartner = epicDevService.updateUserPartner(devUpdateRequestDTO, accountId);
         return ResponseEntity.ok(userPartner);
     }
 

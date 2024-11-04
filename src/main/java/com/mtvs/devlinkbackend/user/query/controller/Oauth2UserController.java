@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.user.query.controller;
 
-import com.mtvs.devlinkbackend.user.query.service.UserService;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.EpicGamesCallbackRequestDTO;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
@@ -20,12 +20,12 @@ public class Oauth2UserController {
 
     private final EpicGamesTokenService epicGamesTokenService;
     private final JwtUtil jwtUtil;
-    private final UserService userService;
+    private final UserViewService userViewService;
 
-    public Oauth2UserController(EpicGamesTokenService epicGamesTokenService, JwtUtil jwtUtil, UserService userService) {
+    public Oauth2UserController(EpicGamesTokenService epicGamesTokenService, JwtUtil jwtUtil, UserViewService userViewService) {
         this.epicGamesTokenService = epicGamesTokenService;
         this.jwtUtil = jwtUtil;
-        this.userService = userService;
+        this.userViewService = userViewService;
     }
 
     // epicgames 계정 정보 가져오는 API
@@ -93,10 +93,10 @@ public class Oauth2UserController {
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        User user = userService.findUserByEpicAccountId(accountId);
+        Boolean isExisted = userViewService.isExistedUserByEpicAccountId(accountId);
 
         // 222 : 해당 User는 이미 서비스를 사용한 경험이 있음
         // 260 : 해당 User가 처음 서비스를 사용
-        return user != null ? ResponseEntity.status(222).body("Existing User") : ResponseEntity.status(260).body("New User");
+        return isExisted ? ResponseEntity.status(222).body("Existing User") : ResponseEntity.status(260).body("New User");
     }
 }

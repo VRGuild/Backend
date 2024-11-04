@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserPartnerSingleResponseDTO {
+public class DevSingleResponseDTO {
     private Dev data;
 }

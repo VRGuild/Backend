@@ -1,8 +1,10 @@
 package com.mtvs.devlinkbackend.user.command.service;
 
-import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRequestDTO;
-import com.mtvs.devlinkbackend.user.query.model.dto.response.UserPartnerSingleResponseDTO;
-import com.mtvs.devlinkbackend.user.command.model.entity.CategoryInfo;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRegistRequestDTO;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.DevInfoRequestDTO;
+import com.mtvs.devlinkbackend.user.command.model.dto.request.DevUpdateRequestDTO;
+import com.mtvs.devlinkbackend.user.query.model.dto.response.DevSingleResponseDTO;
+import com.mtvs.devlinkbackend.user.command.model.entity.SkillCategoryInfo;
 import com.mtvs.devlinkbackend.user.command.model.entity.Dev;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.command.repository.DevRepository;
@@ -30,36 +32,38 @@ public class EpicDevService {
     }
 
     @Transactional
-    public UserPartnerSingleResponseDTO registUserPartner(DevRequestDTO devRequestDTO,
-                                                          String accountId) {
+    public DevSingleResponseDTO registDev(DevRegistRequestDTO devRegistRequestDTO,
+                                          String accountId) {
         User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null) {
             user = new User(
                     accountId,
                     null,
-                    devRequestDTO.getCharacterId(),
-                    devRequestDTO.getNickname()
+                    null,
+                    devRegistRequestDTO.getNickname()
             );
         }
         User savedUser = userRepository.save(user);
 
+        DevInfoRequestDTO devInfoRequestDTO = devRegistRequestDTO.getDevInfo();
         Dev dev = new Dev(
-                devRequestDTO.getDevName(),
-                devRequestDTO.getDevEmail(),
-                devRequestDTO.getDevPhone(),
-                devRequestDTO.getGithubLink(),
-                devRequestDTO.getPortfolioList(),
-                devRequestDTO.getCareer(),
-                devRequestDTO.getTag(),
-                devRequestDTO.getHope(),
+                devInfoRequestDTO.getDevName(),
+                devInfoRequestDTO.getDevEmail(),
+                devInfoRequestDTO.getDevPhone(),
+                devInfoRequestDTO.getGithubLink(),
+                //TODO:: AWS S3 로직 개발 이후 저장 예정
+                List.of(""),
+                devInfoRequestDTO.getCareer(),
+                devInfoRequestDTO.getTag(),
+                devInfoRequestDTO.getHope(),
                 savedUser.getUserId()
         );
 
-        List<CategoryInfo> categoryInfoList = devRequestDTO.getCategoryNameList()
-                .stream().map(categoryName -> new CategoryInfo(categoryName, new ArrayList<>()))
-                .peek(categoryInfo -> categoryInfo.setDev(dev)).toList();
+        List<SkillCategoryInfo> skillCategoryInfoList = devInfoRequestDTO.getCategoryNameList()
+                .stream().map(categoryName -> new SkillCategoryInfo(categoryName, new ArrayList<>()))
+                .peek(skillCategoryInfo -> skillCategoryInfo.setDev(dev)).toList();
 
-        dev.setCategoryInfoList(categoryInfoList);
+        dev.setSkillCategoryList(skillCategoryInfoList);
         Dev savedDev = devRepository.save(dev);
 
         user.setDevId(savedDev.getDevId());
@@ -67,12 +71,12 @@ public class EpicDevService {
         userRepository.save(user);
 
         // Response 정리되면 Refactoring
-        return new UserPartnerSingleResponseDTO(devRepository.save(dev));
+        return new DevSingleResponseDTO(devRepository.save(dev));
     }
 
     @Transactional
-    public UserPartnerSingleResponseDTO updateUserPartner(DevRequestDTO devRequestDTO,
-                                                          String accountId) {
+    public DevSingleResponseDTO updateUserPartner(DevUpdateRequestDTO devUpdateRequestDTO,
+                                                  String accountId) {
 
         User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null)
@@ -81,19 +85,21 @@ public class EpicDevService {
         if(dev == null)
             throw new IllegalArgumentException("잘못된 계정으로 파트너스 정보 수정 시도");
 
-        user.setNickname(devRequestDTO.getNickname());
-        dev.setDevName(devRequestDTO.getDevName());
-        dev.setDevEmail(devRequestDTO.getDevEmail());
-        dev.setDevPhone(devRequestDTO.getDevPhone());
-        dev.setGithubLink(devRequestDTO.getGithubLink());
-        dev.setPortfolioList(devRequestDTO.getPortfolioList());
-        dev.setCareer(devRequestDTO.getCareer());
-        dev.setHope(devRequestDTO.getHope());
+        DevInfoRequestDTO devInfoRequestDTO = devUpdateRequestDTO.getDevInfo();
+        user.setNickname(devUpdateRequestDTO.getNickname());
+        dev.setDevName(devInfoRequestDTO.getDevName());
+        dev.setDevEmail(devInfoRequestDTO.getDevEmail());
+        dev.setDevPhone(devInfoRequestDTO.getDevPhone());
+        dev.setGithubLink(devInfoRequestDTO.getGithubLink());
+        //TODO:: 해당 부분 또한 이전 portfolioFile 삭제 이후 새로 업로드한 URL로 업데이트 예정
+        dev.setPortfolioUrlList(List.of(""));
+        dev.setCareer(devInfoRequestDTO.getCareer());
+        dev.setHope(devInfoRequestDTO.getHope());
 
         userRepository.save(user);
 
         // Response 정리되면 Refactoring
-        return new UserPartnerSingleResponseDTO(devRepository.save(dev));
+        return new DevSingleResponseDTO(devRepository.save(dev));
     }
 
     public void deleteByAccountId(String accountId) {

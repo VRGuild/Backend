@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @ToString
 public class BusinessRequestDTO {
-    private Long characterId;
     private String nickname;
     private String businessName;
     private MultipartFile businessLogoImg;

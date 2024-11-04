@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.user.command.service;
 
 import com.mtvs.devlinkbackend.user.command.model.dto.request.BusinessRequestDTO;
-import com.mtvs.devlinkbackend.user.query.model.dto.response.UserClientGroupSingleResponseDTO;
+import com.mtvs.devlinkbackend.user.query.model.dto.response.BusinessSingleResponseDTO;
 import com.mtvs.devlinkbackend.user.command.model.entity.Business;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.command.repository.BusinessRepository;
@@ -27,8 +27,8 @@ public class EpicBusinessService {
     }
 
     @Transactional
-    public UserClientGroupSingleResponseDTO registUserClientGroup(BusinessRequestDTO businessRequestDTO,
-                                                                  String accountId) {
+    public BusinessSingleResponseDTO registUserClientGroup(BusinessRequestDTO businessRequestDTO,
+                                                           String accountId) {
 
         User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null) {
@@ -55,12 +55,12 @@ public class EpicBusinessService {
 
 
         // Response 나오면 바로 refactoring
-        return new UserClientGroupSingleResponseDTO(businessRepository.save(business));
+        return new BusinessSingleResponseDTO(businessRepository.save(business));
     }
 
     @Transactional
-    public UserClientGroupSingleResponseDTO updateUserClientGroup(BusinessRequestDTO businessRequestDTO,
-                                                                  String accountId) {
+    public BusinessSingleResponseDTO updateUserClientGroup(BusinessRequestDTO businessRequestDTO,
+                                                           String accountId) {
 
         User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null)
@@ -75,7 +75,7 @@ public class EpicBusinessService {
         business.setManagerName(businessRequestDTO.getManagerName());
         business.setManagerPhone(businessRequestDTO.getManagerPhone());
 
-        return new UserClientGroupSingleResponseDTO(business);
+        return new BusinessSingleResponseDTO(business);
     }
 
     public void deleteByAccountId(String accountId) {

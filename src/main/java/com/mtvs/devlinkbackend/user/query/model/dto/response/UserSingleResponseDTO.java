@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.user.query.model.dto.response;
 
-import com.mtvs.devlinkbackend.user.command.model.entity.Business;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import lombok.*;
 
 @Getter
@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserClientGroupSingleResponseDTO {
-    private Business data;
+public class UserSingleResponseDTO {
+    private User data;
 }

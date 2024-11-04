@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserPartnerListResponseDTO {
+public class DevPagingResponseDTO {
     private List<Dev> data;
+    private Integer totalPages;
 }

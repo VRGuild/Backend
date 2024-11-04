@@ -44,9 +44,8 @@ public class User {
     @Column(name = "CHANNEL_LIST", columnDefinition = "TEXT")
     private List<String> channelList;
 
-    @Convert(converter = LongListConverter.class)
-    @Column(name = "EXPERIENCE_LIST", columnDefinition = "TEXT")
-    private List<Long> experienceList;
+    @Column(name = "EXPERIENCE_VALUE")
+    private Integer experienceValue;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
