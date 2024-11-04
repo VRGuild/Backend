@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.util;
 
-import com.mtvs.devlinkbackend.oauth2.component.EpicGamesJWKCache;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
