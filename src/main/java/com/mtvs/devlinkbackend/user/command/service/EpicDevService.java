@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.user.command.service;
 
+import com.mtvs.devlinkbackend.file.service.FileUploadService;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRegistRequestDTO;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevInfoRequestDTO;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevUpdateRequestDTO;
@@ -14,6 +15,7 @@ import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +25,19 @@ public class EpicDevService {
     private final UserRepository userRepository;
     private final UserViewRepository userViewRepository;
     private final DevViewRepository devViewRepository;
+    private final FileUploadService fileUploadService;
 
-    public EpicDevService(DevRepository devRepository, UserRepository userRepository, UserViewRepository userViewRepository, DevViewRepository devViewRepository) {
+    public EpicDevService(DevRepository devRepository, UserRepository userRepository, UserViewRepository userViewRepository, DevViewRepository devViewRepository, FileUploadService fileUploadService) {
         this.devRepository = devRepository;
         this.userRepository = userRepository;
         this.userViewRepository = userViewRepository;
         this.devViewRepository = devViewRepository;
+        this.fileUploadService = fileUploadService;
     }
 
     @Transactional
     public DevSingleResponseDTO registDev(DevRegistRequestDTO devRegistRequestDTO,
-                                          String accountId) {
+                                          String accountId) throws IOException {
         User user = userViewRepository.findUserByEpicAccountId(accountId);
         if (user == null) {
             user = new User(
@@ -46,13 +50,15 @@ public class EpicDevService {
         User savedUser = userRepository.save(user);
 
         DevInfoRequestDTO devInfoRequestDTO = devRegistRequestDTO.getDevInfo();
+        List<String> portfolioUrlList = fileUploadService.uploadPublicReadFiles(
+                devInfoRequestDTO.getPortfolioList(),
+                "/user/" + user.getUserId() + "/portfolio/");
         Dev dev = new Dev(
                 devInfoRequestDTO.getDevName(),
                 devInfoRequestDTO.getDevEmail(),
                 devInfoRequestDTO.getDevPhone(),
                 devInfoRequestDTO.getGithubLink(),
-                //TODO:: AWS S3 로직 개발 이후 저장 예정
-                List.of(""),
+                portfolioUrlList,
                 devInfoRequestDTO.getCareer(),
                 devInfoRequestDTO.getTag(),
                 devInfoRequestDTO.getHope(),
@@ -92,7 +98,14 @@ public class EpicDevService {
         dev.setDevPhone(devInfoRequestDTO.getDevPhone());
         dev.setGithubLink(devInfoRequestDTO.getGithubLink());
         //TODO:: 해당 부분 또한 이전 portfolioFile 삭제 이후 새로 업로드한 URL로 업데이트 예정
-        dev.setPortfolioUrlList(List.of(""));
+
+        List<String> updatedPortfolioUrlList =
+                fileUploadService.updatePublicReadFile(
+                        dev.getPortfolioUrlList(),
+                        devInfoRequestDTO.getPortfolioList(),
+                        "/user/" + user.getUserId() + "/portfolio/");
+
+        dev.setPortfolioUrlList(updatedPortfolioUrlList);
         dev.setCareer(devInfoRequestDTO.getCareer());
         dev.setHope(devInfoRequestDTO.getHope());
 
