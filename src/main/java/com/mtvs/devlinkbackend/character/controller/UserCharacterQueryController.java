@@ -23,11 +23,12 @@ public class UserCharacterQueryController {
     @Operation(summary = "캐릭터 조회", description = "캐릭터 ID로 캐릭터를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "캐릭터가 성공적으로 조회되었습니다.")
     @ApiResponse(responseCode = "404", description = "해당 계정 ID로 캐릭터를 찾을 수 없습니다.")
-    @GetMapping("/{characterId}")
+    @GetMapping
     public ResponseEntity<UserCharacterSingleResponseDTO> getCharacterByCharacterId(
-            @PathVariable(name = "characterId") Long characterId) throws Exception {
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
 
-        UserCharacterSingleResponseDTO userCharacter = userCharacterViewService.findCharacterByCharacterId(characterId);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        UserCharacterSingleResponseDTO userCharacter = userCharacterViewService.findCharacterByAccountId(accountId);
         if (userCharacter == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
