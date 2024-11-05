@@ -1,23 +1,24 @@
 package com.mtvs.devlinkbackend.character.entity;
 
-import com.mtvs.devlinkbackend.util.IntegerListConverter;
 import com.mtvs.devlinkbackend.util.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Table(name = "USER_CHARACTER")
 @Entity(name = "UserCharacter")
 @Getter
+@Setter
 public class UserCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHARACTER_ID")
     private Long characterId;
-
-    @Column(name = "ACCOUNT_ID", unique = true)
-    private String accountId;
 
     @Column(name = "GUILD_ID")
     private Long guildId;
@@ -30,26 +31,28 @@ public class UserCharacter {
     private String characterPicture;
 
     @ElementCollection
-    @CollectionTable(name = "STATUS_LIST", joinColumns = @JoinColumn(name = "CHARACTER_ID"))
-    @Column(name = "STATUS")
-    private List<Integer> status;
+    @CollectionTable(name = "CUSTOM_LIST", joinColumns = @JoinColumn(name = "CHARACTER_ID"))
+    private List<CustomInfo> customList;
 
     @Column(name = "USER_ID")
     private Long userId;
 
+    @CreationTimestamp
+    @Column(name = "CREATED_AT", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt;
+
     public UserCharacter() {
     }
 
-    public UserCharacter(String accountId, List<Integer> status) {
-        this.accountId = accountId;
-        this.status = status;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public void setStatus(List<Integer> status) {
-        this.status = status;
+    public UserCharacter(Long guildId, List<Long> teamIdList, String characterPicture, List<CustomInfo> customList, Long userId) {
+        this.guildId = guildId;
+        this.teamIdList = teamIdList;
+        this.characterPicture = characterPicture;
+        this.customList = customList;
+        this.userId = userId;
     }
 }

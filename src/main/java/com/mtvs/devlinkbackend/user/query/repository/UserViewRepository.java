@@ -4,7 +4,11 @@ import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserViewRepository extends JpaRepository<User, Long> {
     User findUserByEpicAccountId(String epicAccountId);
+
+    List<User> findUsersByNickname(String nickname);
 }

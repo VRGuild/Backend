@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.character.dto.request;
 
+import com.mtvs.devlinkbackend.character.entity.CustomInfo;
 import lombok.*;
 
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class UserCharacterUpdateRequestDTO {
-    private Long characterId;
-    private List<Integer> status;
+    private Long userId;
+    private Long guildId;
+    private List<Long> teamIdList;
+    private List<CustomInfo> customList;
+    private String characterPicture;
 }

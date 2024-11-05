@@ -4,6 +4,7 @@ import com.mtvs.devlinkbackend.character.dto.request.UserCharacterRegistRequestD
 import com.mtvs.devlinkbackend.character.dto.response.UserCharacterSingleResponseDTO;
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
+import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
 import com.mtvs.devlinkbackend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,13 +14,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/character")
-public class UserCharacterController {
+public class UserCharacterCommandController {
     private final UserCharacterService userCharacterService;
     private final JwtUtil jwtUtil;
+    private final UserCharacterViewService userCharacterViewService;
 
-    public UserCharacterController(UserCharacterService userCharacterService, JwtUtil jwtUtil) {
+    public UserCharacterCommandController(UserCharacterService userCharacterService, JwtUtil jwtUtil, UserCharacterViewService userCharacterViewService) {
         this.userCharacterService = userCharacterService;
         this.jwtUtil = jwtUtil;
+        this.userCharacterViewService = userCharacterViewService;
     }
 
     @Operation(summary = "캐릭터 등록", description = "새로운 캐릭터를 등록합니다.")
@@ -35,32 +38,15 @@ public class UserCharacterController {
         return new ResponseEntity<>(userCharacter, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "캐릭터 조회", description = "계정 ID로 캐릭터를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "캐릭터가 성공적으로 조회되었습니다.")
-    @ApiResponse(responseCode = "404", description = "해당 계정 ID로 캐릭터를 찾을 수 없습니다.")
-    @GetMapping
-    public ResponseEntity<UserCharacterSingleResponseDTO> getCharacter(
-            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
-
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        UserCharacterSingleResponseDTO userCharacter = userCharacterService.findCharacterByAccountId(accountId);
-        if (userCharacter == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userCharacter, HttpStatus.OK);
-    }
-
     @Operation(summary = "캐릭터 수정", description = "계정 ID로 캐릭터를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "캐릭터가 성공적으로 수정되었습니다.")
     @ApiResponse(responseCode = "404", description = "해당 계정 ID로 캐릭터를 찾을 수 없습니다.")
     @PatchMapping
     public ResponseEntity<UserCharacterSingleResponseDTO> updateCharacter(
-            @RequestBody UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO,
-            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+            @RequestBody UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO) throws Exception {
 
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         try {
-            UserCharacterSingleResponseDTO updatedCharacter = userCharacterService.updateCharacter(userCharacterUpdateRequestDTO, accountId);
+            UserCharacterSingleResponseDTO updatedCharacter = userCharacterService.updateCharacter(userCharacterUpdateRequestDTO);
             return new ResponseEntity<>(updatedCharacter, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
