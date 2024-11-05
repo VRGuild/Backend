@@ -26,16 +26,14 @@ public class EpicGamesTokenService {
     @Value("${epicgames.registration.deployment-id}")
     private String deploymentId;
 
-    private final String getAuthorizationCodeURL = "https://www.epicgames.com/id/authorize";
-    private final String getAccessTokenURL = "https://api.epicgames.dev/epic/oauth/v2/token";
+    @Value("${epicgames.provider.epicgames.token-uri}")
+    private String getAccessTokenURL;
+
     private final String getAccountURL = "https://api.epicgames.dev/epic/id/v2/accounts?accountId=";
 
-    private final EpicGamesJWKCache jwkCache;
     private final JwtUtil jwtUtil;
 
-    // EpicGamesJWKCache를 주입받아 사용합니다.
-    public EpicGamesTokenService(EpicGamesJWKCache jwkCache, JwtUtil jwtUtil) {
-        this.jwkCache = jwkCache;
+    public EpicGamesTokenService(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 

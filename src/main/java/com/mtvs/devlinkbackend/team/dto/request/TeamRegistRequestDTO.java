@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class TeamRegistRequestDTO {
-    private String teamName;
-    private String introduction;
-    private List<String> memberList;
+    private String teamIntroduction;
+    private Long leaderUserId;
 }
