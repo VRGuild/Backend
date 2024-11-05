@@ -1,6 +1,6 @@
-package com.mtvs.devlinkbackend.member.repository;
+package com.mtvs.devlinkbackend.member.command.repository;
 
-import com.mtvs.devlinkbackend.member.entity.Member;
+import com.mtvs.devlinkbackend.member.command.model.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

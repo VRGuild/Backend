@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.member.entity;
+package com.mtvs.devlinkbackend.member.command.model.entity;
 
 public enum AcceptStatus {
     DELETED(0),
