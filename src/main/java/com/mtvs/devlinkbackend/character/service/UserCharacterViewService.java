@@ -1,8 +1,6 @@
 package com.mtvs.devlinkbackend.character.service;
 
-import com.mtvs.devlinkbackend.character.dto.response.UserCharacterListResponseDTO;
 import com.mtvs.devlinkbackend.character.dto.response.UserCharacterSingleResponseDTO;
-import com.mtvs.devlinkbackend.character.entity.UserCharacter;
 import com.mtvs.devlinkbackend.character.repository.UserCharacterRepository;
 import com.mtvs.devlinkbackend.character.repository.UserCharacterViewRepository;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;

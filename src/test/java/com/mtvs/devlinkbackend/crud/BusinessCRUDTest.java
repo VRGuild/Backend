@@ -2,6 +2,7 @@ package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.user.command.model.dto.request.BusinessRequestDTO;
 import com.mtvs.devlinkbackend.user.command.service.EpicBusinessService;
+import com.mtvs.devlinkbackend.user.query.service.EpicBusinessViewService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,20 +21,22 @@ import java.util.stream.Stream;
 public class BusinessCRUDTest {
     @Autowired
     private EpicBusinessService epicBusinessService;
+    @Autowired
+    private EpicBusinessViewService epicBusinessViewService;
 
     private static Stream<Arguments> registUserClientGroup() {
         return Stream.of(
                 Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
-                        "그룹이름3",
+                        null,
                         "담당자이름3",
                         "담당자핸드폰번호3"
                 ), "계정3"),
                 Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀2",
-                        "그룹이름4",
+                        null,
                         "담당자이름4",
                         "담당자핸드폰번호4"
                 ), "계정4")
@@ -45,14 +48,14 @@ public class BusinessCRUDTest {
                 Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
-                        "그룹이름2",
+                        null,
                         "담당자이름2",
                         "담당자핸드폰번호2"
                 ), "계정1"),
                 Arguments.of(new BusinessRequestDTO(
                         "UserClientGroup",
                         "팀",
-                        "그룹이름1",
+                        null,
                         "담당자이름1",
                         "담당자핸드폰번호1"
                 ), "계정2")
@@ -64,14 +67,14 @@ public class BusinessCRUDTest {
         epicBusinessService.registUserClientGroup(new BusinessRequestDTO(
                 "UserClientGroup",
                 "팀",
-                "그룹이름1",
+                null,
                 "담당자이름1",
                 "담당자핸드폰번호1"
         ), "계정1");
         epicBusinessService.registUserClientGroup(new BusinessRequestDTO(
                 "UserClientGroup",
                 "팀",
-                "그룹이름2",
+                null,
                 "담당자이름2",
                 "담당자핸드폰번호2"
         ), "계정2");
@@ -87,42 +90,10 @@ public class BusinessCRUDTest {
 
     @Order(2)
     @DisplayName("계정 ID로 UserClientGroup 조회")
-    @ValueSource(strings = {"계정1", "계정2"})
+    @ValueSource(longs = {1, 2})
     @ParameterizedTest
-    public void testFindUserClientGroupByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> epicBusinessService.findUserClientGroupByAccountId(accountId));
-    }
-
-    @Order(3)
-    @DisplayName("담당자이름으로 UserClientGroup 조회")
-    @ValueSource(strings = {"담당자이름1", "담당자이름2"})
-    @ParameterizedTest
-    public void findByManagerNameContainingIgnoreCase(String managerName) {
-        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByManagerNameContainingIgnoreCase(managerName));
-    }
-
-    @Order(4)
-    @DisplayName("그룹이름으로 UserClientGroup 조회")
-    @ValueSource(strings = {"그룹이름1", "그룹이름2"})
-    @ParameterizedTest
-    public void testFindByGroupNameContainingIgnoreCase(String groupName) {
-        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByGroupNameContainingIgnoreCase(groupName));
-    }
-
-    @Order(5)
-    @DisplayName("이메일로 UserClientGroup 조회")
-    @ValueSource(strings = {"팀", "법인"})
-    @ParameterizedTest
-    public void testFindUserClientGroupsByEmail(String clientType) {
-        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByClientType(clientType));
-    }
-
-    @Order(6)
-    @DisplayName("담당자 핸드폰 번호로 UserClientGroup 조회")
-    @ValueSource(strings = {"담당자핸드폰1", "담당자핸드폰2"})
-    @ParameterizedTest
-    public void testFindUserClientGroupByPhone(String managerPhone) {
-        Assertions.assertDoesNotThrow(() -> epicBusinessService.findByManagerPhone(managerPhone));
+    public void testFindUserClientGroupByAccountId(Long businessId) {
+        Assertions.assertDoesNotThrow(() -> epicBusinessViewService.findBusinessByBusinessId(businessId));
     }
 
     @Order(7)
