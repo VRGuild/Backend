@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.member.entity;
+package com.mtvs.devlinkbackend.member.command.model.entity;
 
 import com.mtvs.devlinkbackend.util.converter.AcceptStatusConverter;
 import jakarta.persistence.*;
@@ -50,6 +50,10 @@ public class Member {
         this.assigneesId = assigneesId;
         this.userId = userId;
         this.motive = motive;
+        this.isAccepted = isAccepted;
+    }
+
+    public void setIsAccepted(AcceptStatus isAccepted) {
         this.isAccepted = isAccepted;
     }
 }

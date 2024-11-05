@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.team.dto.request;
 
-import com.mtvs.devlinkbackend.member.entity.Member;
+import com.mtvs.devlinkbackend.member.command.model.entity.Member;
 import lombok.*;
 
 import java.util.List;

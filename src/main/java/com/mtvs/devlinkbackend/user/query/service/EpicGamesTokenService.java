@@ -59,7 +59,7 @@ public class EpicGamesTokenService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
-        body.add("scope", "basic_profile friends_list presence");
+        body.add("scope", "basic_profile");
         body.add("deployment_id", deploymentId);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);

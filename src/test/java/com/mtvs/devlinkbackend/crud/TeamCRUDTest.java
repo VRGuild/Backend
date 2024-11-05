@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.member.entity.AcceptStatus;
-import com.mtvs.devlinkbackend.member.entity.Member;
+import com.mtvs.devlinkbackend.member.command.model.entity.AcceptStatus;
+import com.mtvs.devlinkbackend.member.command.model.entity.Member;
 import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;

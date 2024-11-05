@@ -1,8 +1,8 @@
 package com.mtvs.devlinkbackend.team.service;
 
-import com.mtvs.devlinkbackend.member.entity.AcceptStatus;
-import com.mtvs.devlinkbackend.member.entity.Member;
-import com.mtvs.devlinkbackend.member.service.MemberService;
+import com.mtvs.devlinkbackend.member.command.model.entity.AcceptStatus;
+import com.mtvs.devlinkbackend.member.command.model.entity.Member;
+import com.mtvs.devlinkbackend.member.command.service.MemberService;
 import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;

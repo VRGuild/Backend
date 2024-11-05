@@ -65,6 +65,7 @@ public class EpicDevService {
                 savedUser.getUserId()
         );
 
+
         List<SkillCategoryInfo> skillCategoryInfoList = devInfoRequestDTO.getCategoryNameList()
                 .stream().map(categoryName -> new SkillCategoryInfo(categoryName, new ArrayList<>()))
                 .peek(skillCategoryInfo -> skillCategoryInfo.setDev(dev)).toList();
@@ -77,7 +78,7 @@ public class EpicDevService {
         userRepository.save(user);
 
         // Response 정리되면 Refactoring
-        return new DevSingleResponseDTO(devRepository.save(dev));
+        return new DevSingleResponseDTO(savedDev);
     }
 
     @Transactional
