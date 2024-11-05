@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.util;
+package com.mtvs.devlinkbackend.util.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Converter
-public class StringListConverter implements AttributeConverter<List<String>, String> {
+public class LongListConverter implements AttributeConverter<List<Long>, String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<String> attribute) {
+    public String convertToDatabaseColumn(List<Long> attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -24,9 +24,9 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     }
 
     @Override
-    public List<String> convertToEntityAttribute(String dbData) {
+    public List<Long> convertToEntityAttribute(String dbData) {
         try {
-            return Arrays.asList(objectMapper.readValue(dbData, String[].class));
+            return Arrays.asList(objectMapper.readValue(dbData, Long[].class));
         } catch (IOException e) {
             throw new RuntimeException("Could not convert JSON to list", e);
         }
