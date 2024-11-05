@@ -1,9 +1,10 @@
 package com.mtvs.devlinkbackend.member.entity;
 
 public enum AcceptStatus {
-    PENDING(0),    // 대기중
-    ACCEPTED(1),   // 수락
-    REJECTED(2);   // 거절
+    DELETED(0),
+    PENDING(1),    // 대기중
+    ACCEPTED(2),   // 수락
+    REJECTED(3);   // 거절
 
     private final int value;
 
