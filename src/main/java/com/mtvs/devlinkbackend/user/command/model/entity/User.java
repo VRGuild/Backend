@@ -1,7 +1,6 @@
 package com.mtvs.devlinkbackend.user.command.model.entity;
 
-import com.mtvs.devlinkbackend.util.LongListConverter;
-import com.mtvs.devlinkbackend.util.StringListConverter;
+import com.mtvs.devlinkbackend.util.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

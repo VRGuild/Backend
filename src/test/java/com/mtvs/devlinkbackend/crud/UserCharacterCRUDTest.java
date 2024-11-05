@@ -2,7 +2,9 @@ package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterRegistRequestDTO;
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
+import com.mtvs.devlinkbackend.character.entity.CustomInfo;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
+import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,14 +25,26 @@ import java.util.stream.Stream;
 public class UserCharacterCRUDTest {
     @Autowired
     private UserCharacterService userCharacterService;
+    @Autowired
+    private UserCharacterViewService userCharacterViewService;
 
     private static Stream<Arguments> registUserCharacter() {
         return Stream.of(
                 Arguments.of(new UserCharacterRegistRequestDTO(
-                        List.of(5,6)
+                        1L,
+                        2L,
+                        List.of(1L, 2L),
+                        List.of(new CustomInfo(1, "", "", 1),
+                                new CustomInfo(1, "", "", 1)),
+                        ""
                 ), "계정3"),
                 Arguments.of(new UserCharacterRegistRequestDTO(
-                        List.of(7,8)
+                        1L,
+                        2L,
+                        List.of(1L, 2L),
+                        List.of(new CustomInfo(1, "", "", 1),
+                                new CustomInfo(1, "", "", 1)),
+                        ""
                 ), "계정4")
         );
     }
@@ -39,11 +53,19 @@ public class UserCharacterCRUDTest {
         return Stream.of(
                 Arguments.of(new UserCharacterUpdateRequestDTO(
                         1L,
-                        List.of(13,2)
+                        2L,
+                        List.of(1L, 2L),
+                        List.of(new CustomInfo(1, "", "", 1),
+                                new CustomInfo(1, "", "", 1)),
+                        ""
                 ), "계정1"),
                 Arguments.of(new UserCharacterUpdateRequestDTO(
+                        1L,
                         2L,
-                        List.of(43,4)
+                        List.of(1L, 2L),
+                        List.of(new CustomInfo(1, "", "", 1),
+                                new CustomInfo(1, "", "", 1)),
+                        ""
                 ), "계정2")
         );
     }
@@ -51,10 +73,20 @@ public class UserCharacterCRUDTest {
     @BeforeEach
     public void setUp() {
         userCharacterService.registCharacter(new UserCharacterRegistRequestDTO(
-                List.of(1,2)
+                1L,
+                2L,
+                List.of(1L, 2L),
+                List.of(new CustomInfo(1, "", "", 1),
+                        new CustomInfo(1, "", "", 1)),
+                ""
         ), "계정1");
         userCharacterService.registCharacter(new UserCharacterRegistRequestDTO(
-                List.of(3,4)
+                1L,
+                2L,
+                List.of(1L, 2L),
+                List.of(new CustomInfo(1, "", "", 1),
+                        new CustomInfo(1, "", "", 1)),
+                ""
         ), "계정2");
     }
 
@@ -71,15 +103,15 @@ public class UserCharacterCRUDTest {
     @ValueSource(strings = {"계정1", "계정2"})
     @ParameterizedTest
     public void testFindUserCharacterByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() -> userCharacterService.findCharacterByAccountId(accountId));
+        Assertions.assertDoesNotThrow(() -> userCharacterViewService.findCharacterByAccountId(accountId));
     }
 
     @Order(3)
     @DisplayName("UserCharacter 수정")
     @MethodSource("modifyUserCharacter")
     @ParameterizedTest
-    public void testUpdateUserCharacter(UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> userCharacterService.updateCharacter(userCharacterUpdateRequestDTO, accountId));
+    public void testUpdateUserCharacter(UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO) {
+        Assertions.assertDoesNotThrow(() -> userCharacterService.updateCharacter(userCharacterUpdateRequestDTO));
     }
 
     @Order(4)
@@ -88,5 +120,21 @@ public class UserCharacterCRUDTest {
     @ParameterizedTest
     public void testDeleteByAccountId(String accountId) {
         Assertions.assertDoesNotThrow(() -> userCharacterService.deleteCharacterByAccountId(accountId));
+    }
+
+    @Order(2)
+    @DisplayName("캐릭터 ID로 UserCharacter 조회")
+    @ValueSource(longs = {1, 2})
+    @ParameterizedTest
+    public void testFindUserCharacterByUserId(Long characterId) {
+        Assertions.assertDoesNotThrow(() -> userCharacterViewService.findCharacterByCharacterId(characterId));
+    }
+
+    @Order(2)
+    @DisplayName("유저 ID로 UserCharacter 조회")
+    @ValueSource(longs = {1, 2})
+    @ParameterizedTest
+    public void testFindUserCharacterByAccountId(Long userId) {
+        Assertions.assertDoesNotThrow(() -> userCharacterViewService.findCharacterByUserId(userId));
     }
 }
