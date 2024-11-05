@@ -9,5 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, Long> {
+public interface TeamViewRepository extends JpaRepository<Team, Long> {
+    Team findTeamByLeaderUserId(Long leaderUserId);
+
+    // teamMemberList에 memberId를 포함하는 팀 조회
+    @Query("SELECT t FROM Team t WHERE :memberId IN (t.teamMemberList)")
+    List<Team> findByMemberIdInTeam(@Param("memberId") Long memberId);
 }

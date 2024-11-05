@@ -1,11 +1,13 @@
 package com.mtvs.devlinkbackend.team.entity;
 
+import com.mtvs.devlinkbackend.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,19 +24,15 @@ public class Team {
     @Column(name = "TEAM_ID")
     private Long teamId;
 
-    @Column(name = "PM_ID")
-    private String pmId;
+    @Column(name = "LEADER_USER_ID")
+    private Long leaderUserId;
 
-    @Column(name = "TEAM_NAME", unique = true)
-    private String teamName;
+    @Column(name = "TEAM_INTRODUCTION")
+    private String teamIntroduction;
 
-    @Column(name = "INTRODUCTION")
-    private String introduction;
-
-    @ElementCollection
-    @CollectionTable(name = "TEAM_MEMBER", joinColumns = @JoinColumn(name = "TEAM_ID"))
-    @Column(name = "MEMBER_LIST")
-    private List<String> memberList = new ArrayList<>();
+    @Convert(converter = LongListConverter.class)
+    @Column(name = "TEAM_MEMBER_LIST", columnDefinition = "TEXT")
+    private List<Long> teamMemberList = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -44,26 +42,21 @@ public class Team {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    public Team(String pmId, String teamName, String introduction, List<String> memberList) {
-        this.pmId = pmId;
-        this.teamName = teamName;
-        this.introduction = introduction;
-        this.memberList = memberList;
+    public Team(Long leaderUserId, String teamIntroduction, List<Long> teamMemberList) {
+        this.leaderUserId = leaderUserId;
+        this.teamIntroduction = teamIntroduction;
+        this.teamMemberList = teamMemberList;
     }
 
-    public void setPmId(String pmId) {
-        this.pmId = pmId;
+    public void setLeaderUserId(Long leaderUserId) {
+        this.leaderUserId = leaderUserId;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setTeamIntroduction(String teamIntroduction) {
+        this.teamIntroduction = teamIntroduction;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
-
-    public void setMemberList(List<String> memberList) {
-        this.memberList = memberList;
+    public void setTeamMemberList(List<Long> teamMemberList) {
+        this.teamMemberList = teamMemberList;
     }
 }

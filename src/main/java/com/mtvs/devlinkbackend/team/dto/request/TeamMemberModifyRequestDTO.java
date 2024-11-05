@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.team.dto.request;
 
+import com.mtvs.devlinkbackend.member.entity.Member;
 import lombok.*;
 
 import java.util.List;
@@ -11,5 +12,6 @@ import java.util.List;
 @ToString
 public class TeamMemberModifyRequestDTO {
     private Long teamId;
-    private List<String> newMemberList;
+    private Long leaderUserId;
+    private List<Member> teamMemberList;
 }
