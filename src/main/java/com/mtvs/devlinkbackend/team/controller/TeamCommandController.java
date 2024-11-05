@@ -3,9 +3,7 @@ package com.mtvs.devlinkbackend.team.controller;
 import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;
-import com.mtvs.devlinkbackend.team.dto.response.TeamListResponseDTO;
 import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
-import com.mtvs.devlinkbackend.util.JwtUtil;
 import com.mtvs.devlinkbackend.team.service.TeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,11 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class TeamCommandController {
 
     private final TeamService teamService;
-    private final JwtUtil jwtUtil;
 
-    public TeamCommandController(TeamService teamService, JwtUtil jwtUtil) {
+    public TeamCommandController(TeamService teamService) {
         this.teamService = teamService;
-        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "팀 등록", description = "새로운 팀을 등록하고 등록된 팀 정보를 반환합니다.")
@@ -33,7 +29,7 @@ public class TeamCommandController {
     })
     @PostMapping
     public ResponseEntity<TeamSingleReponseDTO> registTeam(
-            @RequestBody TeamRegistRequestDTO teamRegistRequestDTO) throws Exception {
+            @RequestBody TeamRegistRequestDTO teamRegistRequestDTO) {
 
         TeamSingleReponseDTO team = teamService.registTeam(teamRegistRequestDTO);
         return new ResponseEntity<>(team, HttpStatus.CREATED);
@@ -47,7 +43,7 @@ public class TeamCommandController {
     })
     @PatchMapping
     public ResponseEntity<TeamSingleReponseDTO> updateTeam(
-            @RequestBody TeamUpdateRequestDTO teamUpdateRequestDTO) throws Exception {
+            @RequestBody TeamUpdateRequestDTO teamUpdateRequestDTO) {
 
         try {
             TeamSingleReponseDTO updatedTeam = teamService.updateTeam(teamUpdateRequestDTO);
@@ -65,7 +61,7 @@ public class TeamCommandController {
     })
     @PatchMapping("/apply")
     public ResponseEntity<TeamSingleReponseDTO> addMemberToTeam(
-            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO) throws Exception {
+            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO) {
 
         TeamSingleReponseDTO updatedTeam = teamService.applyMemberToTeam(teamMemberModifyRequestDTO);
         return updatedTeam != null ? ResponseEntity.ok(updatedTeam) : ResponseEntity.notFound().build();
