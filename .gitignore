@@ -37,5 +37,6 @@ out/
 ### VS Code ###
 .vscode/
 
+/src/main/resources/rds-truststore.jks
 /src/main/resources/global-bundle.pem
 /src/main/resources/devlink-key.pem
