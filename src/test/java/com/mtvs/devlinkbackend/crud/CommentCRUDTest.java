@@ -2,90 +2,140 @@ package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.comment.dto.request.CommentRegistRequestDTO;
 import com.mtvs.devlinkbackend.comment.dto.request.CommentUpdateRequestDTO;
+import com.mtvs.devlinkbackend.comment.dto.response.CommentListResponseDTO;
+import com.mtvs.devlinkbackend.comment.dto.response.CommentSingleResponseDTO;
+import com.mtvs.devlinkbackend.comment.entity.Comment;
+import com.mtvs.devlinkbackend.comment.repository.CommentRepository;
+import com.mtvs.devlinkbackend.comment.repository.CommentViewRepository;
 import com.mtvs.devlinkbackend.comment.service.CommentService;
-import org.junit.jupiter.api.Assertions;
+import com.mtvs.devlinkbackend.comment.service.CommentViewService;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
 public class CommentCRUDTest {
-    @Autowired
+    @Mock
+    private CommentRepository commentRepository;
+
+    @Mock
+    private UserViewService userViewService;
+
+    @InjectMocks
     private CommentService commentService;
 
-    private static Stream<Arguments> newComment() {
-        return Stream.of(
-                Arguments.of(new CommentRegistRequestDTO("내용0", 1L), "계정0"),
-                Arguments.of(new CommentRegistRequestDTO("내용00", 2L), "계정00")
-        );
+    @InjectMocks
+    private CommentViewService commentViewService;
+
+    @Mock
+    private CommentViewRepository commentViewRepository;
+
+    @Test
+    @DisplayName("코멘트를 등록하는 테스트")
+    void registCommentTest() {
+        CommentRegistRequestDTO requestDTO = new CommentRegistRequestDTO(1L, "테스트 내용");
+        Comment comment = new Comment("테스트 내용", 1L);
+
+        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+
+        CommentSingleResponseDTO responseDTO = commentService.registComment(requestDTO);
+
+        assertEquals("테스트 내용", responseDTO.getData().getContent());
+        verify(commentRepository, times(1)).save(any(Comment.class));
     }
 
-    private static Stream<Arguments> modifiedComment() {
-        return Stream.of(
-                Arguments.of(new CommentUpdateRequestDTO(3L, "내용0"), "계정1"),
-                Arguments.of(new CommentUpdateRequestDTO(4L, "내용00"), "계정2")
-        );
+    @Test
+    @DisplayName("코멘트를 수정하는 테스트")
+    void updateCommentTest() {
+        CommentUpdateRequestDTO requestDTO = new CommentUpdateRequestDTO(1L, "수정된 내용");
+        Comment comment = new Comment("기존 내용", 1L);
+        User user = new User();
+        user.setUserId(1L);
+
+        when(commentRepository.findById(anyLong())).thenReturn(Optional.of(comment));
+        when(userViewService.findUserByEpicAccountId(anyString())).thenReturn(user);
+
+        CommentSingleResponseDTO responseDTO = commentService.updateComment(requestDTO, "testAccount");
+
+        assertEquals("수정된 내용", responseDTO.getData().getContent());
+        verify(commentRepository, times(1)).findById(anyLong());
     }
 
-    @DisplayName("코멘트 추가 테스트")
-    @ParameterizedTest
-    @MethodSource("newComment")
-    @Order(0)
-    public void testCreateComment(CommentRegistRequestDTO commentRegistRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> commentService.registComment(commentRegistRequestDTO, accountId));
+    @Test
+    @DisplayName("코멘트를 삭제하는 테스트")
+    void deleteCommentTest() {
+        Long commentId = 1L;
+
+        commentService.deleteComment(commentId);
+
+        verify(commentRepository, times(1)).deleteById(commentId);
     }
 
-    @DisplayName("PK로 코멘트 조회 테스트")
-    @ValueSource(longs = {1,2})
-    @ParameterizedTest
-    @Order(1)
-    public void testFindCommentByCommentId(long commentId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Comment = " + commentService.findCommentByCommentId(commentId)));
+    @Test
+    @DisplayName("코멘트 ID로 코멘트를 조회하는 테스트")
+    void findCommentByCommentIdTest() {
+        Long commentId = 1L;
+        Comment comment = mock(Comment.class); // 모킹된 Comment 객체 사용
+
+        when(commentViewRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(comment.getContent()).thenReturn("테스트 내용"); // 모킹된 객체의 메서드를 호출
+
+        CommentSingleResponseDTO responseDTO = commentViewService.findCommentByCommentId(commentId);
+
+        assertEquals("테스트 내용", responseDTO.getData().getContent());
+        verify(commentViewRepository, times(1)).findById(commentId);
     }
 
-    @DisplayName("계정 ID에 따른 코멘트 조회 테스트")
-    @ValueSource( strings = {"계정1", "계정2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindCommentsByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Comment = " + commentService.findCommentsByAccountId(accountId)));
+    @Test
+    @DisplayName("계정 ID로 코멘트 리스트를 조회하는 테스트")
+    void findCommentsByAccountIdTest() {
+        User user = mock(User.class); // 모킹된 User 객체 사용
+        when(user.getUserId()).thenReturn(1L);
+
+        Comment comment1 = mock(Comment.class); // 모킹된 Comment 객체 사용
+        Comment comment2 = mock(Comment.class); // 모킹된 Comment 객체 사용
+        when(comment1.getContent()).thenReturn("테스트 내용1");
+        when(comment2.getContent()).thenReturn("테스트 내용2");
+
+        List<Comment> comments = Arrays.asList(comment1, comment2);
+
+        when(userViewService.findUserByEpicAccountId(anyString())).thenReturn(user);
+        when(commentViewRepository.findAllByUserId(1L)).thenReturn(comments);
+
+        CommentListResponseDTO responseDTO = commentViewService.findCommentsByAccountId("testAccount");
+
+        assertEquals(2, responseDTO.getData().size());
+        verify(commentViewRepository, times(1)).findAllByUserId(1L);
     }
 
-    @DisplayName("의뢰 ID에 따른 코멘트 조회 테스트")
-    @ValueSource( longs = {1,2})
-    @ParameterizedTest
-    @Order(3)
-    public void testFindCommentsByRequestId(long requestId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Comment = " + commentService.findCommentsByProjectId(requestId)));
-    }
+    @Test
+    @DisplayName("코멘트 ID 리스트로 코멘트를 조회하는 테스트")
+    void findCommentsByCommentIdListTest() {
+        List<Long> commentIdList = Arrays.asList(1L, 2L);
+        Comment comment1 = mock(Comment.class); // 모킹된 Comment 객체 사용
+        Comment comment2 = mock(Comment.class); // 모킹된 Comment 객체 사용
 
-    @DisplayName("코멘트 수정 테스트")
-    @MethodSource("modifiedComment")
-    @ParameterizedTest
-    @Order(4)
-    public void testUpdateComment(CommentUpdateRequestDTO commentUpdateRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println(commentService.updateComment(commentUpdateRequestDTO, accountId)));
-    }
+        List<Comment> comments = Arrays.asList(comment1, comment2);
 
-    @DisplayName("코멘트 삭제 테스트")
-    @ValueSource(longs = {0,1})
-    @ParameterizedTest
-    @Order(5)
-    public void testDeleteRequest(long commentId) {
-        Assertions.assertDoesNotThrow(() ->
-                commentService.deleteComment(commentId));
+        when(commentViewRepository.findByCommentIdIn(commentIdList)).thenReturn(comments);
+
+        CommentListResponseDTO responseDTO = commentViewService.findCommentsByCommentIdList(commentIdList);
+
+        assertEquals(2, responseDTO.getData().size());
+        verify(commentViewRepository, times(1)).findByCommentIdIn(commentIdList);
     }
 }

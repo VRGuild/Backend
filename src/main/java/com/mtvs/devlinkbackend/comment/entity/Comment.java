@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Entity(name = "Comment")
 @NoArgsConstructor
 @Getter
-@ToString(exclude = "project") // request 필드를 toString에서 제외
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

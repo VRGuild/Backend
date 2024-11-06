@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comment")
-public class CommentController {
+public class CommentCommandController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
 
-    public CommentController(CommentService commentService, JwtUtil jwtUtil) {
+    public CommentCommandController(CommentService commentService, JwtUtil jwtUtil) {
         this.commentService = commentService;
         this.jwtUtil = jwtUtil;
     }
@@ -31,42 +31,10 @@ public class CommentController {
     })
     @PostMapping
     public ResponseEntity<CommentSingleResponseDTO> registComment(
-            @RequestBody CommentRegistRequestDTO commentRegistRequestDTO,
-            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+            @RequestBody CommentRegistRequestDTO commentRegistRequestDTO) {
 
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        CommentSingleResponseDTO comment = commentService.registComment(commentRegistRequestDTO, accountId);
+        CommentSingleResponseDTO comment = commentService.registComment(commentRegistRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
-    }
-
-    @Operation(summary = "댓글 조회", description = "ID를 사용하여 댓글을 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 조회되었습니다."),
-            @ApiResponse(responseCode = "404", description = "해당 댓글을 찾을 수 없습니다.")
-    })
-    @GetMapping("/{commentId}")
-    public ResponseEntity<CommentSingleResponseDTO> findCommentByCommentId(@PathVariable Long commentId) {
-        CommentSingleResponseDTO comment = commentService.findCommentByCommentId(commentId);
-        return comment != null ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
-    }
-
-    @Operation(summary = "요청 ID로 댓글 조회", description = "특정 요청에 연관된 모든 댓글을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "댓글 목록이 성공적으로 조회되었습니다.")
-    @GetMapping("/request/{requestId}")
-    public ResponseEntity<CommentListResponseDTO> findCommentsByRequestId(@PathVariable Long requestId) {
-        CommentListResponseDTO comments = commentService.findCommentsByProjectId(requestId);
-        return ResponseEntity.ok(comments);
-    }
-
-    @Operation(summary = "사용자 ID로 댓글 조회", description = "특정 사용자가 작성한 모든 댓글을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "사용자의 댓글 목록이 성공적으로 조회되었습니다.")
-    @GetMapping("/account")
-    public ResponseEntity<CommentListResponseDTO> findCommentsByAccountId(
-            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
-
-        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
-        CommentListResponseDTO comments = commentService.findCommentsByAccountId(accountId);
-        return ResponseEntity.ok(comments);
     }
 
     @Operation(summary = "댓글 수정", description = "기존 댓글의 내용을 수정합니다.")

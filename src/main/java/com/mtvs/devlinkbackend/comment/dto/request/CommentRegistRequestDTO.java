@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class CommentRegistRequestDTO {
+    private Long userId;
     private String content;
-    private Long requestId;
 }
