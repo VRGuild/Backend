@@ -1,7 +1,5 @@
 package com.mtvs.devlinkbackend.comment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mtvs.devlinkbackend.project.entity.Project;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +20,11 @@ public class Comment {
     @Column(name = "COMMENT_ID")
     private Long commentId;
 
+    @Column(name = "USER_ID")
+    private Long userId;
+
     @Column(name = "CONTENT")
     private String content;
-
-    @Column(name = "ACCOUNT_ID")
-    private String accountId;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -36,15 +34,9 @@ public class Comment {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROJECT_ID", nullable = false)
-    @JsonIgnore
-    private Project project;
-
-    public Comment(String content, String accountId, Project project) {
+    public Comment(String content, Long userId) {
         this.content = content;
-        this.accountId = accountId;
-        this.project = project;
+        this.userId = userId;
     }
 
     public void setContent(String content) {

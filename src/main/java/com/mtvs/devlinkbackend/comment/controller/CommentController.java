@@ -5,7 +5,7 @@ import com.mtvs.devlinkbackend.comment.dto.request.CommentRegistRequestDTO;
 import com.mtvs.devlinkbackend.comment.dto.response.CommentSingleResponseDTO;
 import com.mtvs.devlinkbackend.comment.dto.request.CommentUpdateRequestDTO;
 import com.mtvs.devlinkbackend.comment.service.CommentService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

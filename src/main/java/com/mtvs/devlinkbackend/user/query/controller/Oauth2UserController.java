@@ -1,9 +1,8 @@
 package com.mtvs.devlinkbackend.user.query.controller;
 
 import com.mtvs.devlinkbackend.user.query.service.UserViewService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.EpicGamesCallbackRequestDTO;
-import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.service.EpicGamesTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

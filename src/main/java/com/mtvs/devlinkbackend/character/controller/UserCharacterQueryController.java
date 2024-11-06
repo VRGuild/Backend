@@ -2,7 +2,7 @@ package com.mtvs.devlinkbackend.character.controller;
 
 import com.mtvs.devlinkbackend.character.dto.response.UserCharacterSingleResponseDTO;
 import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;

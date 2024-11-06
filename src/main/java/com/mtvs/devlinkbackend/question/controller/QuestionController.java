@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.question.controller;
 
 import com.mtvs.devlinkbackend.question.dto.response.QuestionPagingResponseDTO;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.question.dto.request.QuestionRegistRequestDTO;
 import com.mtvs.devlinkbackend.question.dto.request.QuestionUpdateRequestDTO;
 import com.mtvs.devlinkbackend.question.entity.Question;

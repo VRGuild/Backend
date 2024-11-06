@@ -2,7 +2,7 @@ package com.mtvs.devlinkbackend.ether.controller;
 
 import com.mtvs.devlinkbackend.ether.dto.response.EtherListResponseDTO;
 import com.mtvs.devlinkbackend.ether.dto.response.EtherSingleResponseDTO;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.ether.dto.request.EtherRegistRequestDTO;
 import com.mtvs.devlinkbackend.ether.dto.request.EtherUpdateRequestDTO;
 import com.mtvs.devlinkbackend.ether.service.EtherService;

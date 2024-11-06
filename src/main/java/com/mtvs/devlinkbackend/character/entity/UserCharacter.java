@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.character.entity;
 
-import com.mtvs.devlinkbackend.util.converter.LongListConverter;
+import com.mtvs.devlinkbackend.common.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
