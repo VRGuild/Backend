@@ -24,6 +24,9 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_DATABASE}?ssl=true&replicaSet=rs0&readpreference=secondaryPreferred
   jpa:
     show-sql: true
     database: mysql
