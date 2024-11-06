@@ -1,7 +1,6 @@
 package com.mtvs.devlinkbackend.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mtvs.devlinkbackend.comment.entity.Comment;
+import com.mtvs.devlinkbackend.common.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Table(name = "PROJECT")
 @Entity(name = "Project")
@@ -26,14 +23,8 @@ public class Project {
     @Column(name = "PROJECT_ID")
     private Long projectId;
 
-    @Column(name = "WORK_TYPE")
-    private String workType;
-
-    @Column(name = "PROGRESS_CLASSIFICATION")
-    private String progressClassification;
-
-    @Column(name = "COMPANY_NAME")
-    private String companyName;
+    @Column(name = "USER_ID", nullable = false)
+    private Long userId;
 
     @Column(name = "TITLE", nullable = false)
     private String title;
@@ -41,32 +32,28 @@ public class Project {
     @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "REQUIRED_CLIENT")
-    private Integer requiredClient;
+    @Column(name = "WORK_TYPE")
+    private String workType;
 
-    @Column(name = "REQUIRED_SERVER")
-    private Integer requiredServer;
+    @Column(name = "PROGRESS_CLASSIFICATION")
+    private String progressClassification;
 
-    @Column(name = "REQUIRED_DESIGN")
-    private Integer requiredDesign;
+    @ElementCollection
+    @CollectionTable(name = "REQUIRED_OCUUPATION_LIST", joinColumns = @JoinColumn(name = "PROJECT_ID"))
+    private List<Occupation> requiredOccupationList;
 
-    @Column(name = "REQUIRED_PLANNER")
-    private Integer requiredPlanner;
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
 
-    @Column(name = "REQUIRED_AIENGINEER")
-    private Integer requiredAIEngineer;
-
-    @Column(name = "START_DATETIME")
-    private LocalDate startDateTime;
-
-    @Column(name = "END_DATETIME")
-    private LocalDate endDateTime;
+    @Column(name = "END_DATE")
+    private LocalDate endDate;
 
     @Column(name = "ESTIMATED_COST")
     private Integer estimatedCost;
 
-    @Column(name = "ACCOUNT_ID", nullable = false)
-    private String accountId;
+    @Convert(converter = LongListConverter.class)
+    @Column(name = "COMMENT_ID_LIST")
+    private List<Long> commentIdList;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -76,71 +63,20 @@ public class Project {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @ElementCollection
-    @CollectionTable(name = "PROJECT_VECTOR", joinColumns = @JoinColumn(name = "PROJECT_ID"))
-    @MapKeyColumn(name = "AXIS")
-    @Column(name = "VALUE")
-    private Map<String, Integer> projectVector;
-
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Comment> comments = new ArrayList<>();
-
-    public Project(String title, String content, LocalDate startDateTime, LocalDate endDateTime, String accountId) {
+    public Project(Long userId, String title, String content, String workType, String progressClassification, List<Occupation> requiredOccupationList, LocalDate startDate, LocalDate endDate, Integer estimatedCost) {
+        this.userId = userId;
         this.title = title;
         this.content = content;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.accountId = accountId;
-    }
-
-    public Project(String workType, String progressClassification, String companyName, String title, String content, Integer requiredClient, Integer requiredServer, Integer requiredDesign, Integer requiredPlanner, Integer requiredAIEngineer, LocalDate startDateTime, LocalDate endDateTime, Integer estimatedCost, String accountId) {
         this.workType = workType;
         this.progressClassification = progressClassification;
-        this.companyName = companyName;
-        this.title = title;
-        this.content = content;
-        this.requiredClient = requiredClient;
-        this.requiredServer = requiredServer;
-        this.requiredDesign = requiredDesign;
-        this.requiredPlanner = requiredPlanner;
-        this.requiredAIEngineer = requiredAIEngineer;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.requiredOccupationList = requiredOccupationList;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.estimatedCost = estimatedCost;
-        this.accountId = accountId;
     }
 
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
-
-    public void setProgressClassification(String progressClassification) {
-        this.progressClassification = progressClassification;
-    }
-
-    public void setRequiredClient(Integer requiredClient) {
-        this.requiredClient = requiredClient;
-    }
-
-    public void setRequiredServer(Integer requiredServer) {
-        this.requiredServer = requiredServer;
-    }
-
-    public void setRequiredDesign(Integer requiredDesign) {
-        this.requiredDesign = requiredDesign;
-    }
-
-    public void setRequiredPlanner(Integer requiredPlanner) {
-        this.requiredPlanner = requiredPlanner;
-    }
-
-    public void setRequiredAIEngineer(Integer requiredAIEngineer) {
-        this.requiredAIEngineer = requiredAIEngineer;
-    }
-
-    public void setEstimatedCost(Integer estimatedCost) {
-        this.estimatedCost = estimatedCost;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setTitle(String title) {
@@ -151,15 +87,31 @@ public class Project {
         this.content = content;
     }
 
-    public void setStartDateTime(LocalDate startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setWorkType(String workType) {
+        this.workType = workType;
     }
 
-    public void setEndDateTime(LocalDate endDateTime) {
-        this.endDateTime = endDateTime;
+    public void setProgressClassification(String progressClassification) {
+        this.progressClassification = progressClassification;
     }
 
-    public void setProjectVector(Map<String, Integer> projectVector) {
-        this.projectVector = projectVector;
+    public void setRequiredOccupationList(List<Occupation> requiredOccupationList) {
+        this.requiredOccupationList = requiredOccupationList;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setEstimatedCost(Integer estimatedCost) {
+        this.estimatedCost = estimatedCost;
+    }
+
+    public void setCommentIdList(List<Long> commentIdList) {
+        this.commentIdList = commentIdList;
     }
 }

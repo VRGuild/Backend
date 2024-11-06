@@ -3,7 +3,7 @@ package com.mtvs.devlinkbackend.team.controller;
 import com.mtvs.devlinkbackend.team.dto.response.TeamListResponseDTO;
 import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
 import com.mtvs.devlinkbackend.team.service.TeamViewService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

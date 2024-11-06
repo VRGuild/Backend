@@ -1,25 +1,22 @@
 package com.mtvs.devlinkbackend.project.repository.projection;
 
+import com.mtvs.devlinkbackend.project.entity.Occupation;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public interface ProjectSummary {
     Long getProjectId();
+    Long getUserId();
     String getWorkType();
     String getProgressClassification();
-    String getCompanyName();
     String getTitle();
-    Integer getRequiredClient();
-    Integer getRequiredServer();
-    Integer getRequiredDesign();
-    Integer getRequiredPlanner();
-    Integer getRequiredAIEngineer();
-    LocalDate getStartDateTime();
-    LocalDate getEndDateTime();
+    List<Occupation> getRequiredOccupationList();
+    LocalDate getStartDate();
+    LocalDate getEndDate();
     Integer getEstimatedCost();
-    String getAccountId();
     LocalDateTime getCreatedAt();
     LocalDateTime getModifiedAt();
-    Map<String, Integer> getProjectVector();
 }

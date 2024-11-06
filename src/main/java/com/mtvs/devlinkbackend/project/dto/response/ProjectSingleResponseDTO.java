@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.project.dto.response;
 
-import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndTeamIdListDTO;
 import lombok.*;
 
 @Getter
@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ProjectSingleResponseDTO {
-    private Project data;
+    private ProjectAndTeamIdListDTO data;
 }
