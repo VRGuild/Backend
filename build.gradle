@@ -44,3 +44,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs '-Djavax.net.debug=ssl'
+}
