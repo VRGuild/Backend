@@ -23,7 +23,7 @@ public class MemberCommandController {
             @ApiResponse(responseCode = "200", description = "팀이 성공적으로 반영되었습니다."),
             @ApiResponse(responseCode = "404", description = "팀을 찾을 수 없습니다.")
     })
-    @PatchMapping("/accpet/{memberId}")
+    @PatchMapping("/accpets/{memberId}")
     public ResponseEntity<MemberStatusResponseDTO> updateTeam(
             @PathVariable(name = "memberId") Long memberId) {
 
