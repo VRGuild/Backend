@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.member.command.model.entity;
 
-import com.mtvs.devlinkbackend.util.converter.AcceptStatusConverter;
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
+import com.mtvs.devlinkbackend.common.util.converter.AcceptStatusConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,6 @@
 package com.mtvs.devlinkbackend.user.query.service;
 
-import com.mtvs.devlinkbackend.util.JwtUtil;
-import com.mtvs.devlinkbackend.util.EpicGamesJWKCache;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;

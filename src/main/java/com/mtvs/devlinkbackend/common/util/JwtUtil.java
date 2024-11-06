@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.util;
+package com.mtvs.devlinkbackend.common.util;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;

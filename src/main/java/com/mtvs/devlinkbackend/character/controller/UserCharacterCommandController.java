@@ -5,7 +5,7 @@ import com.mtvs.devlinkbackend.character.dto.response.UserCharacterSingleRespons
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
 import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;

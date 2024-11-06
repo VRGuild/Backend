@@ -8,6 +8,8 @@ import com.mtvs.devlinkbackend.support.repository.SupportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class SupportService {
     private final SupportRepository supportRepository;
@@ -23,6 +25,10 @@ public class SupportService {
                 supportRegistRequestDTO.getTeamId(),
                 "waiting"
         )));
+    }
+
+    public List<Long> findTeamIdsByProjectId(Long projectId) {
+        return supportRepository.findTeamIdByProjectId(projectId);
     }
 
     public SupportListResponseDTO findSupportsByProjectId(Long projectId) {

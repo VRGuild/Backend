@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.util.converter;
+package com.mtvs.devlinkbackend.common.util.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

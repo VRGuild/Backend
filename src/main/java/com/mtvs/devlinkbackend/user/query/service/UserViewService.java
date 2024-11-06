@@ -11,7 +11,7 @@ import com.mtvs.devlinkbackend.user.query.model.dto.response.sub.DevInfoDTO;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.sub.UserDetailResponseDTO;
 import com.mtvs.devlinkbackend.user.query.repository.SkillCategoryInfoViewRepository;
 import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +33,10 @@ public class UserViewService {
 
     public Boolean isExistedUserByEpicAccountId(String accountId) throws Exception {
         return userViewRepository.findUserByEpicAccountId(accountId) != null;
+    }
+
+    public User findUserByEpicAccountId(String accountId) {
+        return userViewRepository.findUserByEpicAccountId(accountId);
     }
 
     public UserSingleResponseDTO findUserByUserId(Long userId) {

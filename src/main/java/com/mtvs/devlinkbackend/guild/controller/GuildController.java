@@ -5,7 +5,7 @@ import com.mtvs.devlinkbackend.guild.dto.request.GuildRegistRequestDTO;
 import com.mtvs.devlinkbackend.guild.dto.request.GuildUpdateRequestDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildListResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildSingleResponseDTO;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.guild.service.GuildService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

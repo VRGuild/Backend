@@ -2,7 +2,7 @@ package com.mtvs.devlinkbackend.reply.controller;
 
 import com.mtvs.devlinkbackend.reply.dto.response.ReplyListResponseDTO;
 import com.mtvs.devlinkbackend.reply.dto.response.ReplySingleResponseDTO;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.reply.dto.request.ReplyRegistRequestDTO;
 import com.mtvs.devlinkbackend.reply.dto.request.ReplyUpdateRequestDTO;
 import com.mtvs.devlinkbackend.reply.service.ReplyService;

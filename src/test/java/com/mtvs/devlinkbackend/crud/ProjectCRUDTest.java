@@ -1,194 +1,188 @@
 package com.mtvs.devlinkbackend.crud;
 
+
 import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
 import com.mtvs.devlinkbackend.project.dto.request.ProjectUpdateRequestDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectDetailSingleResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectSingleResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.response.ProjectSummaryPagingResponseDTO;
+import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.repository.ProjectRepository;
+import com.mtvs.devlinkbackend.project.repository.ProjectSummaryRepository;
+import com.mtvs.devlinkbackend.project.repository.ProjectViewRepository;
+import com.mtvs.devlinkbackend.project.repository.projection.ProjectSummary;
 import com.mtvs.devlinkbackend.project.service.ProjectService;
-import org.junit.jupiter.api.Assertions;
+import com.mtvs.devlinkbackend.project.service.ProjectSummaryViewService;
+import com.mtvs.devlinkbackend.project.service.ProjectViewService;
+import com.mtvs.devlinkbackend.support.service.SupportService;
+import com.mtvs.devlinkbackend.team.service.TeamService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
 public class ProjectCRUDTest {
-    @Autowired
+
+    @Mock
+    private ProjectRepository projectRepository;
+
+    @Mock
+    private ProjectViewRepository projectViewRepository;
+
+    @InjectMocks
     private ProjectService projectService;
+    @Autowired
+    private ProjectSummaryRepository projectSummaryRepository;
+    @Autowired
+    private ProjectSummaryViewService projectSummaryViewService;
+    @Autowired
+    private ProjectViewService projectViewService;
 
-    private static Stream<Arguments> newRequest() {
-        return Stream.of(
-                Arguments.of(new ProjectRegistRequestDTO(
-                        "업무범위0",
-                        "근무형태0",
-                        "진행분류0",
-                        "회사이름0",
-                        "의뢰0",
-                        "내용0",
-                        3,
-                        3,
-                        3,
-                        3,
-                        3,
-                        LocalDate.of(2024, 10, 22),
-                        LocalDate.of(2024, 10, 26),
-                        1000000), "계정0"),
-                Arguments.of(new ProjectRegistRequestDTO(
-                        "업무범위1",
-                        "근무형태1",
-                        "진행분류1",
-                        "회사이름1",
-                        "의뢰1",
-                        "내용1",
-                        2,
-                        3,
-                        1,
-                        1,
-                        3,
-                        LocalDate.of(2022, 10, 10),
-                        LocalDate.of(2022, 10, 22),
-                        1000000), "계정00")
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    @DisplayName("프로젝트 등록 테스트")
+    void registProjectTest() {
+        // Given
+        ProjectRegistRequestDTO requestDTO = new ProjectRegistRequestDTO(1L, "Test Title", "Test Content", 1000, "in-progress", "both", null, null, null);
+        Project project = new Project(1L, "Test Title", "Test Content", "both", "in-progress", null, null, null, 1000);
+
+        when(projectRepository.save(ArgumentMatchers.any(Project.class))).thenReturn(project);
+
+        // When
+        ProjectSingleResponseDTO response = projectService.registProject(requestDTO);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getData().getProjectInfo()).isEqualTo(project);
+    }
+
+    @Test
+    @DisplayName("프로젝트 업데이트 테스트")
+    void updateProjectTest() {
+        // Given
+        ProjectUpdateRequestDTO requestDTO = new ProjectUpdateRequestDTO(
+                1L,
+                1L,
+                "Updated Title",
+                "Updated Content",
+                2000,
+                "new",
+                "remote",
+                null,
+                null,
+                LocalDate.now(),
+                LocalDate.now()
         );
+        Project project = new Project(1L, "Old Title", "Old Content", "both", "in-progress", null, null, null, 1000);
+
+        when(projectViewRepository.findById(1L)).thenReturn(Optional.of(project));
+
+        // When
+        ProjectSingleResponseDTO response = projectService.updateProject(requestDTO);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getData().getProjectInfo().getTitle()).isEqualTo("Updated Title");
+        assertThat(response.getData().getProjectInfo().getEstimatedCost()).isEqualTo(2000);
     }
 
-    private static Stream<Arguments> modifiedRequest() {
-        return Stream.of(
-                Arguments.of(new ProjectUpdateRequestDTO(
-                        1L,
-                        "업무범위0",
-                        "근무형태0",
-                        "진행분류0",
-                        "회사이름0",
-                        "의뢰0",
-                        "내용0",
-                        2,
-                        3,
-                        1,
-                        1,
-                        3,
-                        LocalDate.of(2024, 10, 22),
-                        LocalDate.of(2024, 10, 26),
-                        1000000), "1"),
-                Arguments.of(new ProjectUpdateRequestDTO(
-                        2L,
-                        "업무범위1",
-                        "근무형태1",
-                        "진행분류1",
-                        "회사이름1",
-                        "의뢰1",
-                        "내용1",
-                        2,
-                        3,
-                        1,
-                        1,
-                        3,
-                        LocalDate.of(2024, 10, 22),
-                        LocalDate.of(2024, 10, 26),
-                        1000000), "1")
-        );
+    @Test
+    @DisplayName("프로젝트 삭제 테스트")
+    void deleteProjectTest() {
+        // Given
+        Long projectId = 1L;
+
+        // When
+        projectService.deleteProject(projectId);
+
+        // Then
+        verify(projectRepository, times(1)).deleteById(projectId);
     }
 
-    @DisplayName("의뢰 추가 테스트")
-    @ParameterizedTest
-    @MethodSource("newRequest")
-    @Order(0)
-    public void testCreateRequest(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> projectService.registProject(projectRegistRequestDTO, accountId));
+    @Test
+    @DisplayName("프로젝트 목록 페이지네이션 조회 테스트")
+    void findAllProjectSummaryWithPaginationTest() {
+        // Given
+        ProjectSummary projectSummary = mock(ProjectSummary.class);
+        Page<ProjectSummary> page = new PageImpl<>(Collections.singletonList(projectSummary));
+
+        when(projectSummaryRepository.findAllBy(any(Pageable.class))).thenReturn(page);
+        when(projectSummaryRepository.count()).thenReturn(1L);
+
+        // When
+        ProjectSummaryPagingResponseDTO response = projectSummaryViewService.findAllProjectSummaryWithPagination(0);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getPreviewDTOList()).hasSize(1);
     }
 
-    @DisplayName("PK로 의뢰 조회 테스트")
-    @ValueSource(longs = {1,2})
-    @ParameterizedTest
-    @Order(1)
-    public void testFindRequestByRequestId(long questionId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectByProjectId(questionId)));
+    @Test
+    @DisplayName("홈 프로젝트 목록 조회 테스트")
+    void findAllProjectPreviewInHomeTest() {
+        // Given
+        ProjectSummary projectSummary = mock(ProjectSummary.class);
+        Page<ProjectSummary> page = new PageImpl<>(Collections.singletonList(projectSummary));
+
+        when(projectSummaryRepository.findAllBy(any(Pageable.class))).thenReturn(page);
+
+        // When
+        ProjectSummaryPagingResponseDTO response = projectSummaryViewService.findAllProjectPreviewInHome();
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getPreviewDTOList()).hasSize(1);
     }
 
-    @DisplayName("계정 ID에 따른 의뢰 paging 조회 테스트")
-    @CsvSource({"0, 계정1", "0, 계정2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsByAccountId(int page, String accountId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByAccountIdWithPaging(page, accountId)));
+    @Test
+    @DisplayName("프로젝트 단일 조회 테스트")
+    void findProjectByProjectIdTest() {
+        // Given
+        Project project = mock(Project.class);
+        when(projectViewRepository.findById(1L)).thenReturn(Optional.of(project));
+
+        // When
+        ProjectSingleResponseDTO response = projectViewService.findProjectByProjectId(1L);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getData().getProjectInfo()).isEqualTo(project);
     }
 
-    @DisplayName("의뢰 수정 테스트")
-    @MethodSource("modifiedRequest")
-    @ParameterizedTest
-    @Order(3)
-    public void testUpdateRequest(ProjectUpdateRequestDTO ProjectUpdateRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println(projectService.updateProject(ProjectUpdateRequestDTO, accountId)));
-    }
+    @Test
+    @DisplayName("프로젝트 상세 조회 테스트")
+    void findProjectDetailByProjectIdTest() {
+        // Given
+        Project project = mock(Project.class);
+        when(projectViewRepository.findById(1L)).thenReturn(Optional.of(project));
 
-    @DisplayName("의뢰 삭제 테스트")
-    @ValueSource(longs = {0,1})
-    @ParameterizedTest
-    @Order(4)
-    public void testDeleteRequest(long requestId) {
-        Assertions.assertDoesNotThrow(() ->
-                projectService.deleteProject(requestId));
-    }
+        // When
+        ProjectDetailSingleResponseDTO response = projectViewService.findProjectDetailByProjectId(1L);
 
-    @DisplayName("업무 범위에 따른 의뢰 조회 테스트")
-    @CsvSource({"0, 업무범위1", "0, 업무범위2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsByWorkScope(int page, String workScope) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByWorkScopeWithPaging(page, workScope)));
-    }
-
-    @DisplayName("근무 형태에 따른 의뢰 조회 테스트")
-    @CsvSource({"0, 근무형태1", "0, 근무형태2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsByWorkType(int page, String workType) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsByWorkTypeWithPaging(page, workType)));
-    }
-
-    @DisplayName("진행 분류에 따른 의뢰 조회 테스트")
-    @CsvSource({"0, 진행분류1", "0, 진행분류2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsByProgressClassification(int page, String progressClassification) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.
-                        findProjectsByProgressClassificationWithPaging(page, progressClassification)));
-    }
-
-    @DisplayName("프로젝트 주제(제목)에 따른 의뢰 조회 테스트")
-    @CsvSource({"0, 제목1", "0, 제목2"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsByTitleContainingIgnoreCase(int page, String title) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService
-                        .findProjectsByTitleContainingIgnoreCaseWithPaging(page, title)));
-    }
-
-    @DisplayName("필요 직군보다 더 많이 모집하는 의뢰 조회 테스트")
-    @CsvSource({"0,2,2,3,1,3", "0,3,2,1,1,3"})
-    @ParameterizedTest
-    @Order(2)
-    public void testFindRequestsWithLargerRequirements(int page, Integer requiredClient,
-                                                       Integer requiredServer, Integer requiredDesign,
-                                                       Integer requiredPlanner, Integer requiredAIEngineer) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Request = " + projectService.findProjectsWithLargerRequirementsWithPaging(
-                        page, requiredClient, requiredServer, requiredDesign, requiredPlanner, requiredAIEngineer
-                )));
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getData().getProjectInfo()).isEqualTo(project);
     }
 }

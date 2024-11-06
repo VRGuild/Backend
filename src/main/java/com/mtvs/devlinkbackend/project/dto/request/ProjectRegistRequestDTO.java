@@ -1,25 +1,23 @@
 package com.mtvs.devlinkbackend.project.dto.request;
 
+import com.mtvs.devlinkbackend.project.entity.Occupation;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class ProjectRegistRequestDTO {
-    private String workType;
-    private String progressClassification;
-    private String companyName;
+    private Long userId;
     private String title;
     private String content;
-    private Integer requiredClient;
-    private Integer requiredServer;
-    private Integer requiredDesign;
-    private Integer requiredPlanner;
-    private Integer requiredAIEngineer;
-    private LocalDate startDateTime;
-    private LocalDate endDateTime;
     private Integer estimatedCost;
+    private String progressClassification;
+    private String workType;
+    private List<Occupation> requiredOccupationList;
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

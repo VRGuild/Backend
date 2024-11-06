@@ -1,13 +1,12 @@
 package com.mtvs.devlinkbackend.team.entity;
 
-import com.mtvs.devlinkbackend.util.converter.LongListConverter;
+import com.mtvs.devlinkbackend.common.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

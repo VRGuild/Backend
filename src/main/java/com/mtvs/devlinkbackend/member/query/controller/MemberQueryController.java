@@ -26,7 +26,7 @@ public class MemberQueryController {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
             @ApiResponse(responseCode = "404", description = "팀을 찾을 수 없습니다.")
     })
-    @PatchMapping("/accpet/{memberId}")
+    @PatchMapping("/{memberId}")
     public ResponseEntity<MemberStatusResponseDTO> updateTeam(
             @PathVariable(name = "memberId") Long memberId) {
 

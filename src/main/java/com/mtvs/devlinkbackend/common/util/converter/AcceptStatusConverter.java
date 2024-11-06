@@ -1,6 +1,6 @@
-package com.mtvs.devlinkbackend.util.converter;
+package com.mtvs.devlinkbackend.common.util.converter;
 
-import com.mtvs.devlinkbackend.member.command.model.entity.AcceptStatus;
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

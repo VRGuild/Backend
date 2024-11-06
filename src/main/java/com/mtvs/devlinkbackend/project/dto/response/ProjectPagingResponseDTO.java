@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.project.dto.response;
 
-import com.mtvs.devlinkbackend.project.entity.Project;
+import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndTeamIdListDTO;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class ProjectPagingResponseDTO {
-    private List<Project> data;
+    private List<ProjectAndTeamIdListDTO> data;
     private Integer totalPages;
+    private Long totalProjectCnt;
 }

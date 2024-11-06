@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.project.dto.response;
+package com.mtvs.devlinkbackend.project.dto.response.sub;
 
 import lombok.*;
 
@@ -15,6 +15,6 @@ public class ProjectPreviewDTO {
     private String workType;
     private String progressClassification;
     private String previewTitle;
-    private List<String> requiredWorkers;
+    private List<String> requiredOccupationNameList;
     private LocalDate deadlineDate;
 }

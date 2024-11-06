@@ -4,7 +4,7 @@ import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRegistRequestDT
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevUpdateRequestDTO;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.DevSingleResponseDTO;
 import com.mtvs.devlinkbackend.user.command.service.EpicDevService;
-import com.mtvs.devlinkbackend.util.JwtUtil;
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
