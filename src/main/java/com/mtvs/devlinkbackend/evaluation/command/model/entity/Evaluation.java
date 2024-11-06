@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity(name = "Evaluation")
 @Getter
 @Setter
-@ToString(exclude = "categoryInfo")
+@ToString(exclude = "skillCategoryInfo")
 @NoArgsConstructor
 public class Evaluation {
     @Id

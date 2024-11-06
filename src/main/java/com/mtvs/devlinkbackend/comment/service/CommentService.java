@@ -8,6 +8,8 @@ import com.mtvs.devlinkbackend.comment.entity.Comment;
 import com.mtvs.devlinkbackend.comment.repository.CommentRepository;
 import com.mtvs.devlinkbackend.project.entity.Project;
 import com.mtvs.devlinkbackend.project.repository.ProjectRepository;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,41 +18,28 @@ import java.util.Optional;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final ProjectRepository projectRepository;
+    private final UserViewService userViewService;
 
-    public CommentService(CommentRepository commentRepository, ProjectRepository projectRepository) {
+    public CommentService(CommentRepository commentRepository, UserViewService userViewService) {
         this.commentRepository = commentRepository;
-        this.projectRepository = projectRepository;
+        this.userViewService = userViewService;
     }
 
     @Transactional
-    public CommentSingleResponseDTO registComment(CommentRegistRequestDTO commentRegistRequestDTO, String accountId) {
-        Project project = projectRepository.findById(commentRegistRequestDTO.getRequestId()).orElse(null);
+    public CommentSingleResponseDTO registComment(CommentRegistRequestDTO commentRegistRequestDTO) {
         return new CommentSingleResponseDTO(commentRepository.save(new Comment(
                 commentRegistRequestDTO.getContent(),
-                accountId,
-                project
+                commentRegistRequestDTO.getUserId()
         )));
-    }
-
-    public CommentSingleResponseDTO findCommentByCommentId(Long commentId) {
-        return new CommentSingleResponseDTO(commentRepository.findById(commentId).orElse(null));
-    }
-
-    public CommentListResponseDTO findCommentsByProjectId(Long requestId) {
-        return new CommentListResponseDTO(commentRepository.findCommentsByProject_ProjectId(requestId));
-    }
-
-    public CommentListResponseDTO findCommentsByAccountId(String accountId) {
-        return new CommentListResponseDTO(commentRepository.findCommentsByAccountId(accountId));
     }
 
     @Transactional
     public CommentSingleResponseDTO updateComment(CommentUpdateRequestDTO commentUpdateRequestDTO, String accountId) {
         Optional<Comment> comment = commentRepository.findById(commentUpdateRequestDTO.getCommentId());
+        User user = userViewService.findUserByEpicAccountId(accountId);
         if (comment.isPresent()) {
             Comment foundComment = comment.get();
-            if(foundComment.getAccountId().equals(accountId)) {
+            if(foundComment.getUserId().equals(user.getUserId())) {
                 foundComment.setContent(commentUpdateRequestDTO.getContent());
                 return new CommentSingleResponseDTO(foundComment);
             }
