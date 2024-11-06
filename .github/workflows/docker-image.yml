@@ -2,7 +2,7 @@ name: Auto delploy Docker
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "77-pl-cicd-ddb" ]
 
 jobs:
   build-and-push-image:
