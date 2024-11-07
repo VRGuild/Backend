@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.support.service;
 
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import com.mtvs.devlinkbackend.support.dto.response.SupportListResponseDTO;
 import com.mtvs.devlinkbackend.support.dto.request.SupportRegistRequestDTO;
 import com.mtvs.devlinkbackend.support.dto.response.SupportSingleResponseDTO;
@@ -23,7 +24,7 @@ public class SupportService {
         return new SupportSingleResponseDTO(supportRepository.save(new Support(
                 supportRegistRequestDTO.getProjectId(),
                 supportRegistRequestDTO.getTeamId(),
-                "waiting"
+                AcceptStatus.PENDING
         )));
     }
 

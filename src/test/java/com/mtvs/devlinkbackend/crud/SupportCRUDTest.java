@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.crud;
 
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import com.mtvs.devlinkbackend.support.dto.request.SupportRegistRequestDTO;
 import com.mtvs.devlinkbackend.support.dto.response.SupportListResponseDTO;
 import com.mtvs.devlinkbackend.support.dto.response.SupportSingleResponseDTO;
@@ -33,8 +34,8 @@ public class SupportCRUDTest {
         MockitoAnnotations.openMocks(this);
 
         // 미리 삽입할 Support 객체 생성
-        support1 = new Support(1L, 2L, "waiting");
-        support2 = new Support(1L, 3L, "accepted");
+        support1 = new Support(1L, 2L, AcceptStatus.PENDING);
+        support2 = new Support(1L, 3L, AcceptStatus.ACCEPTED);
 
         // Mocking the repository calls
         supportRepository.save(support1);
