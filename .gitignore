@@ -39,3 +39,5 @@ out/
 
 /src/main/resources/global-bundle.pem
 /src/main/resources/devlink-key.pem
+/src/main/resources/rds-truststore.jks
+
