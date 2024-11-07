@@ -57,7 +57,7 @@ public class EpicDevCommandController {
             @ApiResponse(responseCode = "204", description = "성공적으로 삭제함"),
             @ApiResponse(responseCode = "404", description = "찾을 수 없음")
     })
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<Void> deleteByAuthorizationHeader(
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 

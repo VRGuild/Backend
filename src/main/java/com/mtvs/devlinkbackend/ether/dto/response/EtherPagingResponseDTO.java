@@ -9,6 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EtherListResponseDTO {
+public class EtherPagingResponseDTO {
     private List<Ether> data;
+    private Integer totalPages;
+    private Long totalEtherCnt;
 }

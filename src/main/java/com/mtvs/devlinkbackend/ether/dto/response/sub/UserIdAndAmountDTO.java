@@ -1,14 +1,14 @@
-package com.mtvs.devlinkbackend.ether.dto.request;
+package com.mtvs.devlinkbackend.ether.dto.response.sub;
 
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EtherRegistRequestDTO {
+public class UserIdAndAmountDTO {
     private Long userId;
     private Integer goldAmount;
     private Integer silverAmount;
-    private String cause;
 }

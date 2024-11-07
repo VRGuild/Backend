@@ -9,6 +9,9 @@ import lombok.*;
 @ToString
 public class EtherUpdateRequestDTO {
     private Long etherId;
-    private Long amount;
-    private String reason;
+    private Long userId;
+    private Integer goldAmount;
+    private Integer
+            silverAmount;
+    private String cause;
 }
