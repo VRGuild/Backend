@@ -63,5 +63,6 @@ public class User {
         this.steamAccountId = steamAccountId;
         this.characterId = characterId;
         this.nickname = nickname;
+        this.experienceValue = 0;
     }
 }

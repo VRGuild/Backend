@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.comment.controller;
 
+import com.mtvs.devlinkbackend.comment.dto.response.CommentDetailSingleResponseDTO;
 import com.mtvs.devlinkbackend.comment.dto.response.CommentListResponseDTO;
 import com.mtvs.devlinkbackend.comment.dto.response.CommentSingleResponseDTO;
 import com.mtvs.devlinkbackend.comment.service.CommentViewService;
@@ -55,6 +56,16 @@ public class CommentQueryController {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         CommentListResponseDTO comments = commentViewService.findCommentsByAccountId(accountId);
+        return ResponseEntity.ok(comments);
+    }
+
+    @Operation(summary = "PK로 댓글 세부 조회", description = "특정 댓글 세부 내용을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다.")
+    @GetMapping("/detail/{commentId}")
+    public ResponseEntity<CommentDetailSingleResponseDTO> findCommentDetailByCommentId(
+            @PathVariable(name = "commentId") Long commentId) throws Exception {
+
+        CommentDetailSingleResponseDTO comments = commentViewService.findCommentDetailByCommentId(commentId);
         return ResponseEntity.ok(comments);
     }
 }
