@@ -10,7 +10,7 @@ import java.util.List;
 @ToString
 public class GuildRegistRequestDTO {
     private String guildName;
-    private String introduction;
-    private Long maximumMember;
-    private List<String> memberList;
+    private String guildIntroduction;
+    private Long masterUserId;
+    private Integer maximumMember;
 }

@@ -3,6 +3,7 @@ package com.mtvs.devlinkbackend.user.query.service;
 import com.mtvs.devlinkbackend.character.entity.UserCharacter;
 import com.mtvs.devlinkbackend.character.repository.UserCharacterRepository;
 import com.mtvs.devlinkbackend.guild.repository.GuildRepository;
+import com.mtvs.devlinkbackend.guild.repository.GuildViewRepository;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.UserDetailSingleResponseDTO;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.UserSingleResponseDTO;
@@ -19,16 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserViewService {
     private final JwtUtil jwtUtil;
     private final UserViewRepository userViewRepository;
-    private final GuildRepository guildRepository;
     private final UserCharacterRepository userCharacterRepository;
     private final SkillCategoryInfoViewRepository skillCategoryInfoViewRepository;
+    private final GuildViewRepository guildViewRepository;
 
-    public UserViewService(JwtUtil jwtUtil, UserViewRepository userViewRepository, GuildRepository guildRepository, UserCharacterRepository userCharacterRepository, SkillCategoryInfoViewRepository skillCategoryInfoViewRepository) {
+    public UserViewService(JwtUtil jwtUtil, UserViewRepository userViewRepository, UserCharacterRepository userCharacterRepository, SkillCategoryInfoViewRepository skillCategoryInfoViewRepository, GuildViewRepository guildViewRepository) {
         this.jwtUtil = jwtUtil;
         this.userViewRepository = userViewRepository;
-        this.guildRepository = guildRepository;
         this.userCharacterRepository = userCharacterRepository;
         this.skillCategoryInfoViewRepository = skillCategoryInfoViewRepository;
+        this.guildViewRepository = guildViewRepository;
     }
 
     public Boolean isExistedUserByEpicAccountId(String accountId) throws Exception {
@@ -54,7 +55,7 @@ public class UserViewService {
                 foundUserCharacter != null ?
                         new CharacterInfoDTO(
                                 foundUserCharacter.getGuildId() != null ?
-                                        guildRepository.findByGuildId(foundUserCharacter.getGuildId()) : null,
+                                        guildViewRepository.findByGuildId(foundUserCharacter.getGuildId()) : null,
                                 foundUserCharacter.getCharacterPicture()) :
                         null;
         DevInfoDTO devInfoDTO =
