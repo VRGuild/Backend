@@ -6,10 +6,10 @@ import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +22,8 @@ public class Channel {
     @Id
     private String channelId;
 
-    @Field(name = "owner_id")
-    private String ownerId;
+    @Field(name = "user_id")
+    private Long userId;
 
     private List<PositionType> positionTypes; // 여러 개의 position과 type 저장
 
@@ -33,9 +33,8 @@ public class Channel {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Channel(String ownerId, List<PositionType> positionTypes) {
-        this.channelId = UUID.randomUUID().toString();
-        this.ownerId = ownerId;
+    public Channel(Long userId, List<PositionType> positionTypes) {
+        this.userId = userId;
         this.positionTypes = positionTypes;
     }
 
