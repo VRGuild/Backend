@@ -20,10 +20,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Download global-bundle.pem
-        run: |
-           wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -O src/main/resources/global-bundle.pem
-
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
