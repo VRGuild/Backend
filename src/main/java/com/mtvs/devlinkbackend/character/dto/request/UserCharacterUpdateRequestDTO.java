@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.character.dto.request;
 
+import com.mtvs.devlinkbackend.character.entity.CharacterPicture;
 import com.mtvs.devlinkbackend.character.entity.CustomInfo;
 import lombok.*;
 
@@ -14,5 +15,5 @@ public class UserCharacterUpdateRequestDTO {
     private Long guildId;
     private List<Long> teamIdList;
     private List<CustomInfo> customList;
-    private String characterPicture;
+    private CharacterPicture characterPicture;
 }
