@@ -10,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GuildDetailListResponseDTO {
+public class GuildDetailPagingResponseDTO {
     private List<GuildAndMemberDTO> data;
+    private Integer totalPages;
+    private Long totalGuildCnt;
 }

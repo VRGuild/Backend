@@ -1,7 +1,7 @@
 package com.mtvs.devlinkbackend.guild.controller;
 
 import com.mtvs.devlinkbackend.common.util.JwtUtil;
-import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailListResponseDTO;
+import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailPagingResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailSingleResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildListResponseDTO;
 import com.mtvs.devlinkbackend.guild.service.GuildViewService;
@@ -35,7 +35,7 @@ public class GuildQueryController {
     @Operation(summary = "길드 목록 조회", description = "이름이 특정 문자열을 포함하는 길드 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "길드 목록이 성공적으로 조회되었습니다.")
     @GetMapping("/list/{page}")
-    public ResponseEntity<GuildDetailListResponseDTO> findGuildsWithPagination(@PathVariable Integer page) {
+    public ResponseEntity<GuildDetailPagingResponseDTO> findGuildsWithPagination(@PathVariable Integer page) {
         return ResponseEntity.ok(guildViewService.findGuildDetailsWithPagination(page));
     }
 
