@@ -12,6 +12,5 @@ import java.util.List;
 @ToString
 public class TeamMemberModifyRequestDTO {
     private Long teamId;
-    private Long leaderUserId;
     private List<Member> teamMemberList;
 }

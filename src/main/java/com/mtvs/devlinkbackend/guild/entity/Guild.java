@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.guild.entity;
 
+import com.mtvs.devlinkbackend.common.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,23 +24,20 @@ public class Guild {
     private Long guildId;
 
     @Column(name = "OWNER_ID")
-    private String ownerId;
+    private Long masterUserId;
 
     @Column(name = "GUILD_NAME")
     private String guildName;
 
-    @Column(name = "INTRODUCTION")
-    private String introduction;
+    @Column(name = "GUILD_INTRODUCTION")
+    private String guildIntroduction;
 
     @Column(name = "MAXIMUM_MEMBER")
-    private Long maximumMember;
+    private Integer maximumMember;
 
-    @Column(name = "CHANNEL_ID")
-    private Long channelId;
-
-    @ElementCollection
-    @CollectionTable(name = "GUILD_MEMBER", joinColumns = @JoinColumn(name = "GUILD_ID"))
-    private List<String> memberList = new ArrayList<>();
+    @Convert(converter = LongListConverter.class)
+    @Column(name = "GUILD_MEMBER_LIST", columnDefinition = "TEXT")
+    private List<Long> guildMemberList = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "CREATED_AT", updatable = false)
@@ -49,44 +47,31 @@ public class Guild {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    public Guild(String ownerId, String guildName, String introduction, Long maximumMember, List<String> memberList) {
-        this.ownerId = ownerId;
+    public Guild(Long masterUserId, String guildName, String guildIntroduction, Integer maximumMember, List<Long> guildMemberList) {
+        this.masterUserId = masterUserId;
         this.guildName = guildName;
-        this.introduction = introduction;
+        this.guildIntroduction = guildIntroduction;
         this.maximumMember = maximumMember;
-        this.memberList = new ArrayList<>(memberList);
+        this.guildMemberList = new ArrayList<>(guildMemberList);
     }
 
-    public Guild(String ownerId, String guildName, String introduction, Long maximumMember, List<String> memberList, Long channelId) {
-        this.ownerId = ownerId;
-        this.guildName = guildName;
-        this.introduction = introduction;
-        this.maximumMember = maximumMember;
-        this.memberList = new ArrayList<>(memberList);
-        this.channelId = channelId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+    public void setMasterUserId(Long masterUserId) {
+        this.masterUserId = masterUserId;
     }
 
     public void setGuildName(String guildName) {
         this.guildName = guildName;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
+    public void setGuildIntroduction(String guildIntroduction) {
+        this.guildIntroduction = guildIntroduction;
     }
 
-    public void setMaximumMember(Long maximumMember) {
+    public void setMaximumMember(Integer maximumMember) {
         this.maximumMember = maximumMember;
     }
 
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
-    public void setMemberList(List<String> memberList) {
-        this.memberList = new ArrayList<>(memberList);
+    public void setMemberList(List<Long> guildMemberList) {
+        this.guildMemberList = new ArrayList<>(guildMemberList);
     }
 }

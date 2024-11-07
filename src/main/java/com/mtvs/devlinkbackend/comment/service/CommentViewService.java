@@ -9,6 +9,7 @@ import com.mtvs.devlinkbackend.comment.dto.response.sub.CommentDetailDTO;
 import com.mtvs.devlinkbackend.comment.entity.Comment;
 import com.mtvs.devlinkbackend.comment.repository.CommentViewRepository;
 import com.mtvs.devlinkbackend.guild.repository.GuildRepository;
+import com.mtvs.devlinkbackend.guild.repository.GuildViewRepository;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.UserDetailSingleResponseDTO;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.sub.CharacterInfoDTO;
@@ -29,15 +30,15 @@ public class CommentViewService {
     private final UserCharacterViewService userCharacterViewService;
     private final UserViewRepository userViewRepository;
     private final SkillCategoryInfoViewRepository skillCategoryInfoViewRepository;
-    private final GuildRepository guildRepository;
+    private final GuildViewRepository guildViewRepository;
 
-    public CommentViewService(CommentViewRepository commentViewRepository, UserViewService userViewService, UserCharacterViewService userCharacterViewService, UserViewRepository userViewRepository, SkillCategoryInfoViewRepository skillCategoryInfoViewRepository, GuildRepository guildRepository) {
+    public CommentViewService(CommentViewRepository commentViewRepository, UserViewService userViewService, UserCharacterViewService userCharacterViewService, UserViewRepository userViewRepository, SkillCategoryInfoViewRepository skillCategoryInfoViewRepository, GuildViewRepository guildViewRepository) {
         this.commentViewRepository = commentViewRepository;
         this.userViewService = userViewService;
         this.userCharacterViewService = userCharacterViewService;
         this.userViewRepository = userViewRepository;
         this.skillCategoryInfoViewRepository = skillCategoryInfoViewRepository;
-        this.guildRepository = guildRepository;
+        this.guildViewRepository = guildViewRepository;
     }
 
     public CommentSingleResponseDTO findCommentByCommentId(Long commentId) {
@@ -67,7 +68,7 @@ public class CommentViewService {
                 foundUserCharacter != null ?
                         new CharacterInfoDTO(
                                 foundUserCharacter.getGuildId() != null ?
-                                        guildRepository.findByGuildId(foundUserCharacter.getGuildId()) : null,
+                                        guildViewRepository.findByGuildId(foundUserCharacter.getGuildId()) : null,
                                 foundUserCharacter.getCharacterPicture())
                         : null;
 

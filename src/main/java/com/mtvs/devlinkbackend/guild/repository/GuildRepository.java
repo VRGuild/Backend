@@ -11,9 +11,4 @@ import java.util.List;
 
 @Repository
 public interface GuildRepository extends JpaRepository<Guild, Long> {
-    List<Guild> findGuildsByGuildNameContaining(String guildName);
-    List<Guild> findGuildsByOwnerId(String ownerId);
-    @Query("SELECT g FROM Guild g JOIN g.memberList m WHERE m LIKE :memberId")
-    List<Guild> findGuildsByMemberIdContaining(@Param("memberId") String accountId);
-    Guild_GuildName findByGuildId(Long guildId);
 }
