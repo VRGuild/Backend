@@ -1,6 +1,6 @@
 package com.mtvs.devlinkbackend.guild.service;
 
-import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailListResponseDTO;
+import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailPagingResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildDetailSingleResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.GuildListResponseDTO;
 import com.mtvs.devlinkbackend.guild.dto.response.sub.GuildAndMemberDTO;
@@ -52,7 +52,7 @@ public class GuildViewService {
         );
     }
 
-    public GuildDetailListResponseDTO findGuildDetailsWithPagination(Integer page) {
+    public GuildDetailPagingResponseDTO findGuildDetailsWithPagination(Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").ascending());
         Page<Guild> guildPage = guildViewRepository.findAllBy(pageable);
 
@@ -67,7 +67,7 @@ public class GuildViewService {
                                 memberViewService.findMemberByMemberId(memberId).getData()).toList()
         )).toList();
 
-        return new GuildDetailListResponseDTO(guildAndMemberDTOList);
+        return new GuildDetailPagingResponseDTO(guildAndMemberDTOList, guildPage.getTotalPages(), guildViewRepository.count());
     }
 
     public GuildListResponseDTO findGuildsByAccountIdInGuild(String accountId) {

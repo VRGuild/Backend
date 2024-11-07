@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.support.entity;
 
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +24,9 @@ public class Support {
     private Long teamId;
 
     @Column(name = "SUPPORT_CONFIRMATION")
-    private String supportConfirmation; // 상태 : waiting, accepted, rejected
+    private AcceptStatus supportConfirmation; // 상태 : waiting, accepted, rejected
 
-    public Support(Long projectId, Long teamId, String supportConfirmation) {
+    public Support(Long projectId, Long teamId, AcceptStatus supportConfirmation) {
         this.projectId = projectId;
         this.teamId = teamId;
         this.supportConfirmation = supportConfirmation;
@@ -39,7 +40,7 @@ public class Support {
         this.teamId = teamId;
     }
 
-    public void setSupportConfirmation(String supportConfirmation) {
+    public void setSupportConfirmation(AcceptStatus supportConfirmation) {
         this.supportConfirmation = supportConfirmation;
     }
 }

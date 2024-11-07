@@ -2,19 +2,37 @@ package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.ether.dto.request.EtherRegistRequestDTO;
 import com.mtvs.devlinkbackend.ether.dto.request.EtherUpdateRequestDTO;
+import com.mtvs.devlinkbackend.ether.dto.response.EtherSingleResponseDTO;
+import com.mtvs.devlinkbackend.ether.dto.response.UserEtherAmountResponseDTO;
+import com.mtvs.devlinkbackend.ether.entity.Ether;
+import com.mtvs.devlinkbackend.ether.repository.EtherRepository;
+import com.mtvs.devlinkbackend.ether.repository.EtherViewRepository;
+import com.mtvs.devlinkbackend.ether.repository.projection.EtherGoldAndSilver;
 import com.mtvs.devlinkbackend.ether.service.EtherService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
+import com.mtvs.devlinkbackend.ether.service.EtherViewService;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.command.repository.UserRepository;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
@@ -22,70 +40,98 @@ public class EtherCRUDTest {
     @Autowired
     private EtherService etherService;
 
-    private static Stream<Arguments> newEther() {
-        return Stream.of(
-                Arguments.of(new EtherRegistRequestDTO(10L, "이유0"), "계정1"),
-                Arguments.of(new EtherRegistRequestDTO(100L, "이유00"), "계정2")
-        );
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EtherViewService etherViewService;
+    @Autowired
+    private EtherViewRepository etherViewRepository;
+    @Autowired
+    private EtherRepository etherRepository;
+
+    @BeforeEach
+    void setUp() {
+        // Create a user if none exists
+        if (userRepository.findAll().isEmpty()) {
+            User user = new User();
+            user.setNickname("TestUser");
+            user.setExperienceValue(0);
+            userRepository.save(user);
+        }
     }
 
-    private static Stream<Arguments> modifiedEther() {
-        return Stream.of(
-                Arguments.of(new EtherUpdateRequestDTO(1L,200L, "이유0")),
-                Arguments.of(new EtherUpdateRequestDTO(2L,500L , "이유00"))
-        );
+    @Test
+    @DisplayName("Ether 등록 서비스 테스트")
+    public void registEtherTest() {
+        List<User> user = userRepository.findAll();
+
+        EtherRegistRequestDTO requestDTO = new EtherRegistRequestDTO(user.get(0).getUserId(), 100, 200, "test cause");
+
+        EtherSingleResponseDTO responseDTO = etherService.registEther(requestDTO);
+
+        assertThat(responseDTO).isNotNull();
+        assertThat(responseDTO.getData().getGoldAmount()).isEqualTo(100);
+        assertThat(responseDTO.getData().getSilverAmount()).isEqualTo(200);
     }
 
-    @DisplayName("에테르 이력 추가 테스트")
-    @ParameterizedTest
-    @MethodSource("newEther")
-    @Order(0)
-    public void testCreateEther(EtherRegistRequestDTO etherRegistRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> etherService.registEther(etherRegistRequestDTO, accountId));
+    @Test
+    @DisplayName("Ether 수정 서비스 테스트")
+    public void updateEtherTest() {
+        List<User> user = userRepository.findAll();
+
+        EtherRegistRequestDTO registRequestDTO = new EtherRegistRequestDTO(user.get(0).getUserId(), 100, 200, "test cause");
+
+        EtherSingleResponseDTO registResponseDTO = etherService.registEther(registRequestDTO);
+
+        EtherUpdateRequestDTO requestDTO = new EtherUpdateRequestDTO(registResponseDTO.getData().getEtherId(), user.get(0).getUserId(), 150, 250, "updated cause");
+
+        EtherSingleResponseDTO responseDTO = etherService.updateEther(requestDTO);
+
+        assertThat(responseDTO).isNotNull();
+        assertThat(responseDTO.getData().getCause()).isEqualTo("updated cause");
+        assertThat(responseDTO.getData().getGoldAmount()).isEqualTo(150);
+        assertThat(responseDTO.getData().getSilverAmount()).isEqualTo(250);
     }
 
-    @DisplayName("PK로 에테르 이력 조회 테스트")
-    @ValueSource(longs = {1,2})
-    @ParameterizedTest
-    @Order(1)
-    public void testFindEtherByEtherId(long etherId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Ether = " + etherService.findEtherByEtherId(etherId)));
+    @Test
+    @DisplayName("존재하지 않는 Ether 수정 서비스 테스트")
+    public void updateEtherNotFoundTest() {
+        List<User> user = userRepository.findAll();
+
+        EtherUpdateRequestDTO requestDTO = new EtherUpdateRequestDTO(1L, user.get(0).getUserId(), 150, 250, "updated cause");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> etherService.updateEther(requestDTO));
     }
 
-    @DisplayName("계정 ID에 따른 에테르 이력 조회 테스트")
-    @ValueSource(strings = {"계정1", "계정2"})
-    @ParameterizedTest
-    @Order(3)
-    public void testFindEthersByAccountId(String accountId) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Ether = " + etherService.findEthersByAccountId(accountId)));
+    @Test
+    @DisplayName("Ether 삭제 서비스 테스트")
+    public void deleteEtherByEtherIdTest() {
+        List<User> user = userRepository.findAll();
+
+        EtherRegistRequestDTO requestDTO = new EtherRegistRequestDTO(user.get(0).getUserId(), 100, 200, "test cause");
+
+        Ether ether = etherService.registEther(requestDTO).getData();
+
+        assertDoesNotThrow(() -> etherService.deleteEtherByEtherId(ether.getEtherId()));
     }
 
-    @DisplayName("지급 이유에 따른 에테르 이력 조회 테스트")
-    @ValueSource(strings = {"Salary Bonus", "Expense Compensation"})
-    @ParameterizedTest
-    @Order(4)
-    public void testFindEthersByReason(String reason) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println("Ether = " + etherService.findEthersByReason(reason)));
-    }
+    @Test
+    @DisplayName("유저 ID로 Ether 총 금액 조회 테스트")
+    public void findTotalEtherAmountByUserIdTest() {
+        List<User> userList = userRepository.findAll();
+        Long userId = userList.get(0).getUserId();
 
-    @DisplayName("에테르 이력 수정 테스트")
-    @MethodSource("modifiedEther")
-    @ParameterizedTest
-    @Order(5)
-    public void testUpdateQuestion(EtherUpdateRequestDTO etherUpdateRequestDTO) {
-        Assertions.assertDoesNotThrow(() ->
-                System.out.println(etherService.updateEther(etherUpdateRequestDTO)));
-    }
+        Ether ether1 = new Ether(userId, "cause 1", 100, 200);
+        Ether ether2 = new Ether(userId, "cause 2", 150, 250);
+        etherRepository.save(ether1);
+        etherRepository.save(ether2);
 
-    @DisplayName("에테르 이력 삭제 테스트")
-    @ValueSource(longs = {0,1})
-    @ParameterizedTest
-    @Order(6)
-    public void testDeleteEther(long etherId) {
-        Assertions.assertDoesNotThrow(() ->
-                etherService.deleteEtherByEtherId(etherId));
+        assertDoesNotThrow(() -> {
+            UserEtherAmountResponseDTO responseDTO = etherViewService.findTotalEtherAmountByUserId(userId);
+            assertThat(responseDTO).isNotNull();
+            assertThat(responseDTO.getData().getGoldAmount()).isEqualTo(250);
+            assertThat(responseDTO.getData().getSilverAmount()).isEqualTo(450);
+        });
     }
 }

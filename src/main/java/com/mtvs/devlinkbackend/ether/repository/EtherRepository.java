@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface EtherRepository extends JpaRepository<Ether, Long> {
-    public List<Ether> findEthersByAccountId(String accountId);
-    public List<Ether> findEthersByReason(String reason);
 }

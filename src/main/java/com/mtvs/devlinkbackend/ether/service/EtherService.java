@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.ether.service;
 
-import com.mtvs.devlinkbackend.ether.dto.response.EtherListResponseDTO;
 import com.mtvs.devlinkbackend.ether.dto.request.EtherRegistRequestDTO;
 import com.mtvs.devlinkbackend.ether.dto.response.EtherSingleResponseDTO;
 import com.mtvs.devlinkbackend.ether.dto.request.EtherUpdateRequestDTO;
@@ -20,25 +19,13 @@ public class EtherService {
     }
 
     @Transactional
-    public EtherSingleResponseDTO registEther(EtherRegistRequestDTO etherRegistRequestDTO, String accountId) {
+    public EtherSingleResponseDTO registEther(EtherRegistRequestDTO etherRegistRequestDTO) {
         return new EtherSingleResponseDTO(etherRepository.save(
                 new Ether(
-                        accountId,
-                        etherRegistRequestDTO.getReason(),
-                        etherRegistRequestDTO.getAmount())
-        ));
-    }
-
-    public EtherSingleResponseDTO findEtherByEtherId(Long etherId) {
-        return new EtherSingleResponseDTO(etherRepository.findById(etherId).orElse(null));
-    }
-
-    public EtherListResponseDTO findEthersByAccountId(String accountId) {
-        return new EtherListResponseDTO(etherRepository.findEthersByAccountId(accountId));
-    }
-
-    public EtherListResponseDTO findEthersByReason(String reason) {
-        return new EtherListResponseDTO(etherRepository.findEthersByReason(reason));
+                        etherRegistRequestDTO.getUserId(),
+                        etherRegistRequestDTO.getCause(),
+                        etherRegistRequestDTO.getGoldAmount(),
+                        etherRegistRequestDTO.getSilverAmount())));
     }
 
     @Transactional
@@ -46,8 +33,9 @@ public class EtherService {
         Optional<Ether> ether = etherRepository.findById(etherUpdateRequestDTO.getEtherId());
         if(ether.isPresent()) {
             Ether foundEther = ether.get();
-            foundEther.setReason(etherUpdateRequestDTO.getReason());
-            foundEther.setAmount(etherUpdateRequestDTO.getAmount());
+            foundEther.setCause(etherUpdateRequestDTO.getCause());
+            foundEther.setGoldAmount(etherUpdateRequestDTO.getGoldAmount());
+            foundEther.setSilverAmount(etherUpdateRequestDTO.getSilverAmount());
             return new EtherSingleResponseDTO(foundEther);
         } else
             throw new IllegalArgumentException("잘못된 Ether Id로 호출, ETHER_ID : " + etherUpdateRequestDTO.getEtherId());
