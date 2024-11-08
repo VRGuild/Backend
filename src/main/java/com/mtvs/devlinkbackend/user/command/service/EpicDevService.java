@@ -47,8 +47,10 @@ public class EpicDevService {
             throw new IllegalArgumentException("등록되지 않은 user로 dev 정보 입력 시도");
 
         UserCharacter userCharacter = userCharacterViewService.findCharacterByUserId(user.getUserId()).getData();
-        user.setCharacterId(userCharacter.getCharacterId());
-        user.setNickname(devRegistRequestDTO.getNickname());
+        if (userCharacter != null) {
+            user.setCharacterId(userCharacter.getCharacterId());
+            user.setNickname(devRegistRequestDTO.getNickname());
+        }
 
 
         User savedUser = userRepository.save(user);
