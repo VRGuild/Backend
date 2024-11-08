@@ -2,7 +2,6 @@ package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterRegistRequestDTO;
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
-import com.mtvs.devlinkbackend.character.entity.CharacterPicture;
 import com.mtvs.devlinkbackend.character.entity.CustomInfo;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
 import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
@@ -37,7 +36,7 @@ public class UserCharacterCRUDTest {
                         List.of(1L, 2L),
                         List.of(new CustomInfo(1, "", "", 1),
                                 new CustomInfo(1, "", "", 1)),
-                        new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                        "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
                 ), "계정3"),
                 Arguments.of(new UserCharacterRegistRequestDTO(
                         1L,
@@ -45,7 +44,7 @@ public class UserCharacterCRUDTest {
                         List.of(1L, 2L),
                         List.of(new CustomInfo(1, "", "", 1),
                                 new CustomInfo(1, "", "", 1)),
-                        new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                        "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
                 ), "계정4")
         );
     }
@@ -58,7 +57,7 @@ public class UserCharacterCRUDTest {
                         List.of(1L, 2L),
                         List.of(new CustomInfo(1, "", "", 1),
                                 new CustomInfo(1, "", "", 1)),
-                        new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                        "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
                 ), "계정1"),
                 Arguments.of(new UserCharacterUpdateRequestDTO(
                         1L,
@@ -66,7 +65,7 @@ public class UserCharacterCRUDTest {
                         List.of(1L, 2L),
                         List.of(new CustomInfo(1, "", "", 1),
                                 new CustomInfo(1, "", "", 1)),
-                        new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                        "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
                 ), "계정2")
         );
     }
@@ -79,7 +78,7 @@ public class UserCharacterCRUDTest {
                 List.of(1L, 2L),
                 List.of(new CustomInfo(1, "", "", 1),
                         new CustomInfo(1, "", "", 1)),
-                new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
         ), "계정1");
         userCharacterService.registCharacter(new UserCharacterRegistRequestDTO(
                 1L,
@@ -87,7 +86,7 @@ public class UserCharacterCRUDTest {
                 List.of(1L, 2L),
                 List.of(new CustomInfo(1, "", "", 1),
                         new CustomInfo(1, "", "", 1)),
-                new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)
+                "new CharacterPicture(1.0F, 1.0F, 1.0F, 1.0F)"
         ), "계정2");
     }
 

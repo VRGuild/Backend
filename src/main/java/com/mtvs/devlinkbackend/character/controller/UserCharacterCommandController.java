@@ -4,7 +4,6 @@ import com.mtvs.devlinkbackend.character.dto.request.UserCharacterRegistRequestD
 import com.mtvs.devlinkbackend.character.dto.response.UserCharacterSingleResponseDTO;
 import com.mtvs.devlinkbackend.character.dto.request.UserCharacterUpdateRequestDTO;
 import com.mtvs.devlinkbackend.character.service.UserCharacterService;
-import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
 import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,12 +16,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserCharacterCommandController {
     private final UserCharacterService userCharacterService;
     private final JwtUtil jwtUtil;
-    private final UserCharacterViewService userCharacterViewService;
 
-    public UserCharacterCommandController(UserCharacterService userCharacterService, JwtUtil jwtUtil, UserCharacterViewService userCharacterViewService) {
+    public UserCharacterCommandController(UserCharacterService userCharacterService, JwtUtil jwtUtil) {
         this.userCharacterService = userCharacterService;
         this.jwtUtil = jwtUtil;
-        this.userCharacterViewService = userCharacterViewService;
     }
 
     @Operation(summary = "캐릭터 등록", description = "새로운 캐릭터를 등록합니다.")
@@ -43,7 +40,7 @@ public class UserCharacterCommandController {
     @ApiResponse(responseCode = "404", description = "해당 계정 ID로 캐릭터를 찾을 수 없습니다.")
     @PatchMapping
     public ResponseEntity<UserCharacterSingleResponseDTO> updateCharacter(
-            @RequestBody UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO) throws Exception {
+            @RequestBody UserCharacterUpdateRequestDTO userCharacterUpdateRequestDTO) {
 
         try {
             UserCharacterSingleResponseDTO updatedCharacter = userCharacterService.updateCharacter(userCharacterUpdateRequestDTO);
