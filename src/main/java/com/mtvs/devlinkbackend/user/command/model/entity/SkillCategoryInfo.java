@@ -2,7 +2,7 @@ package com.mtvs.devlinkbackend.user.command.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mtvs.devlinkbackend.evaluation.command.model.entity.Evaluation;
+import com.mtvs.devlinkbackend.evaluation.command.domain.model.entity.Evaluation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
