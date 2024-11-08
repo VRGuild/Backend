@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.evaluation.command.model.entity;
+package com.mtvs.devlinkbackend.evaluation.command.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mtvs.devlinkbackend.user.command.model.entity.SkillCategoryInfo;
