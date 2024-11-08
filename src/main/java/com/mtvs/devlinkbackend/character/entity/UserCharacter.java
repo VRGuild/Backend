@@ -27,8 +27,8 @@ public class UserCharacter {
     @Column(name = "TEAM_ID_LIST")
     private List<Long> teamIdList;
 
-    @Embedded
-    private CharacterPicture characterPicture;
+    @Column(name = "CHARACTER_PICTURE")
+    private String characterPicture;
 
     @ElementCollection
     @CollectionTable(name = "CUSTOM_LIST", joinColumns = @JoinColumn(name = "CHARACTER_ID"))
@@ -48,7 +48,7 @@ public class UserCharacter {
     public UserCharacter() {
     }
 
-    public UserCharacter(Long guildId, List<Long> teamIdList, CharacterPicture characterPicture, List<CustomInfo> customList, Long userId) {
+    public UserCharacter(Long guildId, List<Long> teamIdList, String characterPicture, List<CustomInfo> customList, Long userId) {
         this.guildId = guildId;
         this.teamIdList = teamIdList;
         this.characterPicture = characterPicture;
