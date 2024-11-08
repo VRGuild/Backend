@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -36,15 +37,19 @@ public class Evaluation {
     @Column(name = "CREATED_AT", updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    @Column(name = "MODIFIED_AT", updatable = false)
+    private LocalDateTime modifiedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SKILL_CATEGORY_INFO_ID", nullable = false)
     @JsonIgnore
     private SkillCategoryInfo skillCategoryInfo;
 
-    public Evaluation(Long userId, String cause, Integer point, LocalDateTime createdAt) {
+    public Evaluation(Long userId, String cause, Integer point, SkillCategoryInfo skillCategoryInfo) {
         this.userId = userId;
         this.cause = cause;
         this.point = point;
-        this.createdAt = createdAt;
+        this.skillCategoryInfo = skillCategoryInfo;
     }
 }

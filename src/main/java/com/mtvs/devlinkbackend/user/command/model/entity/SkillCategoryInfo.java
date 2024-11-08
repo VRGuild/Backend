@@ -1,8 +1,7 @@
 package com.mtvs.devlinkbackend.user.command.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mtvs.devlinkbackend.evaluation.command.domain.model.entity.Evaluation;
+import com.mtvs.devlinkbackend.common.util.converter.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,18 +29,18 @@ public class SkillCategoryInfo {
     private Boolean isEvaluated;
 
     @Column(name = "POINT_AVG")
-    private Integer pointAvg;
+    private Double pointAvg;
 
-    @OneToMany(mappedBy = "skillCategoryInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Evaluation> evaluationIdList;
+    @Convert(converter = LongListConverter.class)
+    @Column(name = "EVALUATION_ID_LIST")
+    private List<Long> evaluationIdList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DEV_ID", nullable = false)
     @JsonIgnore
     private Dev dev;
 
-    public SkillCategoryInfo(String categoryName, List<Evaluation> evaluationIdList) {
+    public SkillCategoryInfo(String categoryName, List<Long> evaluationIdList) {
         this.categoryName = categoryName;
         this.isEvaluated = false;
         this.evaluationIdList = evaluationIdList;
