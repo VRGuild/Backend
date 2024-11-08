@@ -1,5 +1,7 @@
 package com.mtvs.devlinkbackend.user.command.service;
 
+import com.mtvs.devlinkbackend.character.entity.UserCharacter;
+import com.mtvs.devlinkbackend.character.service.UserCharacterViewService;
 import com.mtvs.devlinkbackend.file.service.FileUploadService;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevRegistRequestDTO;
 import com.mtvs.devlinkbackend.user.command.model.dto.request.DevInfoRequestDTO;
@@ -26,27 +28,31 @@ public class EpicDevService {
     private final UserViewRepository userViewRepository;
     private final DevViewRepository devViewRepository;
     private final FileUploadService fileUploadService;
+    private final UserCharacterViewService userCharacterViewService;
 
-    public EpicDevService(DevRepository devRepository, UserRepository userRepository, UserViewRepository userViewRepository, DevViewRepository devViewRepository, FileUploadService fileUploadService) {
+    public EpicDevService(DevRepository devRepository, UserRepository userRepository, UserViewRepository userViewRepository, DevViewRepository devViewRepository, FileUploadService fileUploadService, UserCharacterViewService userCharacterViewService) {
         this.devRepository = devRepository;
         this.userRepository = userRepository;
         this.userViewRepository = userViewRepository;
         this.devViewRepository = devViewRepository;
         this.fileUploadService = fileUploadService;
+        this.userCharacterViewService = userCharacterViewService;
     }
 
     @Transactional
     public DevSingleResponseDTO registDev(DevRegistRequestDTO devRegistRequestDTO,
                                           String accountId) throws IOException {
         User user = userViewRepository.findUserByEpicAccountId(accountId);
-        if (user == null) {
-            user = new User(
-                    accountId,
-                    null,
-                    null,
-                    devRegistRequestDTO.getNickname()
-            );
+        if (user == null)
+            throw new IllegalArgumentException("등록되지 않은 user로 dev 정보 입력 시도");
+
+        UserCharacter userCharacter = userCharacterViewService.findCharacterByUserId(user.getUserId()).getData();
+        if (userCharacter != null) {
+            user.setCharacterId(userCharacter.getCharacterId());
+            user.setNickname(devRegistRequestDTO.getNickname());
         }
+
+
         User savedUser = userRepository.save(user);
 
         DevInfoRequestDTO devInfoRequestDTO = devRegistRequestDTO.getDevInfo();
