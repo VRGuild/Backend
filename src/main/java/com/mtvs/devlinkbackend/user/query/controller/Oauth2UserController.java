@@ -98,4 +98,16 @@ public class Oauth2UserController {
         // 260 : 해당 User가 처음 서비스를 사용
         return isExisted ? ResponseEntity.status(222).body("Existing User") : ResponseEntity.status(260).body("New User");
     }
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+        String token = authorizationHeader.replace("Bearer ", "");
+        Map<String, Object> tokenBody = epicGamesTokenService.getRefreshByRefreshToken(token);
+        if(tokenBody != null) {
+            return ResponseEntity.ok(tokenBody);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 }

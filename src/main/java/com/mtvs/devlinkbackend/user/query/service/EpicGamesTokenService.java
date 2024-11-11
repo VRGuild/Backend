@@ -32,6 +32,7 @@ public class EpicGamesTokenService {
 
     private final JwtUtil jwtUtil;
 
+
     public EpicGamesTokenService(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
@@ -58,7 +59,7 @@ public class EpicGamesTokenService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("code", code);
-        body.add("scope", "basic_profile");
+        body.add("scope", "basic_profile friends_list presence");
         body.add("deployment_id", deploymentId);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
@@ -103,6 +104,35 @@ public class EpicGamesTokenService {
             throw new RuntimeException("API 요청 중 오류 발생 : " + e.getMessage());
         }
 
+        return response.getBody();
+    }
+    public Map<String, Object> getRefreshByRefreshToken(String refreshToken) throws Exception {
+        // Epic Games의 OAuth2 토큰 엔드포인트 호출
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        // Basic Authentication 헤더 추가
+        String auth = clientId + ":" + clientSecret;
+        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
+        String authHeader = "Basic " + new String(encodedAuth);
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
+        headers.set("Authorization", authHeader);
+
+        // 요청 본문 설정
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("scope", "basic_profile friends_list presence");
+        body.add("refresh_token", refreshToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+        // Epic Games 토큰 엔드포인트 요청
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                getAccessTokenURL,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<Map<String, Object>>() {}
+        );
         return response.getBody();
     }
 }
