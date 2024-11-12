@@ -34,6 +34,9 @@ public class Member {
     @Column(name = "MOTIVE")
     private String motive;
 
+    @Column(name = "GROUP_ID")
+    private Long groupId;
+
     @Column(name = "IS_ACCEPTED")
     @Convert(converter = AcceptStatusConverter.class)
     private AcceptStatus isAccepted;
@@ -46,10 +49,11 @@ public class Member {
     @Column(name = "MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    public Member(String type, Long assigneesId, Long userId, String motive, AcceptStatus isAccepted) {
+    public Member(String type, Long assigneesId, Long userId, String motive, Long groupId, AcceptStatus isAccepted) {
         this.type = type;
         this.assigneesId = assigneesId;
         this.userId = userId;
+        this.groupId = groupId;
         this.motive = motive;
         this.isAccepted = isAccepted;
     }

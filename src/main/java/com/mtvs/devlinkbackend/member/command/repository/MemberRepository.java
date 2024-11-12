@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     void deleteMembersByMemberIdIn(List<Long> memberIdList);
-    Member findByAssigneesIdAndUserId(Long assigneesId, Long userId);
+    Member findByAssigneesIdAndUserIdAndGroupIdAndType(Long assigneesId, Long userId, Long groupId, String type);
 }

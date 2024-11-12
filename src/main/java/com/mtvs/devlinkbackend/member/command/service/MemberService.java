@@ -65,9 +65,8 @@ public class MemberService {
         }
         return null;
     }
-    public Boolean isMemberExist(Long assigneesId, Long userId) {
-        Member member = memberRepository.findByAssigneesIdAndUserId(assigneesId, userId);
-        return member != null;
+    public Boolean isMemberExist(Long assigneesId, Long userId, Long groupId, String type) {
+            Member member = memberRepository.findByAssigneesIdAndUserIdAndGroupIdAndType(assigneesId, userId, groupId, type);
+            return member != null;
     }
-
 }

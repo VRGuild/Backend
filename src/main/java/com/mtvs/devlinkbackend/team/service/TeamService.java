@@ -62,9 +62,9 @@ public class TeamService {
         if (team.isPresent()) {
             Team foundTeam = team.get();
             // Member로 등록되어있는지 확인
-            if(!memberService.isMemberExist(foundTeam.getLeaderUserId(), userId) && !Objects.equals(foundTeam.getLeaderUserId(), userId)) {
+            if(!memberService.isMemberExist(foundTeam.getLeaderUserId(), userId, foundTeam.getTeamId(), "team") && !Objects.equals(foundTeam.getLeaderUserId(), userId)) {
                 // Member로 등록 안되어있으면 Member에 추가
-                Member member = new Member("team", foundTeam.getLeaderUserId(), userId,"", AcceptStatus.PENDING);
+                Member member = new Member("team", foundTeam.getLeaderUserId(), userId,"",foundTeam.getTeamId(), AcceptStatus.PENDING);
                 memberService.regist(member);
                 // TeamMemberList에 추가
                 List<Long> teamMemberList = foundTeam.getTeamMemberList();
