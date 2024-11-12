@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,11 @@ public class MemberService {
     @Transactional
     public void registAll(List<Member> memberList) {
         memberRepository.saveAll(memberList);
+    }
+
+    @Transactional
+    public void regist(Member member) {
+        memberRepository.save(member);
     }
 
     @Transactional
@@ -58,5 +64,9 @@ public class MemberService {
             return new MemberStatusResponseDTO(foundMember);
         }
         return null;
+    }
+    public Boolean isMemberExist(Long assigneesId, Long userId, Long groupId, String type) {
+            Member member = memberRepository.findByAssigneesIdAndUserIdAndGroupIdAndType(assigneesId, userId, groupId, type);
+            return member != null;
     }
 }

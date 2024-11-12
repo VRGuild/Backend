@@ -73,6 +73,7 @@ public class GuildService {
                                     guildMember.getUserId(),
                                     guildMember.getAssigneesId(),
                                     guildMember.getMotive(),
+                                    guildMemberModifyRequestDTO.getGuildId(),
                                     AcceptStatus.PENDING)).toList();
 
             memberService.registAll(memberList);

@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.team.controller;
 
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.team.dto.request.TeamMemberModifyRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;
@@ -18,8 +19,11 @@ public class TeamCommandController {
 
     private final TeamService teamService;
 
-    public TeamCommandController(TeamService teamService) {
+    private final JwtUtil jwtUtil;
+
+    public TeamCommandController(TeamService teamService, JwtUtil jwtUtil) {
         this.teamService = teamService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "팀 등록", description = "새로운 팀을 등록하고 등록된 팀 정보를 반환합니다.")
@@ -61,9 +65,10 @@ public class TeamCommandController {
     })
     @PatchMapping("/apply")
     public ResponseEntity<TeamSingleReponseDTO> addMemberToTeam(
-            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO) {
-
-        TeamSingleReponseDTO updatedTeam = teamService.applyMemberToTeam(teamMemberModifyRequestDTO);
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody TeamMemberModifyRequestDTO teamMemberModifyRequestDTO) throws Exception {
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        TeamSingleReponseDTO updatedTeam = teamService.applyMemberToTeam(teamMemberModifyRequestDTO, accountId);
         return updatedTeam != null ? ResponseEntity.ok(updatedTeam) : ResponseEntity.notFound().build();
     }
 

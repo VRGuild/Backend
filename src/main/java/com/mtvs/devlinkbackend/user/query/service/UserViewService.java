@@ -39,6 +39,9 @@ public class UserViewService {
     public User findUserByEpicAccountId(String accountId) {
         return userViewRepository.findUserByEpicAccountId(accountId);
     }
+    public Long findUserIdByEpicAccountId(String accountId) {
+        return userViewRepository.findUserByEpicAccountId(accountId).getUserId();
+    }
 
     public UserSingleResponseDTO findUserByUserId(Long userId) {
         return new UserSingleResponseDTO(userViewRepository.findById(userId).orElse(null));
