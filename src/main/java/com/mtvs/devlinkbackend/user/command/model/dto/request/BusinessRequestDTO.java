@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BusinessRequestDTO {
     private String nickname;
     private String businessName;
-    private MultipartFile businessLogoImg;
+    private String businessLogoImg;
     private String managerName;
     private String managerPhone;
 }

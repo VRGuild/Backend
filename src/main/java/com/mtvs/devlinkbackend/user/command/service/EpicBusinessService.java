@@ -44,7 +44,7 @@ public class EpicBusinessService {
 
         Business business = new Business(
                 businessRequestDTO.getBusinessName(),
-                businessRequestDTO.getBusinessLogoImg().getOriginalFilename(),
+                businessRequestDTO.getBusinessLogoImg(),
                 businessRequestDTO.getManagerName(),
                 businessRequestDTO.getManagerPhone(),
                 savedUser.getUserId()
@@ -71,7 +71,7 @@ public class EpicBusinessService {
 
         user.setNickname(businessRequestDTO.getNickname());
         business.setBusinessName(businessRequestDTO.getBusinessName());
-        business.setBusinessLogoUrl(businessRequestDTO.getBusinessLogoImg().getOriginalFilename());
+        business.setBusinessLogoUrl(businessRequestDTO.getBusinessLogoImg());
         business.setManagerName(businessRequestDTO.getManagerName());
         business.setManagerPhone(businessRequestDTO.getManagerPhone());
 

@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.common.util.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -33,9 +34,9 @@ public class LongListConverter implements AttributeConverter<List<Long>, String>
             return Collections.emptyList(); // 빈 리스트 반환
         }
         try {
-            List<Long> resultList = objectMapper.readValue(dbData, List.class);
+            List<Long> resultList = objectMapper.readValue(dbData, new TypeReference<List<Long>>() {});
             if (resultList == null || resultList.contains(null)) {
-                return Collections.emptyList(); // null이거나 null이 포함된 경우 빈 리스트 반환
+                return Collections.emptyList();
             }
             return resultList;
         } catch (IOException e) {

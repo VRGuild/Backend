@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.mtvs.devlinkbackend.file.entity.File;
+import com.mtvs.devlinkbackend.file.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,11 +20,14 @@ public class FileUploadService {
 
     private final AmazonS3Client amazonS3Client;
 
+    private final FileRepository fileRepository;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public FileUploadService(AmazonS3Client amazonS3Client) {
+    public FileUploadService(AmazonS3Client amazonS3Client, FileRepository fileRepository) {
         this.amazonS3Client = amazonS3Client;
+        this.fileRepository = fileRepository;
     }
 
     public String uploadPublicReadFile(MultipartFile file, String filePath) {
@@ -52,7 +57,10 @@ public class FileUploadService {
             String fileUrl = uploadPublicReadFile(file, filePath); // 각 파일을 업로드
             fileUrls.add(fileUrl); // 업로드된 파일의 URL을 리스트에 추가
         }
-
+        for (String url : fileUrls) {
+            File fileEntity = new File(filePath, url);
+            fileRepository.save(fileEntity);
+        }
         return fileUrls;
     }
 
@@ -68,6 +76,7 @@ public class FileUploadService {
             else
                 throw new IllegalArgumentException("잘못된 파일 경로 삭제 에러");
         }
-        return uploadPublicReadFiles(newFileList, filePath);
+//        return uploadPublicReadFiles(newFileList, filePath);
+        return null;
     }
 }

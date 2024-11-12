@@ -14,7 +14,7 @@ public class DevInfoRequestDTO {
     private String devEmail;
     private String devPhone;
     private String githubLink;
-    private MultipartFile[] portfolioList;
+    private List<String> portfolioList;
     private String career;
     private List<String> categoryNameList;
     private List<String> tag;

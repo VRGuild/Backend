@@ -56,15 +56,12 @@ public class EpicDevService {
         User savedUser = userRepository.save(user);
 
         DevInfoRequestDTO devInfoRequestDTO = devRegistRequestDTO.getDevInfo();
-        List<String> portfolioUrlList = fileUploadService.uploadPublicReadFiles(
-                devInfoRequestDTO.getPortfolioList(),
-                "/user/" + user.getUserId() + "/portfolio/");
         Dev dev = new Dev(
                 devInfoRequestDTO.getDevName(),
                 devInfoRequestDTO.getDevEmail(),
                 devInfoRequestDTO.getDevPhone(),
                 devInfoRequestDTO.getGithubLink(),
-                portfolioUrlList,
+                devInfoRequestDTO.getPortfolioList(),
                 devInfoRequestDTO.getCareer(),
                 devInfoRequestDTO.getTag(),
                 devInfoRequestDTO.getHope(),
@@ -105,14 +102,7 @@ public class EpicDevService {
         dev.setDevPhone(devInfoRequestDTO.getDevPhone());
         dev.setGithubLink(devInfoRequestDTO.getGithubLink());
         //TODO:: 해당 부분 또한 이전 portfolioFile 삭제 이후 새로 업로드한 URL로 업데이트 예정
-
-        List<String> updatedPortfolioUrlList =
-                fileUploadService.updatePublicReadFile(
-                        dev.getPortfolioUrlList(),
-                        devInfoRequestDTO.getPortfolioList(),
-                        "/user/" + user.getUserId() + "/portfolio/");
-
-        dev.setPortfolioUrlList(updatedPortfolioUrlList);
+        dev.setPortfolioUrlList(devInfoRequestDTO.getPortfolioList());
         dev.setCareer(devInfoRequestDTO.getCareer());
         dev.setHope(devInfoRequestDTO.getHope());
 

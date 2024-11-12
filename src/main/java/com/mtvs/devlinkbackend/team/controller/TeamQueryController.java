@@ -30,7 +30,6 @@ public class TeamQueryController {
     @GetMapping("/{teamId}")
     public ResponseEntity<TeamSingleReponseDTO> getTeamById(
             @PathVariable Long teamId) {
-
         TeamSingleReponseDTO team = teamViewService.findTeamByTeamId(teamId);
         if (team != null) {
             return ResponseEntity.ok(team);
