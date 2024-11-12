@@ -55,11 +55,11 @@ public class EvaluationCRUDTest {
         // Given
         EvaluationRegistRequestDTO request = new EvaluationRegistRequestDTO(
                 skillCategoryInfo.getCategoryInfoId(),
-                new Evaluation(1L, "Good Job", 80, skillCategoryInfo)
+                new Evaluation(1L,2L, "Good Job", 80, skillCategoryInfo)
         );
 
         // When
-        EvaluationSingleResponseDTO response = evaluationService.registerEvaluation(request);
+        EvaluationSingleResponseDTO response = evaluationService.registerEvaluation(request,2L);
 
         // Then
         assertThat(response).isNotNull();
@@ -70,12 +70,13 @@ public class EvaluationCRUDTest {
     @Test
     void updateEvaluation_shouldUpdateEvaluation() {
         // Given
-        Evaluation existingEvaluation = new Evaluation(1L, "Initial Cause", 70, skillCategoryInfo);
+        Evaluation existingEvaluation = new Evaluation(1L,2L, "Initial Cause", 70, skillCategoryInfo);
         evaluationRepository.save(existingEvaluation);
 
         EvaluationUpdateRequestDTO updateRequest = new EvaluationUpdateRequestDTO(
                 existingEvaluation.getEvaluationId(),
-                existingEvaluation.getUserId(),
+                existingEvaluation.getEstimatorId(),
+                existingEvaluation.getEstimatederId(),
                 "Updated Cause",
                 85
         );
@@ -92,7 +93,7 @@ public class EvaluationCRUDTest {
     @Test
     void deleteById_shouldDeleteEvaluation() {
         // Given
-        Evaluation evaluation = new Evaluation(1L, "To be deleted", 70, skillCategoryInfo);
+        Evaluation evaluation = new Evaluation(1L, 2L,"To be deleted", 70, skillCategoryInfo);
         evaluationRepository.save(evaluation);
 
         // When

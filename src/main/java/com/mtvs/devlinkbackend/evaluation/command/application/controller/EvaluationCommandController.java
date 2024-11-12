@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.evaluation.command.application.controller;
 
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.evaluation.command.application.dto.request.EvaluationRegistRequestDTO;
 import com.mtvs.devlinkbackend.evaluation.command.application.dto.request.EvaluationUpdateRequestDTO;
 import com.mtvs.devlinkbackend.evaluation.command.application.dto.response.EvaluationSingleResponseDTO;
@@ -16,8 +17,11 @@ public class EvaluationCommandController {
 
     private final EvaluationService evaluationService;
 
-    public EvaluationCommandController(EvaluationService evaluationService) {
+    private final JwtUtil jwtUtil;
+
+    public EvaluationCommandController(EvaluationService evaluationService, JwtUtil jwtUtil) {
         this.evaluationService = evaluationService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "SkillCategoryInfo Id로 평가 등록")
@@ -27,10 +31,11 @@ public class EvaluationCommandController {
     })
     @PostMapping
     public ResponseEntity<EvaluationSingleResponseDTO> registerEvaluation(
-            @RequestBody EvaluationRegistRequestDTO evaluationRegistRequestDTO) {
-
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody EvaluationRegistRequestDTO evaluationRegistRequestDTO) throws Exception {
+        Long estimatorId = Long.parseLong(jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader));
         EvaluationSingleResponseDTO evaluationSingleResponseDTO =
-                evaluationService.registerEvaluation(evaluationRegistRequestDTO);
+                evaluationService.registerEvaluation(evaluationRegistRequestDTO, estimatorId);
 
         return evaluationSingleResponseDTO != null
                 ? ResponseEntity.ok(evaluationSingleResponseDTO)

@@ -24,8 +24,11 @@ public class Evaluation {
     @Column(name = "EVALUATION_ID")
     private Long evaluationId;
 
-    @Column(name = "USER_ID")
-    private Long userId;
+    @Column(name = "ESTIMATOR_ID")
+    private Long estimatorId;
+
+    @Column(name = "ESTIMATEDER_ID")
+    private Long estimatederId;
 
     @Column(name = "CAUSE")
     private String cause;
@@ -46,8 +49,9 @@ public class Evaluation {
     @JsonIgnore
     private SkillCategoryInfo skillCategoryInfo;
 
-    public Evaluation(Long userId, String cause, Integer point, SkillCategoryInfo skillCategoryInfo) {
-        this.userId = userId;
+    public Evaluation(Long estimatorId, Long estimatederId, String cause, Integer point, SkillCategoryInfo skillCategoryInfo) {
+        this.estimatorId= estimatorId;
+        this.estimatederId = estimatederId;
         this.cause = cause;
         this.point = point;
         this.skillCategoryInfo = skillCategoryInfo;

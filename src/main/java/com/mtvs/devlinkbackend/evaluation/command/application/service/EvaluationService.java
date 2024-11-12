@@ -27,7 +27,7 @@ public class EvaluationService {
     }
 
     @Transactional
-    public EvaluationSingleResponseDTO registerEvaluation(EvaluationRegistRequestDTO evaluationRegistRequestDTO) {
+    public EvaluationSingleResponseDTO registerEvaluation(EvaluationRegistRequestDTO evaluationRegistRequestDTO, Long estimatorId) {
         SkillCategoryInfo skillCategoryInfo =
                 skillCategoryViewService.findById(evaluationRegistRequestDTO.getCategoryId());
 
@@ -35,7 +35,8 @@ public class EvaluationService {
             throw new IllegalArgumentException("잘못된 skillCategoryInfoId로 평가 작성 시도중");
 
         Evaluation savedEvaluation = evaluationRepository.save(new Evaluation(
-                evaluationRegistRequestDTO.getEvaluationInfo().getUserId(),
+                estimatorId,
+                evaluationRegistRequestDTO.getEvaluationInfo().getEstimatederId(),
                 evaluationRegistRequestDTO.getEvaluationInfo().getCause(),
                 evaluationRegistRequestDTO.getEvaluationInfo().getPoint(),
                 skillCategoryInfo
@@ -67,9 +68,9 @@ public class EvaluationService {
         if (evaluation == null)
             throw new IllegalArgumentException("잘못된 evaluationId로 호출중");
 
-        if (!evaluation.getUserId().equals(evaluationUpdateRequestDTO.getUserId()))
+        if (!evaluation.getEstimatorId().equals(evaluationUpdateRequestDTO.getEstimatorId()))
             throw new IllegalArgumentException("자신이 평가하지 않은 평가 내용을 수정중 - userId : "
-                    + evaluationUpdateRequestDTO.getUserId());
+                    + evaluationUpdateRequestDTO.getEstimatorId());
 
         evaluation.setCause(evaluationUpdateRequestDTO.getCause());
         evaluation.setPoint(evaluationUpdateRequestDTO.getPoint());
