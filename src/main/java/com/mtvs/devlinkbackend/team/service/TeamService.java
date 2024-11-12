@@ -9,6 +9,7 @@ import com.mtvs.devlinkbackend.team.dto.request.TeamUpdateRequestDTO;
 import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
 import com.mtvs.devlinkbackend.team.entity.Team;
 import com.mtvs.devlinkbackend.team.repository.TeamRepository;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final MemberService memberService;
+    private final UserViewService userViewService;
 
-    public TeamService(TeamRepository teamRepository, MemberService memberService) {
+    public TeamService(TeamRepository teamRepository, MemberService memberService, UserViewService userViewService) {
         this.teamRepository = teamRepository;
         this.memberService = memberService;
+        this.userViewService = userViewService;
     }
 
     @Transactional
@@ -52,23 +55,21 @@ public class TeamService {
     }
 
     @Transactional
-    public TeamSingleReponseDTO applyMemberToTeam(TeamMemberModifyRequestDTO teamMemberModifyRequestDTO) {
+    public TeamSingleReponseDTO applyMemberToTeam(TeamMemberModifyRequestDTO teamMemberModifyRequestDTO, String accountId) {
+        Long userId = userViewService.findUserIdByEpicAccountId(accountId);
         Optional<Team> team = teamRepository.findById(teamMemberModifyRequestDTO.getTeamId());
         if (team.isPresent()) {
             Team foundTeam = team.get();
-            List<Member> memberList = teamMemberModifyRequestDTO.getTeamMemberList().stream()
-                    .map(teamMember ->
-                            new Member(
-                                    teamMember.getType(),
-                                    teamMember.getUserId(),
-                                    teamMember.getAssigneesId(),
-                                    teamMember.getMotive(),
-                                    AcceptStatus.PENDING)).toList();
-
-            memberService.registAll(memberList);
-
-            foundTeam.getTeamMemberList().addAll(memberList.stream().map(Member::getMemberId).toList());
-
+            // Member로 등록되어있는지 확인
+            if(!memberService.isMemberExist(foundTeam.getLeaderUserId(), userId)) {
+                // Member로 등록 안되어있으면 Member에 추가
+                Member member = new Member("team", foundTeam.getLeaderUserId(), userId,"", AcceptStatus.PENDING);
+                memberService.regist(member);
+                // TeamMemberList에 추가
+                List<Long> teamMemberList = foundTeam.getTeamMemberList();
+                teamMemberList.add(userId);
+                foundTeam.setTeamMemberList(teamMemberList);
+            }
             return new TeamSingleReponseDTO(foundTeam);
         } else return null;
     }
