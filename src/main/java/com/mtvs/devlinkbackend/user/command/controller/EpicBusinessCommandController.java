@@ -5,6 +5,8 @@ import com.mtvs.devlinkbackend.user.query.model.dto.response.BusinessSingleRespo
 import com.mtvs.devlinkbackend.user.command.service.EpicBusinessService;
 import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,8 @@ public class EpicBusinessCommandController {
     })
     @PostMapping
     public ResponseEntity<BusinessSingleResponseDTO> registerBusiness(
-            @RequestBody BusinessRequestDTO businessRequestDTO,
+            @Parameter(content = @Content(mediaType = "multipart/form-data"))
+            @ModelAttribute BusinessRequestDTO businessRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
