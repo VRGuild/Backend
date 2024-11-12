@@ -1,4 +1,7 @@
 spring:
+  servlet:
+    multipart:
+      enabled: true
   application:
     name: Devlink-backend
   security:
