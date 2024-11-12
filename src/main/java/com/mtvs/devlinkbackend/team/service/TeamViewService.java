@@ -18,7 +18,11 @@ public class TeamViewService {
     }
 
     public TeamSingleReponseDTO findTeamByTeamId(Long teamId) {
-        return new TeamSingleReponseDTO(teamViewRepository.findById(teamId).orElse(null));
+        TeamSingleReponseDTO team  = new TeamSingleReponseDTO(teamViewRepository.findById(teamId).orElse(null));
+        for (Long memberId : team.getData().getTeamMemberList()) {
+            System.out.println("Member ID type: " + memberId.getClass().getName());
+        }
+        return team;
     }
 
     public TeamSingleReponseDTO findTeamsByLeaderUserId(Long leaderUserId) {
