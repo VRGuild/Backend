@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -61,7 +62,7 @@ public class TeamService {
         if (team.isPresent()) {
             Team foundTeam = team.get();
             // Member로 등록되어있는지 확인
-            if(!memberService.isMemberExist(foundTeam.getLeaderUserId(), userId)) {
+            if(!memberService.isMemberExist(foundTeam.getLeaderUserId(), userId) && !Objects.equals(foundTeam.getLeaderUserId(), userId)) {
                 // Member로 등록 안되어있으면 Member에 추가
                 Member member = new Member("team", foundTeam.getLeaderUserId(), userId,"", AcceptStatus.PENDING);
                 memberService.regist(member);
@@ -69,9 +70,11 @@ public class TeamService {
                 List<Long> teamMemberList = foundTeam.getTeamMemberList();
                 teamMemberList.add(userId);
                 foundTeam.setTeamMemberList(teamMemberList);
+                return new TeamSingleReponseDTO(foundTeam);
             }
-            return new TeamSingleReponseDTO(foundTeam);
+
         } else return null;
+        return null;
     }
 
     @Transactional
