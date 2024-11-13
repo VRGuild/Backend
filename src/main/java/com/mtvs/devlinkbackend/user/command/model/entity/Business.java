@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Table(name = "BUSINESS")
 @Entity(name = "Business")
-@ToString(exclude = "user")
 @Getter @Setter
 @NoArgsConstructor
 public class Business {
