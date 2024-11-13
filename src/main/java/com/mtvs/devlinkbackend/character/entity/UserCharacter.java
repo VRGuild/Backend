@@ -27,7 +27,7 @@ public class UserCharacter {
     @Column(name = "TEAM_ID_LIST")
     private List<Long> teamIdList;
 
-    @Column(name = "CHARACTER_PICTURE")
+    @Column(name = "CHARACTER_PICTURE", columnDefinition="TEXT")
     private String characterPicture;
 
     @ElementCollection

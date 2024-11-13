@@ -1,12 +1,10 @@
-package com.mtvs.devlinkbackend.file;
+package com.mtvs.devlinkbackend.file.controller;
 
 
 import com.mtvs.devlinkbackend.file.dto.FileResponseDTO;
 import com.mtvs.devlinkbackend.file.service.FileUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +33,11 @@ public class FileController {
             @Parameter(description = "Files to upload", required = true)
             @RequestParam("multipartFiles") MultipartFile[] multipartFiles,
             @RequestParam("filePath") String filePath) {
-
         List<String> fileUrlList = fileUploadService.uploadPublicReadFiles(multipartFiles, filePath);
         FileResponseDTO response = new FileResponseDTO(fileUrlList, "파일 업로드가 성공적으로 완료되었습니다.");
         return ResponseEntity.ok(response);
     }
+
     @Operation(summary = "Upload files",
             description = "Upload multiple files and receive their URLs")
     @ApiResponses(value = {

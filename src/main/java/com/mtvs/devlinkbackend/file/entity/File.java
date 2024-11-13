@@ -23,7 +23,7 @@ public class File {
     @Column(name="PATH")
     private String path;
 
-    @Column(name="URL")
+    @Column(name="URL", columnDefinition="TEXT")
     private String url;
 
     @CreationTimestamp

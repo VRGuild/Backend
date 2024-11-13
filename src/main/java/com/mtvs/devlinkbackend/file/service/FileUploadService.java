@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FileUploadService {
@@ -31,10 +32,11 @@ public class FileUploadService {
     }
 
     public String uploadPublicReadFile(MultipartFile file, String filePath) {
-        String fileName = filePath + file.getOriginalFilename();
-        // filePath는 /를 하지 않고 시작해야 함
+        // UUID를 생성하여 파일 이름 앞에 추가
+        String uniqueId = UUID.randomUUID().toString();
+        String fileName = filePath + uniqueId + "_" + file.getOriginalFilename(); // UUID와 원래 파일 이름 결합
 
-        ObjectMetadata metadata= new ObjectMetadata();
+        ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
 

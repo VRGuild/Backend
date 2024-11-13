@@ -25,7 +25,7 @@ public class Business {
     @Column(name = "BUSINESS_NAME")
     private String businessName;
 
-    @Column(name = "BUSINESS_LOGO_URL")
+    @Column(name = "BUSINESS_LOGO_URL", columnDefinition="TEXT")
     private String businessLogoUrl;
 
     @Column(name = "MANAGER_NAME")
