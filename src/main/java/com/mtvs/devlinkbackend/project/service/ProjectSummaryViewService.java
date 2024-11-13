@@ -93,6 +93,7 @@ public class ProjectSummaryViewService {
             ProjectPreviewDTO previewDTO = new ProjectPreviewDTO();
 
             // workType 설정
+            previewDTO.setProjectId(projectSummary.getProjectId());
             previewDTO.setWorkType(projectSummary.getWorkType());
             previewDTO.setProgressClassification(projectSummary.getProgressClassification());
 
