@@ -44,7 +44,7 @@ public class EvaluationService {
 
         skillCategoryInfo.getEvaluationIdList().add(savedEvaluation.getEvaluationId());
 
-        if (skillCategoryInfo.getEvaluationIdList().size() == 5)
+        if (skillCategoryInfo.getEvaluationIdList().size() == 1)
             skillCategoryInfo.setIsEvaluated(true);
 
         if (skillCategoryInfo.getIsEvaluated()) {
