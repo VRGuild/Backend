@@ -4,6 +4,7 @@ import com.mtvs.devlinkbackend.user.command.model.entity.Dev;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.DevPagingResponseDTO;
 import com.mtvs.devlinkbackend.user.query.model.dto.response.DevSingleResponseDTO;
+import com.mtvs.devlinkbackend.user.query.model.dto.response.sub.NicknameAndDevInfoDTO;
 import com.mtvs.devlinkbackend.user.query.repository.DevViewRepository;
 import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EpicDevViewService {
@@ -38,6 +41,12 @@ public class EpicDevViewService {
     public DevPagingResponseDTO findAllDevsWithPagination(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
         Page<Dev> devPage = devViewRepository.findAllBy(pageable);
-        return new DevPagingResponseDTO(devPage.getContent(), devPage.getTotalPages());
+        List<NicknameAndDevInfoDTO> data = devPage.getContent().stream().map(dev -> {
+            User user = userViewRepository.findById(dev.getUserId()).orElse(null);
+            if(user == null)
+                return new NicknameAndDevInfoDTO(null, dev);
+            return new NicknameAndDevInfoDTO(user.getNickname(), dev);
+        }).toList();
+        return new DevPagingResponseDTO(data, devPage.getTotalPages());
     }
 }
