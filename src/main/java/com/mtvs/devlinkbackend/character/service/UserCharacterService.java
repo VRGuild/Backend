@@ -7,7 +7,9 @@ import com.mtvs.devlinkbackend.character.entity.UserCharacter;
 import com.mtvs.devlinkbackend.character.repository.UserCharacterRepository;
 import com.mtvs.devlinkbackend.character.repository.UserCharacterViewRepository;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.command.repository.UserRepository;
 import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +18,33 @@ public class UserCharacterService {
     private final UserCharacterRepository userCharacterRepository;
     private final UserViewRepository userViewRepository;
     private final UserCharacterViewRepository userCharacterViewRepository;
+    private final UserRepository userRepository;
+    private final UserViewService userViewService;
 
-    public UserCharacterService(UserCharacterRepository userCharacterRepository, UserViewRepository userViewRepository, UserCharacterViewRepository userCharacterViewRepository) {
+    public UserCharacterService(UserCharacterRepository userCharacterRepository, UserViewRepository userViewRepository, UserCharacterViewRepository userCharacterViewRepository, UserRepository userRepository, UserViewService userViewService) {
         this.userCharacterRepository = userCharacterRepository;
         this.userViewRepository = userViewRepository;
         this.userCharacterViewRepository = userCharacterViewRepository;
+        this.userRepository = userRepository;
+        this.userViewService = userViewService;
     }
 
     @Transactional
     public UserCharacterSingleResponseDTO registCharacter(UserCharacterRegistRequestDTO userCharacterRegistRequestDTO, String accountId) {
-        return new UserCharacterSingleResponseDTO(userCharacterRepository.save(new UserCharacter(
+        UserCharacter userCharacter = userCharacterRepository.save(new UserCharacter(
                 userCharacterRegistRequestDTO.getGuildId(),
                 userCharacterRegistRequestDTO.getTeamIdList(),
                 userCharacterRegistRequestDTO.getCharacterPicture(),
                 userCharacterRegistRequestDTO.getCustomList(),
                 userCharacterRegistRequestDTO.getUserId()
-        )));
+        ));
+
+        User user = userViewService.findUserByEpicAccountId(accountId);
+        user.setCharacterId(userCharacter.getCharacterId());
+
+        userRepository.save(user);
+
+        return new UserCharacterSingleResponseDTO(userCharacter);
     }
 
     @Transactional
