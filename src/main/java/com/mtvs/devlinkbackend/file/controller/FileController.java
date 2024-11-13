@@ -37,21 +37,5 @@ public class FileController {
         FileResponseDTO response = new FileResponseDTO(fileUrlList, "파일 업로드가 성공적으로 완료되었습니다.");
         return ResponseEntity.ok(response);
     }
-
-    @Operation(summary = "Upload files",
-            description = "Upload multiple files and receive their URLs")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 등록됨"),
-            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터")
-    })
-    @PostMapping(value="/seper", consumes = "multipart/form-data")
-    public ResponseEntity<String> fileUploadtest(
-            @Parameter(description = "Files to upload", required = true)
-            @RequestParam("multipartFiles") MultipartFile multipartFiles) {
-
-        String fileUrl = fileUploadService.uploadPublicReadFile(multipartFiles, "dkan/");
-        System.out.println(fileUrl);
-        return ResponseEntity.ok(fileUrl);
-    }
 }
 
