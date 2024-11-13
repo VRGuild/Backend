@@ -1,11 +1,10 @@
 package com.mtvs.devlinkbackend.project.service;
 
-import com.mtvs.devlinkbackend.project.dto.response.ProjectDetailPagingResponseDTO;
-import com.mtvs.devlinkbackend.project.dto.response.ProjectDetailSingleResponseDTO;
-import com.mtvs.devlinkbackend.project.dto.response.ProjectPagingResponseDTO;
+import com.mtvs.devlinkbackend.project.dto.response.*;
 import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndTeamIdListDTO;
-import com.mtvs.devlinkbackend.project.dto.response.ProjectSingleResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndUserAndTeamIdListDTO;
+import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectIdAndCommnetIdListDTO;
+import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectIdAndTeamIdListDTO;
 import com.mtvs.devlinkbackend.project.entity.Project;
 import com.mtvs.devlinkbackend.project.repository.ProjectViewRepository;
 import com.mtvs.devlinkbackend.support.service.SupportService;
@@ -21,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -113,5 +113,17 @@ public class ProjectViewService {
                 projectPage.getTotalPages(),
                 projectPage.getTotalElements()
         );
+    }
+
+    public ProjectTeamResponseDTO findProjectTeamByProjectId(Long projectId) {
+        List<Long> supportedTeamIdList = supportService.findTeamIdsByProjectId(projectId);
+        return new ProjectTeamResponseDTO(new ProjectIdAndTeamIdListDTO(projectId, supportedTeamIdList));
+    }
+
+    public ProjectCommnetResponseDTO findProjectCommnetByProjectId(Long projectId) {
+        Project project = projectViewRepository.findById(projectId).orElse(null);
+        if (project == null)
+            throw new IllegalArgumentException("잘못된 ProjectId로 호출중");
+        return new ProjectCommnetResponseDTO(new ProjectIdAndCommnetIdListDTO(projectId, project.getCommentIdList()));
     }
 }
