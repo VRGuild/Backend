@@ -9,8 +9,7 @@ import lombok.*;
 @ToString
 public class EvaluationUpdateRequestDTO {
     private Long evaluationId;
-    private Long estimatorId;
-    private Long estimatederId;
+    private Long userId;
     private String cause;
     private Integer point;
 }
