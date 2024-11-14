@@ -7,7 +7,9 @@ import com.mtvs.devlinkbackend.evaluation.command.domain.model.entity.Evaluation
 import com.mtvs.devlinkbackend.evaluation.command.domain.repository.EvaluationRepository;
 import com.mtvs.devlinkbackend.evaluation.query.service.EvaluationViewService;
 import com.mtvs.devlinkbackend.user.command.model.entity.SkillCategoryInfo;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.service.SkillCategoryViewService;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +21,27 @@ public class EvaluationService {
     private final EvaluationRepository evaluationRepository;
     private final SkillCategoryViewService skillCategoryViewService;
     private final EvaluationViewService evaluationViewService;
+    private final UserViewService userViewService;
 
-    public EvaluationService(EvaluationRepository evaluationRepository, SkillCategoryViewService skillCategoryViewService, EvaluationViewService evaluationViewService) {
+    public EvaluationService(EvaluationRepository evaluationRepository, SkillCategoryViewService skillCategoryViewService, EvaluationViewService evaluationViewService, UserViewService userViewService) {
         this.evaluationRepository = evaluationRepository;
         this.skillCategoryViewService = skillCategoryViewService;
         this.evaluationViewService = evaluationViewService;
+        this.userViewService = userViewService;
     }
 
     @Transactional
-    public EvaluationSingleResponseDTO registerEvaluation(EvaluationRegistRequestDTO evaluationRegistRequestDTO, Long estimatorId) {
+    public EvaluationSingleResponseDTO registerEvaluation(EvaluationRegistRequestDTO evaluationRegistRequestDTO, String accountId) {
         SkillCategoryInfo skillCategoryInfo =
                 skillCategoryViewService.findById(evaluationRegistRequestDTO.getCategoryId());
 
         if(skillCategoryInfo == null)
             throw new IllegalArgumentException("잘못된 skillCategoryInfoId로 평가 작성 시도중");
 
+        User user = userViewService.findUserByEpicAccountId(accountId);
+
         Evaluation savedEvaluation = evaluationRepository.save(new Evaluation(
-                estimatorId,
-                evaluationRegistRequestDTO.getEvaluationInfo().getEstimatederId(),
+                evaluationRegistRequestDTO.getEvaluationInfo().getUserId(),
                 evaluationRegistRequestDTO.getEvaluationInfo().getCause(),
                 evaluationRegistRequestDTO.getEvaluationInfo().getPoint(),
                 skillCategoryInfo
@@ -68,9 +73,9 @@ public class EvaluationService {
         if (evaluation == null)
             throw new IllegalArgumentException("잘못된 evaluationId로 호출중");
 
-        if (!evaluation.getEstimatorId().equals(evaluationUpdateRequestDTO.getEstimatorId()))
+        if (!evaluation.getUserId().equals(evaluationUpdateRequestDTO.getUserId()))
             throw new IllegalArgumentException("자신이 평가하지 않은 평가 내용을 수정중 - userId : "
-                    + evaluationUpdateRequestDTO.getEstimatorId());
+                    + evaluationUpdateRequestDTO.getUserId());
 
         evaluation.setCause(evaluationUpdateRequestDTO.getCause());
         evaluation.setPoint(evaluationUpdateRequestDTO.getPoint());

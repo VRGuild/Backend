@@ -33,9 +33,9 @@ public class EvaluationCommandController {
     public ResponseEntity<EvaluationSingleResponseDTO> registerEvaluation(
             @RequestHeader("Authorization") String authorizationHeader,
             @RequestBody EvaluationRegistRequestDTO evaluationRegistRequestDTO) throws Exception {
-        Long estimatorId = Long.parseLong(jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader));
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         EvaluationSingleResponseDTO evaluationSingleResponseDTO =
-                evaluationService.registerEvaluation(evaluationRegistRequestDTO, estimatorId);
+                evaluationService.registerEvaluation(evaluationRegistRequestDTO, accountId);
 
         return evaluationSingleResponseDTO != null
                 ? ResponseEntity.ok(evaluationSingleResponseDTO)
