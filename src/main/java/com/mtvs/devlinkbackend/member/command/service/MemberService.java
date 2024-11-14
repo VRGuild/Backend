@@ -47,7 +47,6 @@ public class MemberService {
         Optional<Member> member = memberRepository.findById(memberId);
         if (member.isPresent()) {
             Member foundMember = member.get();
-            foundMember.setAssigneesId(user.getUserId());
             foundMember.setIsAccepted(AcceptStatus.ACCEPTED);
             return new MemberStatusResponseDTO(foundMember);
         }
@@ -63,7 +62,6 @@ public class MemberService {
         Optional<Member> member = memberRepository.findById(memberId);
         if (member.isPresent()) {
             Member foundMember = member.get();
-            foundMember.setAssigneesId(user.getUserId());
             foundMember.setIsAccepted(AcceptStatus.REJECTED);
             return new MemberStatusResponseDTO(foundMember);
         }
