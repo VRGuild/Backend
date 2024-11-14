@@ -25,8 +25,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void regist(Member member) {
-        memberRepository.save(member);
+    public Member regist(Member member) {
+        return memberRepository.save(member);
     }
 
     @Transactional
