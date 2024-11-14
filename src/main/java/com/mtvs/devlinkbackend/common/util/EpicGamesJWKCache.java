@@ -22,7 +22,7 @@ public class EpicGamesJWKCache {
     }
 
     // 1시간에 한 번 공개 키를 갱신하는 스케줄러
-    @Scheduled(cron = "0 0 * * * ?")  // 매일 자정에 실행
+    @Scheduled(cron = "0 * * * * ?")  // 매일 자정에 실행
     public void refreshJWKs() {
         try {
             loadJWKs();
