@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.member.command.controller;
 
+import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import com.mtvs.devlinkbackend.member.command.service.MemberService;
 import com.mtvs.devlinkbackend.member.query.view.response.MemberStatusResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class MemberCommandController {
 
     private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
-    public MemberCommandController(MemberService memberService) {
+    public MemberCommandController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "멤버 지원 수락", description = "멤버 지원을 수락합니다.")
@@ -25,9 +28,11 @@ public class MemberCommandController {
     })
     @PatchMapping("/accpet/{memberId}")
     public ResponseEntity<MemberStatusResponseDTO> updateTeam(
-            @PathVariable(name = "memberId") Long memberId) {
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable(name = "memberId") Long memberId) throws Exception {
 
-        MemberStatusResponseDTO memberStatusResponseDTO = memberService.acceptSupplyByMemberId(memberId);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        MemberStatusResponseDTO memberStatusResponseDTO = memberService.acceptSupplyByMemberId(memberId, accountId);
         return memberStatusResponseDTO != null ?
                 ResponseEntity.ok(memberStatusResponseDTO) :
                 ResponseEntity.notFound().build();
@@ -40,9 +45,11 @@ public class MemberCommandController {
     })
     @PatchMapping("/reject/{memberId}")
     public ResponseEntity<MemberStatusResponseDTO> addMemberToTeam(
-            @PathVariable(name = "memberId") Long memberId) {
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable(name = "memberId") Long memberId) throws Exception {
 
-        MemberStatusResponseDTO memberStatusResponseDTO = memberService.rejectSupplyByMemberId(memberId);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        MemberStatusResponseDTO memberStatusResponseDTO = memberService.rejectSupplyByMemberId(memberId, accountId);
         return memberStatusResponseDTO != null ?
                 ResponseEntity.ok(memberStatusResponseDTO) :
                 ResponseEntity.notFound().build();

@@ -61,4 +61,8 @@ public class Member {
     public void setIsAccepted(AcceptStatus isAccepted) {
         this.isAccepted = isAccepted;
     }
+
+    public void setAssigneesId(Long assigneesId) {
+        this.assigneesId = assigneesId;
+    }
 }
