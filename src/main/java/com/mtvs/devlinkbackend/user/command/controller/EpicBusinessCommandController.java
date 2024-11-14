@@ -30,8 +30,7 @@ public class EpicBusinessCommandController {
     })
     @PostMapping
     public ResponseEntity<BusinessSingleResponseDTO> registerBusiness(
-            @Parameter(content = @Content(mediaType = "multipart/form-data"))
-            @ModelAttribute BusinessRequestDTO businessRequestDTO,
+            @RequestBody BusinessRequestDTO businessRequestDTO,
             @RequestHeader("Authorization") String authorizationHeader) throws Exception {
 
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
