@@ -38,6 +38,19 @@ public class TeamQueryController {
         }
     }
 
+    @Operation(summary = "사용자가 리더인 팀 조회", description = "사용자가 멤버인 팀 목록을 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")
+    })
+    @GetMapping("/leader")
+    public ResponseEntity<TeamListResponseDTO> getTeamsByLeaderUserId(
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        TeamListResponseDTO teams = teamViewService.findTeamsByLeaderAccountId(accountId);
+        return ResponseEntity.ok(teams);
+    }
+
     @Operation(summary = "사용자가 멤버인 팀 조회", description = "사용자가 멤버인 팀 목록을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")

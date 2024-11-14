@@ -5,16 +5,19 @@ import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
 import com.mtvs.devlinkbackend.team.repository.TeamViewRepository;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.repository.UserViewRepository;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TeamViewService {
     private final TeamViewRepository teamViewRepository;
     private final UserViewRepository userViewRepository;
+    private final UserViewService userViewService;
 
-    public TeamViewService(TeamViewRepository teamViewRepository, UserViewRepository userViewRepository) {
+    public TeamViewService(TeamViewRepository teamViewRepository, UserViewRepository userViewRepository, UserViewService userViewService) {
         this.teamViewRepository = teamViewRepository;
         this.userViewRepository = userViewRepository;
+        this.userViewService = userViewService;
     }
 
     public TeamSingleReponseDTO findTeamByTeamId(Long teamId) {
@@ -25,8 +28,9 @@ public class TeamViewService {
         return team;
     }
 
-    public TeamSingleReponseDTO findTeamsByLeaderUserId(Long leaderUserId) {
-        return new TeamSingleReponseDTO(teamViewRepository.findTeamByLeaderUserId(leaderUserId));
+    public TeamListResponseDTO findTeamsByLeaderAccountId(String accountId) {
+        User user = userViewService.findUserByEpicAccountId(accountId);
+        return new TeamListResponseDTO(teamViewRepository.findTeamsByLeaderUserId(user.getUserId()));
     }
 
     public TeamListResponseDTO findByMemberIdInTeam(Long memberUserId) {
