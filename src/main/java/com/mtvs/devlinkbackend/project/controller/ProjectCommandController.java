@@ -33,9 +33,11 @@ public class ProjectCommandController {
     })
     @PostMapping
     public ResponseEntity<ProjectSingleResponseDTO> registerProject(
-            @RequestBody ProjectRegistRequestDTO requestDTO) {
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @RequestBody ProjectRegistRequestDTO requestDTO) throws Exception {
 
-        ProjectSingleResponseDTO newProject = projectService.registProject(requestDTO);
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        ProjectSingleResponseDTO newProject = projectService.registProject(requestDTO, accountId);
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
     }
 
