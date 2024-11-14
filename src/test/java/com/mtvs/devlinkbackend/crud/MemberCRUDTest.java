@@ -119,7 +119,7 @@ public class MemberCRUDTest {
         when(memberViewRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // when
-        MemberStatusResponseDTO responseDTO = memberViewService.findMemberByMemberId(memberId);
+        MemberStatusResponseDTO responseDTO = memberViewService.findMemberDTOByMemberId(memberId);
 
         // then
         assertNotNull(responseDTO);
