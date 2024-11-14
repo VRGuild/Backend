@@ -27,7 +27,7 @@ public class MemberQueryController {
     public ResponseEntity<MemberStatusResponseDTO> updateTeam(
             @PathVariable(name = "memberId") Long memberId) {
 
-        MemberStatusResponseDTO memberStatusResponseDTO = memberViewService.findMemberByMemberId(memberId);
+        MemberStatusResponseDTO memberStatusResponseDTO = memberViewService.findMemberDTOByMemberId(memberId);
         return memberStatusResponseDTO != null ?
                 ResponseEntity.ok(memberStatusResponseDTO) :
                 ResponseEntity.notFound().build();

@@ -46,8 +46,7 @@ public class GuildViewService {
                     guild.getGuildIntroduction(),
                     guild.getMasterUserId(),
                     guild.getMaximumMember(),
-                    guild.getGuildMemberList().stream().map(memberId ->
-                            memberViewService.findMemberByMemberId(memberId).getData()).toList()
+                    guild.getGuildMemberList().stream().map(memberViewService::findMemberByMemberId).toList()
             )
         );
     }
@@ -63,8 +62,7 @@ public class GuildViewService {
                         guild.getGuildIntroduction(),
                         guild.getMasterUserId(),
                         guild.getMaximumMember(),
-                        guild.getGuildMemberList().stream().map(memberId ->
-                                memberViewService.findMemberByMemberId(memberId).getData()).toList()
+                        guild.getGuildMemberList().stream().map(memberViewService::findMemberByMemberId).toList()
         )).toList();
 
         return new GuildDetailPagingResponseDTO(guildAndMemberDTOList, guildPage.getTotalPages(), guildViewRepository.count());

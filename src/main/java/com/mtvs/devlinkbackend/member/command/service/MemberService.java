@@ -4,6 +4,7 @@ import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import com.mtvs.devlinkbackend.member.command.model.entity.Member;
 import com.mtvs.devlinkbackend.member.command.repository.MemberRepository;
 import com.mtvs.devlinkbackend.member.query.view.response.MemberStatusResponseDTO;
+import com.mtvs.devlinkbackend.member.query.view.response.sub.MemberDTO;
 import com.mtvs.devlinkbackend.user.command.model.entity.User;
 import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,18 @@ public class MemberService {
         if (member.isPresent()) {
             Member foundMember = member.get();
             foundMember.setIsAccepted(AcceptStatus.ACCEPTED);
-            return new MemberStatusResponseDTO(foundMember);
+            return new MemberStatusResponseDTO(
+                    new MemberDTO(
+                            foundMember.getMemberId(),
+                            foundMember.getType(),
+                            foundMember.getAssigneesId(),
+                            foundMember.getUserId(),
+                            foundMember.getMotive(),
+                            foundMember.getGroupId(),
+                            foundMember.getIsAccepted().getValue(),
+                            foundMember.getCreatedAt(),
+                            foundMember.getModifiedAt()
+                    ));
         }
         return null;
     }
@@ -63,7 +75,18 @@ public class MemberService {
         if (member.isPresent()) {
             Member foundMember = member.get();
             foundMember.setIsAccepted(AcceptStatus.REJECTED);
-            return new MemberStatusResponseDTO(foundMember);
+            return new MemberStatusResponseDTO(
+                    new MemberDTO(
+                            foundMember.getMemberId(),
+                            foundMember.getType(),
+                            foundMember.getAssigneesId(),
+                            foundMember.getUserId(),
+                            foundMember.getMotive(),
+                            foundMember.getGroupId(),
+                            foundMember.getIsAccepted().getValue(),
+                            foundMember.getCreatedAt(),
+                            foundMember.getModifiedAt()
+                    ));
         }
         return null;
     }
@@ -73,7 +96,18 @@ public class MemberService {
         if (member.isPresent()) {
             Member foundMember = member.get();
             foundMember.setIsAccepted(AcceptStatus.DELETED);
-            return new MemberStatusResponseDTO(foundMember);
+            return new MemberStatusResponseDTO(
+                    new MemberDTO(
+                            foundMember.getMemberId(),
+                            foundMember.getType(),
+                            foundMember.getAssigneesId(),
+                            foundMember.getUserId(),
+                            foundMember.getMotive(),
+                            foundMember.getGroupId(),
+                            foundMember.getIsAccepted().getValue(),
+                            foundMember.getCreatedAt(),
+                            foundMember.getModifiedAt()
+                    ));
         }
         return null;
     }
