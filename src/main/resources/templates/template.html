@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Devlink</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+        .email-content {
+            width: 100%;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            padding: 16px;
+            text-align: center;
+        }
+        .header img {
+            width: 44px;
+            height: 44px;
+        }
+        .title {
+            padding: 16px;
+            line-height: 30px;
+            color: #292929;
+            font-size: 24px;
+            text-align: center;
+        }
+        .divider {
+            padding: 32px 16px;
+            text-align: center;
+        }
+        .content {
+            width: 60%;
+            padding: 32px 16px;
+            line-height: 20px;
+            color: #292929;
+            font-size: 14px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .footer {
+            padding: 32px 16px;
+            line-height: 18px;
+            color: #737373;
+            font-size: 12px;
+            border-top: 1px solid #eaeaea;
+            text-align: center;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="email-content">
+        <div class="header">
+            <a href="https://devlink-six-mu.vercel.app" target="_blank" style="text-decoration: none;">
+                <img src="https://devlink-s3.s3.ap-northeast-2.amazonaws.com/devlink_logo.png" loading="lazy" alt="devlink 로고">
+            </a>
+        </div>
+        <div class="title">
+            <br>새로운 메일이 도착하였습니다.
+        </div>
+        <div class="divider">
+            <span style="display: inline-block; width: 48px; height: 1px; background-color: #292929;"></span>
+        </div>
+        <div class="content">
+            <p><strong th:text="${text}">내용</strong></p>
+        </div>
+        <div class="divider">
+            <span style="display: inline-block; width: 48px; height: 1px; background-color: #292929;"></span>
+        </div>
+        <br>
+        <div class="footer">
+            <p>* 본 메일은 발신 전용 메일이므로 답장을 받을 수 없는 메일입니다.<br>
+                * 본 메일은 광고성 정보 수신 동의 여부와 관계없이, 운영상 안내 목적으로 발송되는 메일입니다.<br>
+                * 본 메일은 회원가입 시 입력한 이메일 주소로 발송된 메일입니다.<br><br>
+                메일에 포함된 정보는 지정된 수신인에게만 발송되는 것으로 보안을 유지해야 하는 정보와 법률상 및 기타 사유로 공개가 금지된 정보가 포함되어 있을 수 있습니다.<br>
+                귀하가 지정된 수신인이 아니라면 본 메일에 포함된 정보의 전부 또는 일부를 무단으로 보유, 사용하거나 제3자에게 공개, 복사, 전송, 배포해서는 안 됩니다.<br>
+                만약 메일이 잘못 발송되었다면 devlink <a href="https://devlink-six-mu.vercel.app" target="_blank">[문의하기]</a>를 통해 연락해 주시고, 즉시 삭제해 주시기 바랍니다.<br><br>
+                <b>Copyright ⓒ devlink. All Rights Reserved.</b></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
