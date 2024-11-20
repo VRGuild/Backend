@@ -2,6 +2,7 @@ package com.mtvs.devlinkbackend.team.controller;
 
 import com.mtvs.devlinkbackend.team.dto.response.TeamListResponseDTO;
 import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
+import com.mtvs.devlinkbackend.team.dto.response.support.TeamSupportListResponseDTO;
 import com.mtvs.devlinkbackend.team.service.TeamViewService;
 import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/team")
@@ -62,5 +65,15 @@ public class TeamQueryController {
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         TeamListResponseDTO teams = teamViewService.findByAccountIdInTeam(accountId);
         return ResponseEntity.ok(teams);
+    }
+
+    @GetMapping("/{projectId}/support/list")
+    public ResponseEntity<TeamSupportListResponseDTO> getSupportTeamsByProjectId(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable Long projectId
+            ) throws Exception {
+        Long userId = jwtUtil.getUserIdByToken(authorizationHeader);
+        TeamSupportListResponseDTO teamlists = teamViewService.getTeamList(userId, projectId);
+        return ResponseEntity.ok(teamlists);
     }
 }

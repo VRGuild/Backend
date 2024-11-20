@@ -14,4 +14,6 @@ public interface SupportRepository extends JpaRepository<Support, Long> {
     List<Support> findSupportsByTeamId(Long teamId);
     @Query("SELECT s.teamId FROM Support s WHERE s.projectId = :projectId")
     List<Long> findTeamIdByProjectId(@Param("projectId") Long projectId);
+    @Query("SELECT s.teamId FROM Support s WHERE s.projectId = :projectId AND s.supportConfirmation = 1")
+    List<Long> findTeamIdByProjectIdUnConfirmed(@Param("projectId") Long projectId);
 }

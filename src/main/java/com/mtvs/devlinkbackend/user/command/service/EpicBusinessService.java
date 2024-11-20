@@ -51,8 +51,6 @@ public class EpicBusinessService {
         );
         Business savedBusiness = businessRepository.save(business);
 
-        savedUser.setBusinessId(savedBusiness.getBusinessId());
-
 
         // Response 나오면 바로 refactoring
         return new BusinessSingleResponseDTO(businessRepository.save(business));

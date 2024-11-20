@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/project")
 public class ProjectCommandController {
@@ -71,6 +74,26 @@ public class ProjectCommandController {
 
         ProjectTeamResponseDTO newProject = projectService.applyProjectByNewTeam(teamRegistRequestDTO, projectId);
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "프로젝트 지원 수락", description = "특정 팀의 프로젝트 지원을 수락합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "지원을 성공적으로 수락함"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터")
+    })
+    @PostMapping("/accept/epic/{projectId}/{teamId}")
+    public ResponseEntity<Map<String, String>> acceptProject(
+            @PathVariable(name = "projectId") Long projectId,
+            @PathVariable(name = "teamId") Long teamId,
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+        Long userId = jwtUtil.getUserIdByToken(authorizationHeader);
+        Map<String, String> response = new HashMap<>();
+        if(projectService.acceptTeam(userId, projectId, teamId)) {
+            response.put("isSuccess", "true");
+        } else {
+            response.put("isSuccess", "false");
+        }
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "프로젝트 의뢰 삭제", description = "ID로 특정 프로젝트 의뢰를 삭제합니다.")

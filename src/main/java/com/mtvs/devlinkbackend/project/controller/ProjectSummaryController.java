@@ -27,7 +27,7 @@ public class ProjectSummaryController {
     @GetMapping("/{page}")
     public ResponseEntity<ProjectSummaryPagingResponseDTO> getProjectSummaries(
             @PathVariable(name = "page") int page) {
-        ProjectSummaryPagingResponseDTO responseDTO = projectSummaryViewService.findAllProjectSummaryWithPagination(page);
+        ProjectSummaryPagingResponseDTO responseDTO = projectSummaryViewService.findAllProjectSummaryWithPagination(page-1);
         return ResponseEntity.ok(responseDTO);
     }
 

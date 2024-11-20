@@ -41,12 +41,20 @@ public class ProjectSummaryViewService {
             // workType 설정
             previewDTO.setWorkType(projectSummary.getWorkType());
             previewDTO.setProgressClassification(projectSummary.getProgressClassification());
+            previewDTO.setProjectId(projectSummary.getProjectId());
 
             // previewTitle 생성: workType + (StartDateTime과 EndDateTime의 월 차이) + title
             long monthsDifference = ChronoUnit.MONTHS.between(
                     projectSummary.getStartDate(), projectSummary.getEndDate());
 
-            StringBuilder previewTitle = new StringBuilder("[" + projectSummary.getWorkType() + "] [" + monthsDifference + "개월");
+            StringBuilder previewTitle = new StringBuilder("[");
+            if(projectSummary.getWorkType().equals("both"))
+                previewTitle.append("상주, 원격");
+            else if (projectSummary.getWorkType().equals("local"))
+                previewTitle.append("상주");
+            else if (projectSummary.getWorkType().equals("remote"))
+                previewTitle.append("원격");
+            previewTitle.append("] [").append(monthsDifference).append("개월");
 
             List<String> requiredOccupationNameList = new ArrayList<>();
             for (Occupation occupation : projectSummary.getRequiredOccupationList()) {

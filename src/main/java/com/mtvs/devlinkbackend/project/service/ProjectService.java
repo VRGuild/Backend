@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.service;
 
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import com.mtvs.devlinkbackend.project.dto.response.ProjectTeamResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndTeamIdListDTO;
 import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
@@ -102,8 +103,20 @@ public class ProjectService {
     }
 
     @Transactional
+    public boolean acceptTeam(Long userId, Long projectId, Long teamId) {
+        try{
+            projectRepository.updateSupportConfirmation(projectId, teamId, userId, AcceptStatus.ACCEPTED);
+            return true;
+        } catch (Exception e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    @Transactional
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
     }
+
+
 }
 
