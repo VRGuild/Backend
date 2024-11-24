@@ -22,23 +22,10 @@ public class Channel {
     @Id
     private String channelId;
 
-    @Field(name = "user_id")
-    private Long userId;
-
-    private List<PositionType> positionTypes; // 여러 개의 position과 type 저장
-
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Channel(Long userId, List<PositionType> positionTypes) {
-        this.userId = userId;
-        this.positionTypes = positionTypes;
-    }
-
-    public void setPositionTypes(List<PositionType> positionTypes) {
-        this.positionTypes = positionTypes;
-    }
 }
