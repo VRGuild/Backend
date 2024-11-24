@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.channel.dto.request;
 
-import com.mtvs.devlinkbackend.channel.entity.PositionType;
 import lombok.*;
 
 import java.util.List;
