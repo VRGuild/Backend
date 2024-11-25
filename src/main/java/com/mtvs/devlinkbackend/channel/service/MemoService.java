@@ -10,5 +10,9 @@ public class MemoService {
     @Autowired
     private MemoRepository memoRepository;
 
-
+    @Transactional
+    public Boolean deleteMemoById(String memoId) {
+        memoRepository.deleteById(memoId);
+        return !memoRepository.existsById(memoId);
+    }
 }
