@@ -32,7 +32,6 @@ public class MemoService {
             isSuccessDTO.setMessage("메모 등록 실패");
             e.printStackTrace();
         }
-
         return isSuccessDTO;
     }
 
@@ -66,7 +65,7 @@ public class MemoService {
         } catch (Exception e) {
             isSuccessDTO.setSuccess(false);
             isSuccessDTO.setMessage("메모 삭제 실패");
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return isSuccessDTO;
     }
