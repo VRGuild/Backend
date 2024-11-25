@@ -22,6 +22,8 @@ public class Channel {
     @Id
     private String channelId;
 
+    private String channelName;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

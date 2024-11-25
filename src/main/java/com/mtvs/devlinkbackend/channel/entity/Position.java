@@ -8,7 +8,7 @@ public class Position {
     private float y;
     private float z;
 
-    public Position(int x, int y, int z) {
+    public Position(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
