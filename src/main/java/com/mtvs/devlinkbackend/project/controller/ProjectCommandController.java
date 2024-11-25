@@ -82,16 +82,16 @@ public class ProjectCommandController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터")
     })
     @PostMapping("/accept/epic/{projectId}/{teamId}")
-    public ResponseEntity<Map<String, String>> acceptProject(
+    public ResponseEntity<Map<String, Boolean>> acceptProject(
             @PathVariable(name = "projectId") Long projectId,
             @PathVariable(name = "teamId") Long teamId,
             @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
         Long userId = jwtUtil.getUserIdByToken(authorizationHeader);
-        Map<String, String> response = new HashMap<>();
+        Map<String, Boolean> response = new HashMap<>();
         if(projectService.acceptTeam(userId, projectId, teamId)) {
-            response.put("isSuccess", "true");
+            response.put("isSuccess", true);
         } else {
-            response.put("isSuccess", "false");
+            response.put("isSuccess", false);
         }
         return ResponseEntity.ok(response);
     }
