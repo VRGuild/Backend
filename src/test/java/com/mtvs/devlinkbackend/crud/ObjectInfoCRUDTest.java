@@ -99,7 +99,7 @@ class ObjectInfoCRUDTest {
         );
 
         // When
-        ObjectInfoSingleResponseDTO responseDTO = objectInfoService.updateObjectInfoByObjectId(updateDTO, existingObject.getObjectId());
+        ObjectInfoSingleResponseDTO responseDTO = objectInfoService.updateObjectInfoByObjectId(updateDTO, existingObject.getObjectId(), channelId);
 
         // Then
         assertThat(responseDTO.getData().getObjectName()).isEqualTo("UpdatedObject");
@@ -128,6 +128,7 @@ class ObjectInfoCRUDTest {
     @Test
     void testUpdateObjectInfoWithInvalidId() {
         // Given
+        String channelId = "channel123";
         String invalidObjectId = "invalid123";
         ObjectInfoRegistDTO updateDTO = new ObjectInfoRegistDTO(
                 "UpdatedObject", "UpdatedClass",
@@ -136,7 +137,7 @@ class ObjectInfoCRUDTest {
         );
 
         // When/Then
-        assertThatThrownBy(() -> objectInfoService.updateObjectInfoByObjectId(updateDTO, invalidObjectId))
+        assertThatThrownBy(() -> objectInfoService.updateObjectInfoByObjectId(updateDTO, invalidObjectId, channelId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("잘못된 ObjectInfoId로 수정 요청");
     }

@@ -31,7 +31,7 @@ public class ObjectInfoService {
 
     @Transactional
     public ObjectInfoSingleResponseDTO updateObjectInfoByObjectId(
-            ObjectInfoRegistDTO objectInfoRegistDTO, String objectId) {
+            ObjectInfoRegistDTO objectInfoRegistDTO, String objectId, String channelId) {
 
         ObjectInfo objectInfo = objectInfoRepository.findById(objectId).orElse(null);
 
@@ -40,6 +40,7 @@ public class ObjectInfoService {
             objectInfo.setObjectClassName(objectInfoRegistDTO.getObjectClassName());
             objectInfo.setPosition(objectInfoRegistDTO.getPosition());
             objectInfo.setRotator(objectInfoRegistDTO.getRotator());
+            objectInfo.setChannelId(channelId);
 
             return new ObjectInfoSingleResponseDTO(objectInfo);
         }
