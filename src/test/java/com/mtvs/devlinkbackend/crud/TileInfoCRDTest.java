@@ -75,7 +75,7 @@ class TileInfoCRDTest {
         TileInfo tileInfo = tileInfoRepository.save(new TileInfo(channelId, new Position(15, 25, 35)));
 
         // When
-        tileInfoService.deleteTileInfoByChannelId(channelId);
+        tileInfoService.deleteTileInfoByChannelId(channelId, tileInfo.getTileId());
 
         // Then
         boolean exists = tileInfoViewRepository.findAllByChannelId(channelId).isEmpty();
