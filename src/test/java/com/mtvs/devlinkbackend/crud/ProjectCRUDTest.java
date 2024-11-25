@@ -67,11 +67,12 @@ public class ProjectCRUDTest {
         // Given
         ProjectRegistRequestDTO requestDTO = new ProjectRegistRequestDTO(1L, "Test Title", "Test Content", 1000, "in-progress", "both", null, null, null);
         Project project = new Project(1L, "Test Title", "Test Content", "both", "in-progress", null, null, null, 1000);
+        String accountId = "";
 
         when(projectRepository.save(ArgumentMatchers.any(Project.class))).thenReturn(project);
 
         // When
-        ProjectSingleResponseDTO response = projectService.registProject(requestDTO);
+        ProjectSingleResponseDTO response = projectService.registProject(requestDTO, accountId);
 
         // Then
         assertThat(response).isNotNull();
