@@ -27,7 +27,18 @@ public class TileInfoService {
     }
 
     @Transactional
-    public void deleteTileInfoByChannelId(String channelId) {
-        tileInfoRepository.deleteAllByChannelId(channelId);
+    public TileInfoRegistDTO updateTileInfoByChannelId(TileInfoRegistDTO tileInfoRegistDTO, String channelId, String tileId) {
+        TileInfo tileInfo = tileInfoRepository.findById(tileId).orElse(null);
+
+        if(tileInfo != null) {
+            tileInfo.setPosition(tileInfoRegistDTO.getPosition());
+            return tileInfoRegistDTO;
+        }
+        else throw new IllegalArgumentException("잘못된 channelId로의 조회");
+    }
+
+    @Transactional
+    public void deleteTileInfoByChannelId(String channelId, String tileId) {
+        tileInfoRepository.deleteById(tileId);
     }
 }
