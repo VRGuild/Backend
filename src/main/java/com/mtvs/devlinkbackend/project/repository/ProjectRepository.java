@@ -15,7 +15,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Transactional
     @Query("UPDATE Support s SET s.supportConfirmation = :confirmationStatus " +
             "WHERE s.projectId = :projectId AND s.teamId = :teamId " +
-            "AND EXISTS (SELECT 1 FROM Team t WHERE t.teamId = s.teamId AND t.leaderUserId = :userId)")
+            "AND EXISTS (SELECT 1 FROM Project p WHERE p.projectId = :projectId AND p.userId = :userId)")
     void updateSupportConfirmation(@Param("projectId") Long projectId,
                                    @Param("teamId") Long teamId,
                                    @Param("userId") Long userId,
