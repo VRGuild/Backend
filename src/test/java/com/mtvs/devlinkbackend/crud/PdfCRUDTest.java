@@ -84,7 +84,7 @@ class PdfCRUDTest {
         PdfModifyDTO modifyDTO = new PdfModifyDTO(savedPdf.getPdfId(), "http://example.com/modified.pdf");
 
         // 4. PDF 수정
-        IsSuccessDTO isSuccessModify = pdfService.modifyPdf(modifyDTO, "channel 1");
+        IsSuccessDTO isSuccessModify = pdfService.modifyPdf(modifyDTO);
         assertThat(isSuccessModify.isSuccess()).isTrue(); // 수정 성공 여부 확인
 
         // 5. 수정된 PDF 확인

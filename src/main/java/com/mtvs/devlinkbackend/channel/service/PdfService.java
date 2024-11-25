@@ -34,12 +34,11 @@ public class PdfService {
     }
 
     @Transactional
-    public IsSuccessDTO modifyPdf(PdfModifyDTO pdfModifyDTO, String channelId) {
+    public IsSuccessDTO modifyPdf(PdfModifyDTO pdfModifyDTO) {
         IsSuccessDTO isSuccessDTO = new IsSuccessDTO();
         try {
             PdfInfo pdfInfo = pdfRepository.findById(pdfModifyDTO.getPdfId()).orElseThrow(() -> new RuntimeException("pdf를 찾을 수 없습니다."));
             pdfInfo.setPdfUrl(pdfModifyDTO.getPdfUrl());
-            pdfInfo.setChannelId(channelId);
             pdfRepository.save(pdfInfo);
             isSuccessDTO.setSuccess(true);
             isSuccessDTO.setMessage("pdf 수정 성공");
