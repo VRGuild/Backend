@@ -48,6 +48,11 @@ public class ObjectInfoService {
     }
 
     @Transactional
+    public void deleteObjectInfosByChannelId(String channelId) {
+        objectInfoRepository.deleteAllByChannelId(channelId);
+    }
+
+    @Transactional
     public void deleteObjectInfoByObjectId(String objectId) {
         objectInfoRepository.deleteById(objectId);
     }

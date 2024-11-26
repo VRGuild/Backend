@@ -38,7 +38,12 @@ public class TileInfoService {
     }
 
     @Transactional
-    public void deleteTileInfoByChannelId(String channelId, String tileId) {
+    public void deleteTileInfosByChannelId(String channelId) {
+        tileInfoRepository.deleteAllByChannelId(channelId);
+    }
+
+    @Transactional
+    public void deleteTileInfoByTileId(String channelId, String tileId) {
         tileInfoRepository.deleteById(tileId);
     }
 }

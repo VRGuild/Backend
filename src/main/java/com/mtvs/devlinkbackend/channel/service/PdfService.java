@@ -71,4 +71,9 @@ public class PdfService {
             return isSuccessDTO;
         }
     }
+
+    @Transactional
+    public void deletePdfsByChannelId(String channelId) {
+        pdfRepository.deleteAllByChannelId(channelId);
+    }
 }

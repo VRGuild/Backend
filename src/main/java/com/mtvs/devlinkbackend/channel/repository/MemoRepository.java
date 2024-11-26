@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemoRepository extends MongoRepository<MemoInfo, String> {
-
+    void deleteAllByChannelId(String channelId);
 }

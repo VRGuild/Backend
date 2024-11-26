@@ -30,4 +30,7 @@ public class Channel {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    public Channel(String channelName) {
+        this.channelName = channelName;
+    }
 }

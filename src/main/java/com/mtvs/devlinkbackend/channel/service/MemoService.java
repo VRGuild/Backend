@@ -67,4 +67,9 @@ public class MemoService {
         }
         return isSuccessDTO;
     }
+
+    @Transactional
+    public void deleteMemosByChannelId(String channelId) {
+        memoRepository.deleteAllByChannelId(channelId);
+    }
 }

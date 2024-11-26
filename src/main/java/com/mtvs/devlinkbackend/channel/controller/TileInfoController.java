@@ -73,7 +73,7 @@ public class TileInfoController {
     })
     @DeleteMapping("/{channelId}/{tileId}")
     public ResponseEntity<Void> deleteTileInfoByChannelId(@PathVariable String channelId, @PathVariable String tileId) {
-        tileInfoService.deleteTileInfoByChannelId(channelId, tileId);
+        tileInfoService.deleteTileInfoByTileId(channelId, tileId);
         return ResponseEntity.noContent().build();
     }
 }
