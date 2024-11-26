@@ -1,12 +1,10 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.channel.dto.request.MemoModifyDTO;
 import com.mtvs.devlinkbackend.channel.dto.request.MemoRegistDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.IsSuccessDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.MemoResponseDTO;
 import com.mtvs.devlinkbackend.channel.entity.MemoInfo;
 import com.mtvs.devlinkbackend.channel.entity.Position;
-import com.mtvs.devlinkbackend.channel.entity.TileInfo;
 import com.mtvs.devlinkbackend.channel.repository.MemoRepository;
 import com.mtvs.devlinkbackend.channel.repository.MemoViewRepository;
 import com.mtvs.devlinkbackend.channel.service.MemoService;
@@ -89,10 +87,10 @@ class MemoCRUDTest {
         MemoInfo savedMemo = memoRepository.findAll().get(0); // 가장 최근에 등록된 메모 조회 (단일 테스트에서는 이 방법이 유효)
 
         // 3. 수정할 데이터 준비
-        MemoModifyDTO dto = new MemoModifyDTO(savedMemo.getMemoId(), new MemoRegistDTO("수정된 메모 텍스트", new Position(4.0F, 5.0F, 6.0F)));
+        MemoRegistDTO dto = new MemoRegistDTO("수정된 메모 텍스트", new Position(4.0F, 5.0F, 6.0F));
 
         // 4. 메모 수정
-        IsSuccessDTO isSuccessDTO = memoService.modifyMemo(dto);
+        IsSuccessDTO isSuccessDTO = memoService.modifyMemo(dto, "1");
         assertThat(isSuccessDTO.isSuccess()).isTrue();
 
         // 5. 수정된 메모 확인

@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.channel.entity;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,20 +17,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Document(collection = "memoInfo")
-public class MemoInfo {
+@Document(collection = "pdfInfo")
+public class PdfInfo {
     @Id
-    private String memoId;
+    private String pdfId;
 
     @Indexed
     private String channelId;
 
     @Field
-    private String memoText;
-
-    @NotNull
-    @Field
-    private Position position;
+    private String pdfUrl;
 
     @CreatedDate
     private LocalDateTime createdAt;
