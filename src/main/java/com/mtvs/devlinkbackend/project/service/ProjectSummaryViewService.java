@@ -136,8 +136,7 @@ public class ProjectSummaryViewService {
             }
 
             // deadlineDate 설정: createdAt에서 30일을 더한 날짜
-            LocalDate deadlineDate = projectSummary.getCreatedAt().toLocalDate().plusDays(30);
-            previewDTO.setDeadlineDate(deadlineDate);
+            previewDTO.setDeadlineDate(projectSummary.getStartDate().minusDays(5));
 
             previewTitle.append("] ").append(projectSummary.getTitle());
 
