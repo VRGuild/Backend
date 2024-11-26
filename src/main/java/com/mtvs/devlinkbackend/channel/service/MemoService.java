@@ -1,12 +1,10 @@
 package com.mtvs.devlinkbackend.channel.service;
 
-import com.mtvs.devlinkbackend.channel.dto.request.MemoModifyDTO;
 import com.mtvs.devlinkbackend.channel.dto.request.MemoRegistDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.IsSuccessDTO;
 import com.mtvs.devlinkbackend.channel.entity.MemoInfo;
 import com.mtvs.devlinkbackend.channel.repository.MemoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +34,13 @@ public class MemoService {
     }
 
     @Transactional
-    public IsSuccessDTO modifyMemo(MemoModifyDTO memoModifyDTO) {
+    public IsSuccessDTO modifyMemo(MemoRegistDTO memoRegistDTO, String memoId) {
         IsSuccessDTO isSuccessDTO = new IsSuccessDTO();
         try {
-            MemoInfo memo = memoRepository.findById(memoModifyDTO.getMemoId())
+            MemoInfo memo = memoRepository.findById(memoId)
                     .orElseThrow(() -> new RuntimeException("메모를 찾을 수 없습니다."));
-            memo.setMemoText(memoModifyDTO.getMemoRegistDTO().getMemoText());
-            memo.setPosition(memoModifyDTO.getMemoRegistDTO().getPosition());
+            memo.setMemoText(memoRegistDTO.getMemoText());
+            memo.setPosition(memoRegistDTO.getPosition());
             memoRepository.save(memo);
 
             isSuccessDTO.setSuccess(true);

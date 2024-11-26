@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class PdfService {
     @Autowired
@@ -34,14 +36,17 @@ public class PdfService {
     }
 
     @Transactional
-    public IsSuccessDTO modifyPdf(PdfModifyDTO pdfModifyDTO) {
+    public IsSuccessDTO modifyPdf(PdfRegistDTO pdfRegistDTO, String pdfId) {
         IsSuccessDTO isSuccessDTO = new IsSuccessDTO();
         try {
-            PdfInfo pdfInfo = pdfRepository.findById(pdfModifyDTO.getPdfId()).orElseThrow(() -> new RuntimeException("pdf를 찾을 수 없습니다."));
-            pdfInfo.setPdfUrl(pdfModifyDTO.getPdfUrl());
-            pdfRepository.save(pdfInfo);
-            isSuccessDTO.setSuccess(true);
-            isSuccessDTO.setMessage("pdf 수정 성공");
+            Optional<PdfInfo> pdfInfoOptional = pdfRepository.findById(pdfId);
+            if (pdfInfoOptional.isPresent()) {
+                PdfInfo pdfInfo = pdfInfoOptional.get();
+                pdfInfo.setPdfUrl(pdfRegistDTO.getPdfUrl());
+                pdfRepository.save(pdfInfo);
+                isSuccessDTO.setSuccess(true);
+                isSuccessDTO.setMessage("pdf 수정 성공");
+            }
         } catch (Exception e) {
             isSuccessDTO.setMessage("pdf 수정 실패");
             isSuccessDTO.setSuccess(false);
