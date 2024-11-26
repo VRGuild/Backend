@@ -48,7 +48,7 @@ public class EpicDevQueryController {
         return ResponseEntity.ok(devSingleResponseDTO);
     }
 
-    @Operation(summary = "Epic 계정으로 Dev 전체 Pagination 조회")
+    @Operation(summary = "Epic 계정으로 평가되지 않은 Dev 전체 Pagination 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회됨"),
             @ApiResponse(responseCode = "401", description = "잘못된 토큰")
