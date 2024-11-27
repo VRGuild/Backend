@@ -1,6 +1,7 @@
 package com.mtvs.devlinkbackend.channel.controller;
 
 import com.mtvs.devlinkbackend.channel.dto.request.ChannelRegistRequestDTO;
+import com.mtvs.devlinkbackend.channel.dto.response.ChannelListResponseDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.ChannelSingleResponseDTO;
 import com.mtvs.devlinkbackend.channel.service.ChannelService;
 import com.mtvs.devlinkbackend.channel.service.ChannelViewService;
@@ -33,7 +34,7 @@ public class ChannelController {
                     content = @Content(schema = @Schema(implementation = ChannelSingleResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "입력 데이터가 유효하지 않습니다.", content = @Content)
     })
-    @PostMapping("/{accountId}")
+    @PostMapping
     public ResponseEntity<ChannelSingleResponseDTO> registerChannel(
             @RequestHeader(name = "Authorization") String authorizationHeader,
             @RequestBody ChannelRegistRequestDTO channelRegistRequestDTO) throws Exception {
@@ -78,6 +79,19 @@ public class ChannelController {
     @GetMapping("/{channelId}")
     public ResponseEntity<ChannelSingleResponseDTO> getChannelInfo(@PathVariable String channelId) {
         ChannelSingleResponseDTO responseDTO = channelViewService.findChannelInitInfoByChannelId(channelId);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @Operation(summary = "채널 정보 전체 조회", description = "채널 정보 전체를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "채널 정보 전체를 성공적으로 조회했습니다.",
+                    content = @Content(schema = @Schema(implementation = ChannelSingleResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "찾을 수 없습니다.", content = @Content)
+    })
+    @GetMapping("/all/{page}")
+    public ResponseEntity<ChannelListResponseDTO> getAllChannelInfo(@PathVariable int page) {
+
+        ChannelListResponseDTO responseDTO = channelViewService.findAllChannelInitInfo(page);
         return ResponseEntity.ok(responseDTO);
     }
 }
