@@ -1,6 +1,5 @@
 package com.mtvs.devlinkbackend.crud;
 
-import com.mtvs.devlinkbackend.channel.dto.request.PdfModifyDTO;
 import com.mtvs.devlinkbackend.channel.dto.request.PdfRegistDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.IsSuccessDTO;
 import com.mtvs.devlinkbackend.channel.dto.response.PdfResponseDTO;
