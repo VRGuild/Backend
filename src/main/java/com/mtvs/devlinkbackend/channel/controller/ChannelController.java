@@ -34,7 +34,7 @@ public class ChannelController {
                     content = @Content(schema = @Schema(implementation = ChannelSingleResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "입력 데이터가 유효하지 않습니다.", content = @Content)
     })
-    @PostMapping("/{accountId}")
+    @PostMapping
     public ResponseEntity<ChannelSingleResponseDTO> registerChannel(
             @RequestHeader(name = "Authorization") String authorizationHeader,
             @RequestBody ChannelRegistRequestDTO channelRegistRequestDTO) throws Exception {
