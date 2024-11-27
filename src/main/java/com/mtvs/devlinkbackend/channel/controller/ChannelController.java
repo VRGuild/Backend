@@ -85,7 +85,7 @@ public class ChannelController {
     @Operation(summary = "채널 정보 전체 조회", description = "채널 정보 전체를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "채널 정보 전체를 성공적으로 조회했습니다.",
-                    content = @Content(schema = @Schema(implementation = ChannelSingleResponseDTO.class))),
+                    content = @Content(schema = @Schema(implementation = ChannelListResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "찾을 수 없습니다.", content = @Content)
     })
     @GetMapping("/all/{page}")
