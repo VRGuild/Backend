@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.credentials.AccessTokenAuthentication;
@@ -12,11 +13,15 @@ import software.amazon.awssdk.services.eks.EksClient;
 import software.amazon.awssdk.services.eks.model.DescribeClusterRequest;
 import software.amazon.awssdk.services.eks.model.DescribeClusterResponse;
 import software.amazon.awssdk.services.sts.StsClient;
+import software.amazon.awssdk.services.sts.model.AssumeRoleRequest;
+import software.amazon.awssdk.services.sts.model.AssumeRoleResponse;
 import software.amazon.awssdk.utils.BinaryUtils;
 import software.amazon.awssdk.utils.Md5Utils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -54,6 +59,9 @@ public class EKSConfig {
         DescribeClusterResponse describeClusterResponse = eksClient.describeCluster(describeClusterRequest);
 
         String clusterEndpoint = describeClusterResponse.cluster().endpoint();
+
+        System.out.println(clusterEndpoint);
+
         String clusterCaCert = describeClusterResponse.cluster().certificateAuthority().data();
         String token = getEksToken();
 
@@ -70,48 +78,33 @@ public class EKSConfig {
     }
 
     public static String getEksToken() throws Exception {
-        StsClient stsClient = createStsClient();
-        AwsCredentials credentials = DefaultCredentialsProvider.create().resolveCredentials();
+        ProcessBuilder processBuilder = new ProcessBuilder(
+                "aws", "eks", "get-token",
+                "--cluster-name", "devlink-eks",
+                "--region", "ap-northeast-2"
+        );
 
-        Instant now = Instant.now();
-        String amzDate = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'")
-                .withZone(ZoneOffset.UTC)
-                .format(now);
-        String shortDate = amzDate.substring(0, 8);
+        Process process = processBuilder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        StringBuilder output = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            output.append(line);
+        }
+        process.waitFor();
 
-        String credentialScope = shortDate + "/" + REGION.id() + "/" + SERVICE + "/aws4_request";
-        String host = "sts." + REGION.id() + ".amazonaws.com";
-        String canonicalHeaders = "host:" + host + "\n" + "x-k8s-aws-id:" + CLUSTER_NAME + "\n";
-        String signedHeaders = "host;x-k8s-aws-id";
-        String payloadHash = hash("");
+        // JSON 출력에서 토큰 추출
+        String jsonOutput = output.toString();
+        System.out.println("CLI Token Response: " + jsonOutput);
 
-        String canonicalRequest = "GET\n/\n" + getCanonicalQueryString(credentials, amzDate, credentialScope) + "\n" +
-                canonicalHeaders + "\n" + signedHeaders + "\n" + payloadHash;
+        String token = new ObjectMapper()
+                .readTree(jsonOutput)
+                .path("status")
+                .path("token")
+                .asText();
 
-        String stringToSign = ALGORITHM + "\n" + amzDate + "\n" + credentialScope + "\n" + hash(canonicalRequest);
-
-        byte[] signingKey = getSignatureKey(credentials.secretAccessKey(), shortDate, REGION.id(), SERVICE);
-        String signature = BinaryUtils.toHex(hmacSha256(stringToSign, signingKey));
-
-        String url = "https://" + host + "/?" + getCanonicalQueryString(credentials, amzDate, credentialScope) +
-                "&X-Amz-Signature=" + signature;
-
-        return "k8s-aws-v1." + Base64.getUrlEncoder().encodeToString(url.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private static String getCanonicalQueryString(AwsCredentials credentials, String amzDate, String credentialScope) throws Exception {
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("Action", "GetCallerIdentity");
-        queryParams.put("Version", "2011-06-15");
-        queryParams.put("X-Amz-Algorithm", ALGORITHM);
-        queryParams.put("X-Amz-Credential", URLEncoder.encode(credentials.accessKeyId() + "/" + credentialScope, StandardCharsets.UTF_8.toString()));
-        queryParams.put("X-Amz-Date", amzDate);
-        queryParams.put("X-Amz-Expires", "60");
-        queryParams.put("X-Amz-SignedHeaders", "host;x-k8s-aws-id");
-
-        return queryParams.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"));
+        System.out.println("Generated EKS Token: " + token);
+        return token;
     }
 
     private static byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
@@ -126,11 +119,5 @@ public class EKSConfig {
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(key, "HmacSHA256"));
         return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private static String hash(String text) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hashBytes = md.digest(text.getBytes(StandardCharsets.UTF_8));
-        return BinaryUtils.toHex(hashBytes);
     }
 }
