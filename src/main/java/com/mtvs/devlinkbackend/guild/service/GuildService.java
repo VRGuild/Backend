@@ -87,8 +87,7 @@ public class GuildService {
                             foundGuild.getGuildIntroduction(),
                             foundGuild.getMasterUserId(),
                             foundGuild.getMaximumMember(),
-                            foundGuild.getGuildMemberList().stream().map(memberId ->
-                                    memberViewService.findMemberByMemberId(memberId).getData()).toList()
+                            foundGuild.getGuildMemberList().stream().map(memberViewService::findMemberByMemberId).toList()
                     )
             );
         } else return null;

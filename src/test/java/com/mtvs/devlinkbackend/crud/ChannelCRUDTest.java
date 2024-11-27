@@ -1,75 +1,104 @@
 package com.mtvs.devlinkbackend.crud;
 
 import com.mtvs.devlinkbackend.channel.dto.request.ChannelRegistRequestDTO;
-import com.mtvs.devlinkbackend.channel.dto.request.ChannelUpdateRequestDTO;
-import com.mtvs.devlinkbackend.channel.entity.PositionType;
-import com.mtvs.devlinkbackend.channel.service.ChannelService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
+import com.mtvs.devlinkbackend.channel.dto.response.ChannelSingleResponseDTO;
+import com.mtvs.devlinkbackend.channel.entity.Channel;
+import com.mtvs.devlinkbackend.channel.repository.ChannelRepository;
+import com.mtvs.devlinkbackend.channel.service.*;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
 public class ChannelCRUDTest {
-
     @Autowired
     private ChannelService channelService;
 
-    private static Stream<Arguments> newChannel() {
-        return Stream.of(
-                Arguments.of(new ChannelRegistRequestDTO(Arrays.asList(new PositionType(new PositionType.Position(1, 2, 3), "chair"))), "0bb31d25962c4817be894044371d4d3c"),
-                Arguments.of(new ChannelRegistRequestDTO(Arrays.asList(new PositionType(new PositionType.Position(4, 5, 6), "grass"))), "0bb31d25962c4817be894044371d4d3c")
-                );
-    }
+    @Autowired
+    private ChannelRepository channelRepository;
 
-    private static Stream<Arguments> modifiedChannel() {
-        return Stream.of(
-                Arguments.of(new ChannelUpdateRequestDTO("27ceb93e-bf35-4058-9a07-46550cf1aa00", Arrays.asList(new PositionType(new PositionType.Position(1, 2, 3), "chair"))), "0bb31d25962c4817be894044371d4d3c"),
-                Arguments.of(new ChannelUpdateRequestDTO("27ceb93e-bf35-4058-9a07-46550cf1aa00", Arrays.asList(new PositionType(new PositionType.Position(3, 1, 2), "block"))), "0bb31d25962c4817be894044371d4d3c")
-        );
-    }
+    @Autowired
+    private UserViewService userViewService;
+    @Autowired
+    private TileInfoService tileInfoService;
+    @Autowired
+    private ObjectInfoService objectInfoService;
+    @Autowired
+    private MemoService memoService;
+    @Autowired
+    private PdfService pdfService;
 
-    @DisplayName("채널 등록 테스트")
-    @ParameterizedTest
-    @MethodSource("newChannel")
-    public void testCreateChannel(ChannelRegistRequestDTO channelRegistRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> channelService.saveChannel(channelRegistRequestDTO, accountId));
-    }
-
-    @DisplayName("채널 PK로 조회 테스트")
-    @ValueSource(strings = {"79673000-2800-4226-ac32-fae65cd0a55c"})
-    @ParameterizedTest
-    public void testFindChannelByChannelId(String channelId) {
-        Assertions.assertDoesNotThrow(() -> channelService.findChannelByChannelId(channelId));
-    }
-
-    @DisplayName("모든 채널 조회 테스트")
     @Test
-    public void testFindAllChannels() {
-        Assertions.assertDoesNotThrow(() -> channelService.findAllChannels());
+    void testRegisterChannelInitInfo() {
+        // Given
+        String accountId = "testAccountId";
+        ChannelRegistRequestDTO requestDTO = new ChannelRegistRequestDTO("TestChannel");
+
+        User mockUser = new User(accountId);
+        when(userViewService.findUserByEpicAccountId(accountId)).thenReturn(mockUser);
+
+        // When
+        ChannelSingleResponseDTO responseDTO = channelService.registerChannelInitInfo(requestDTO, accountId);
+
+        // Then
+        assertThat(responseDTO).isNotNull();
+        assertThat(responseDTO.getData().getChannelName()).isEqualTo("TestChannel");
+
+        Optional<Channel> savedChannel = channelRepository.findById(responseDTO.getData().getChannelId());
+        assertThat(savedChannel).isPresent();
+        assertThat(mockUser.getChannelList()).contains(savedChannel.get().getChannelId());
     }
 
-    @DisplayName("채널 수정 테스트")
-    @MethodSource("modifiedChannel")
-    @ParameterizedTest
-    public void testUpdateChannel(ChannelUpdateRequestDTO channelUpdateRequestDTO, String accountId) {
-        Assertions.assertDoesNotThrow(() -> channelService.updateChannel(channelUpdateRequestDTO, accountId));
+    @Test
+    void testUpdateChannelInitInfo() {
+        // Given
+        Channel channel = channelRepository.save(new Channel("OldChannel"));
+        String channelId = channel.getChannelId();
+        ChannelRegistRequestDTO requestDTO = new ChannelRegistRequestDTO("UpdatedChannel");
+
+        // When
+        ChannelSingleResponseDTO responseDTO = channelService.updateChannelInitInfo(requestDTO, channelId);
+
+        // Then
+        assertThat(responseDTO).isNotNull();
+        assertThat(responseDTO.getData().getChannelName()).isEqualTo("UpdatedChannel");
+
+        Channel updatedChannel = channelRepository.findById(channelId).orElseThrow();
+        assertThat(updatedChannel.getChannelName()).isEqualTo("UpdatedChannel");
     }
 
-    @DisplayName("채널 삭제 테스트")
-    @ValueSource(strings = {"79673000-2800-4226-ac32-fae65cd0a55c"})
-    @ParameterizedTest
-    public void testDeleteChannel(String channelId) {
-        Assertions.assertDoesNotThrow(() -> channelService.deleteChannel(channelId));
+    @Test
+    void testDeleteChannelByChannelId() {
+        // Given
+        Channel channel = channelRepository.save(new Channel("TestChannel"));
+        String channelId = channel.getChannelId();
+
+        // Mocking services
+        doNothing().when(tileInfoService).deleteTileInfosByChannelId(channelId);
+        doNothing().when(objectInfoService).deleteObjectInfosByChannelId(channelId);
+        doNothing().when(memoService).deleteMemosByChannelId(channelId);
+        doNothing().when(pdfService).deletePdfsByChannelId(channelId);
+
+        // When
+        channelService.deleteChannelByChannelId(channelId);
+
+        // Then
+        Optional<Channel> deletedChannel = channelRepository.findById(channelId);
+        assertThat(deletedChannel).isNotPresent();
+
+        // Verify that related services were called
+        verify(tileInfoService, times(1)).deleteTileInfosByChannelId(channelId);
+        verify(objectInfoService, times(1)).deleteObjectInfosByChannelId(channelId);
+        verify(memoService, times(1)).deleteMemosByChannelId(channelId);
+        verify(pdfService, times(1)).deletePdfsByChannelId(channelId);
     }
 }

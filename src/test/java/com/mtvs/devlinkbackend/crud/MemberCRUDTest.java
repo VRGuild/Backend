@@ -67,11 +67,12 @@ public class MemberCRUDTest {
     public void testAcceptSupplyByMemberId() {
         // given
         Long memberId = 1L;
+        String accountId = "";
         Member member = new Member();
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // when
-        MemberStatusResponseDTO responseDTO = memberService.acceptSupplyByMemberId(memberId);
+        MemberStatusResponseDTO responseDTO = memberService.acceptSupplyByMemberId(memberId, accountId);
 
         // then
         assertNotNull(responseDTO);
@@ -83,11 +84,12 @@ public class MemberCRUDTest {
     public void testRejectSupplyByMemberId() {
         // given
         Long memberId = 1L;
+        String accountId = "";
         Member member = new Member();
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // when
-        MemberStatusResponseDTO responseDTO = memberService.rejectSupplyByMemberId(memberId);
+        MemberStatusResponseDTO responseDTO = memberService.rejectSupplyByMemberId(memberId, accountId);
 
         // then
         assertNotNull(responseDTO);
@@ -119,7 +121,7 @@ public class MemberCRUDTest {
         when(memberViewRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         // when
-        MemberStatusResponseDTO responseDTO = memberViewService.findMemberByMemberId(memberId);
+        MemberStatusResponseDTO responseDTO = memberViewService.findMemberDTOByMemberId(memberId);
 
         // then
         assertNotNull(responseDTO);

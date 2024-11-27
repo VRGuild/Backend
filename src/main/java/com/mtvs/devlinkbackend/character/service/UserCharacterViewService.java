@@ -21,7 +21,7 @@ public class UserCharacterViewService {
 
     public UserCharacterSingleResponseDTO findCharacterByAccountId(String accountId) {
         User foundUser = userViewRepository.findUserByEpicAccountId(accountId);
-        return new UserCharacterSingleResponseDTO(userCharacterViewRepository.findByUserId(foundUser.getUserId()));
+        return new UserCharacterSingleResponseDTO(userCharacterViewRepository.findById(foundUser.getCharacterId()).orElse(null));
     }
 
     public UserCharacterSingleResponseDTO findCharacterByUserId(Long userId) {

@@ -16,9 +16,8 @@ public class CorsConfig {
         configuration.addAllowedOrigin("http://125.132.216.190:15530");
         configuration.addAllowedOrigin("http://localhost:8080");
         configuration.addAllowedOrigin("https://devlink-six-mu.vercel.app"); // 테스트에서 사용되는 도메인 추가
-
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedMethod("*");
-
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
 
         configuration.setAllowCredentials(true); // 인증 정보 포함 허용

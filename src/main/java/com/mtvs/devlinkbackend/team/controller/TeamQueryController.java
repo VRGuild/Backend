@@ -2,6 +2,7 @@ package com.mtvs.devlinkbackend.team.controller;
 
 import com.mtvs.devlinkbackend.team.dto.response.TeamListResponseDTO;
 import com.mtvs.devlinkbackend.team.dto.response.TeamSingleReponseDTO;
+import com.mtvs.devlinkbackend.team.dto.response.support.TeamSupportListResponseDTO;
 import com.mtvs.devlinkbackend.team.service.TeamViewService;
 import com.mtvs.devlinkbackend.common.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/team")
@@ -38,6 +41,19 @@ public class TeamQueryController {
         }
     }
 
+    @Operation(summary = "사용자가 리더인 팀 조회", description = "사용자가 멤버인 팀 목록을 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")
+    })
+    @GetMapping("/leader")
+    public ResponseEntity<TeamListResponseDTO> getTeamsByLeaderUserId(
+            @RequestHeader(name = "Authorization") String authorizationHeader) throws Exception {
+
+        String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
+        TeamListResponseDTO teams = teamViewService.findTeamsByLeaderAccountId(accountId);
+        return ResponseEntity.ok(teams);
+    }
+
     @Operation(summary = "사용자가 멤버인 팀 조회", description = "사용자가 멤버인 팀 목록을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "팀이 성공적으로 조회되었습니다.")
@@ -49,5 +65,15 @@ public class TeamQueryController {
         String accountId = jwtUtil.getSubjectFromAuthHeaderWithoutAuth(authorizationHeader);
         TeamListResponseDTO teams = teamViewService.findByAccountIdInTeam(accountId);
         return ResponseEntity.ok(teams);
+    }
+
+    @GetMapping("/{projectId}/support/list")
+    public ResponseEntity<TeamSupportListResponseDTO> getSupportTeamsByProjectId(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable Long projectId
+            ) throws Exception {
+        Long userId = jwtUtil.getUserIdByToken(authorizationHeader);
+        TeamSupportListResponseDTO teamlists = teamViewService.getTeamList(userId, projectId);
+        return ResponseEntity.ok(teamlists);
     }
 }

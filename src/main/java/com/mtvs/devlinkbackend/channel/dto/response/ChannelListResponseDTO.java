@@ -11,4 +11,5 @@ import java.util.List;
 @ToString
 public class ChannelListResponseDTO {
     private List<Channel> data;
+    private Integer totalPages;
 }

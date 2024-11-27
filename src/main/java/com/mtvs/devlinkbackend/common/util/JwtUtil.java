@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.common.util;
 
+import com.mtvs.devlinkbackend.user.command.service.UserService;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
@@ -22,8 +23,11 @@ public class JwtUtil {
 
     private final EpicGamesJWKCache jwkCache;
 
-    public JwtUtil(EpicGamesJWKCache jwkCache) {
+    private final UserService userService;
+
+    public JwtUtil(EpicGamesJWKCache jwkCache, UserService userService) {
         this.jwkCache = jwkCache;
+        this.userService = userService;
     }
 
     // JWT 서명 및 검증을 통한 Claims 추출
@@ -110,5 +114,15 @@ public class JwtUtil {
         } else {
             throw new IllegalArgumentException("Authorization header must start with 'Bearer '");
         }
+    }
+
+    public Long getUserIdByToken(String token) throws Exception {
+        String accountId = getSubjectFromAuthHeaderWithoutAuth(token);
+        return userService.findUserId(accountId);
+    }
+    public String getUserNickNameByToken(String token) throws Exception {
+        Long userId = getUserIdByToken(token);
+        System.out.println("userId : " + userId);
+        return userService.findUserNickname(userId);
     }
 }

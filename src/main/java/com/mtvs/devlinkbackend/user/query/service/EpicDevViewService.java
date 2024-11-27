@@ -40,7 +40,7 @@ public class EpicDevViewService {
 
     public DevPagingResponseDTO findAllDevsWithPagination(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdAt").descending());
-        Page<Dev> devPage = devViewRepository.findAllBy(pageable);
+        Page<Dev> devPage = devViewRepository.findAllWithUnevaluatedSkillCategory(pageable);
         List<NicknameAndDevInfoDTO> data = devPage.getContent().stream().map(dev -> {
             User user = userViewRepository.findById(dev.getUserId()).orElse(null);
             if(user == null)

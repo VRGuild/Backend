@@ -93,7 +93,7 @@ public class GuildCRUDTest {
         GuildMemberModifyRequestDTO memberRequestDTO = new GuildMemberModifyRequestDTO(
                 responseDTO.getData().getGuildId(),
                 responseDTO.getData().getMasterUserId(),
-                List.of(new Member("Guild", 1L, 2L, "motive", AcceptStatus.PENDING))
+                List.of(new Member("Guild", 1L, 2L, "motive", 3L , AcceptStatus.PENDING))
         );
 
         var modifiedGuildDTO = guildService.applyMemberToGuild(memberRequestDTO);

@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/member")
@@ -26,11 +23,11 @@ public class MemberQueryController {
             @ApiResponse(responseCode = "200", description = "성공적으로 조회되었습니다."),
             @ApiResponse(responseCode = "404", description = "팀을 찾을 수 없습니다.")
     })
-    @PatchMapping("/{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<MemberStatusResponseDTO> updateTeam(
             @PathVariable(name = "memberId") Long memberId) {
 
-        MemberStatusResponseDTO memberStatusResponseDTO = memberViewService.findMemberByMemberId(memberId);
+        MemberStatusResponseDTO memberStatusResponseDTO = memberViewService.findMemberDTOByMemberId(memberId);
         return memberStatusResponseDTO != null ?
                 ResponseEntity.ok(memberStatusResponseDTO) :
                 ResponseEntity.notFound().build();

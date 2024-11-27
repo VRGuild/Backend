@@ -1,5 +1,6 @@
 package com.mtvs.devlinkbackend.project.service;
 
+import com.mtvs.devlinkbackend.common.model.AcceptStatus;
 import com.mtvs.devlinkbackend.project.dto.response.ProjectTeamResponseDTO;
 import com.mtvs.devlinkbackend.project.dto.response.sub.ProjectAndTeamIdListDTO;
 import com.mtvs.devlinkbackend.project.dto.request.ProjectRegistRequestDTO;
@@ -14,6 +15,8 @@ import com.mtvs.devlinkbackend.support.service.SupportService;
 import com.mtvs.devlinkbackend.team.dto.request.TeamRegistRequestDTO;
 import com.mtvs.devlinkbackend.team.entity.Team;
 import com.mtvs.devlinkbackend.team.service.TeamService;
+import com.mtvs.devlinkbackend.user.command.model.entity.User;
+import com.mtvs.devlinkbackend.user.query.service.UserViewService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +31,24 @@ public class ProjectService {
     private final SupportService supportService;
     private final ProjectViewRepository projectViewRepository;
     private final TeamService teamService;
+    private final UserViewService userViewService;
 
-    public ProjectService(ProjectRepository projectRepository, SupportService supportService, ProjectViewRepository projectViewRepository, TeamService teamService) {
+    public ProjectService(ProjectRepository projectRepository, SupportService supportService, ProjectViewRepository projectViewRepository, TeamService teamService, UserViewService userViewService) {
         this.projectRepository = projectRepository;
         this.supportService = supportService;
         this.projectViewRepository = projectViewRepository;
         this.teamService = teamService;
+        this.userViewService = userViewService;
     }
 
     @Transactional
-    public ProjectSingleResponseDTO registProject(ProjectRegistRequestDTO projectRegistRequestDTO) {
+    public ProjectSingleResponseDTO registProject(ProjectRegistRequestDTO projectRegistRequestDTO, String accountId) {
+        User user = userViewService.findUserByEpicAccountId(accountId);
+        if(user == null)
+            throw new IllegalArgumentException("잘못된 userId 매핑");
+
         Project project = projectRepository.save(new Project(
-                projectRegistRequestDTO.getUserId(),
+                user.getUserId(),
                 projectRegistRequestDTO.getTitle(),
                 projectRegistRequestDTO.getContent(),
                 projectRegistRequestDTO.getWorkType(),
@@ -94,8 +103,20 @@ public class ProjectService {
     }
 
     @Transactional
+    public boolean acceptTeam(Long userId, Long projectId, Long teamId) {
+        try{
+            projectRepository.updateSupportConfirmation(projectId, teamId, userId, AcceptStatus.ACCEPTED);
+            return true;
+        } catch (Exception e){
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    @Transactional
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
     }
+
+
 }
 
