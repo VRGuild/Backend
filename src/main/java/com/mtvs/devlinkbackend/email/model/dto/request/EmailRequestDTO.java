@@ -1,4 +1,4 @@
-package com.mtvs.devlinkbackend.email.model.dto;
+package com.mtvs.devlinkbackend.email.model.dto.request;
 
 
 import lombok.*;
