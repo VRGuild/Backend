@@ -1,12 +1,11 @@
-# VRGuild Backend
+# DEVLINK Backend
 
-VRGuild(DevLink)는 개발자와 기획자, 아티스트, 기업 사용자가 프로젝트와 팀을 만들고 협업할 수 있도록 지원하는 커뮤니티형 협업 플랫폼입니다. 이 저장소는 DevLink 서비스의 Spring Boot 백엔드 API 서버이며, Epic Games OAuth 기반 사용자 인증, 프로젝트/길드/팀/지원/평가 도메인, 메타버스 공간 데이터, 파일 업로드, 배포 자동화까지 담당합니다.
+DevLink는 개발자와 기업 사용자가 프로젝트와 팀을 만들고 협업할 수 있도록 지원하는 커뮤니티형 협업 플랫폼입니다. 이 저장소는 DevLink 서비스의 Spring Boot 백엔드 API 서버이며 Epic Games OAuth 기반 사용자 인증, 프로젝트/길드/팀/지원/평가 도메인, 메타버스 공간 데이터, 파일 업로드, 배포 자동화까지 담당합니다.
 
 ## 프로젝트 개요
 
 - 개발 기간: 2024.09 ~ 2024.11
 - 주요 영역: Backend / Infra
-- 핵심 구성: Spring Boot API, MySQL/MongoDB 저장소 분리, Epic Games JWT 검증, S3 파일 업로드, GitHub Actions 기반 AWS 배포 자동화
 - 배포 환경: Docker, Amazon ECR, AWS Elastic Beanstalk
 
 ## 주요 기능
@@ -21,7 +20,6 @@ VRGuild(DevLink)는 개발자와 기획자, 아티스트, 기업 사용자가 �
 - 채널, 타일, 메모, PDF, 오브젝트 정보 등 메타버스 공간 데이터 관리
 - AWS S3 기반 파일 업로드 및 URL 저장
 - Swagger/OpenAPI 기반 API 문서 제공
-- `/health` 엔드포인트 기반 로드 밸런서 상태 확인
 
 ## 기술 스택
 
@@ -118,9 +116,7 @@ Epic Games OAuth2를 기반으로 사용자 인증을 처리합니다.
 - Java/Spring 기반 주요 도메인 CRUD API 개발 및 테스트 코드 작성
 - AWS S3 파일 객체 스토리지 환경 설정 및 파일 CRUD 로직 구현
 
-### 내 담당 영역
-
-이력서와 저장소 구현 기준으로 별도 정리한 담당 영역입니다.
+### 임수연(lsy1307)
 
 - Spring Boot 기반 DevLink 백엔드 API 설계 및 구현 참여
 - 프로젝트, 팀, 길드, 지원, 사용자 등 주요 서비스 도메인 API 구현
@@ -185,47 +181,12 @@ docker build -t devlink-server .
 docker run -p 8443:8443 --env-file .env devlink-server
 ```
 
-## 환경 변수
-
-`application.yml`은 다음 환경 변수를 참조합니다.
-
-```env
-MYSQL_URL=
-MYSQL_USERNAME=
-MYSQL_PASSWORD=
-
-MONGO_USERNAME=
-MONGO_PASSWORD=
-MONGO_HOST=
-MONGO_PORT=
-MONGO_DATABASE=
-
-EPIC_GAMES_CLIENT_ID=
-EPIC_GAMES_CLIENT_SECRET=
-EPIC_GAMES_DEPLOYMENT_ID=
-
-AWS_S3_BUCKET_NAME=
-AWS_S3_REGION=
-AWS_S3_BUCKET_ACCESS_KEY=
-AWS_S3_BUCKET_SECRET_KEY=
-
-MAIL_USERNAME=
-MAIL_PASSWORD=
-```
-
 ## API 문서
 
 애플리케이션 실행 후 Swagger UI에서 API 문서를 확인할 수 있습니다.
 
 ```text
 http://localhost:8443/swagger-ui.html
-```
-
-상태 확인 엔드포인트는 로드 밸런서 헬스 체크에 사용됩니다.
-
-```text
-GET /health
-POST /health
 ```
 
 ## 테스트
