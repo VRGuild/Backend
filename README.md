@@ -5,8 +5,8 @@ VRGuild(DevLink)는 개발자와 기획자, 아티스트, 기업 사용자가 �
 ## 프로젝트 개요
 
 - 개발 기간: 2024.09 ~ 2024.11
-- 역할: Backend / Infra
-- 핵심 구현: Spring Boot API, MySQL/MongoDB 저장소 분리, Epic Games JWT 검증, S3 파일 업로드, GitHub Actions 기반 AWS 배포 자동화
+- 주요 영역: Backend / Infra
+- 핵심 구성: Spring Boot API, MySQL/MongoDB 저장소 분리, Epic Games JWT 검증, S3 파일 업로드, GitHub Actions 기반 AWS 배포 자동화
 - 배포 환경: Docker, Amazon ECR, AWS Elastic Beanstalk
 
 ## 주요 기능
@@ -103,19 +103,37 @@ Epic Games OAuth2를 기반으로 사용자 인증을 처리합니다.
 - Comment / Reply / Question: 커뮤니티 상호작용
 - Evaluation / Experience / Ether: 평가, 경험치, 서비스 내 재화
 
-## 담당 구현
+## 역할 분배
 
-이력서와 저장소 구현 기준으로 정리한 주요 담당 영역입니다.
+### 박인성(Hexeong)
 
-- Java, Spring Boot, JPA, MySQL 기반 주요 도메인 CRUD API 구현
-- RDB와 NoSQL을 함께 사용하는 저장소 구조 설계 및 적용
-- Epic Games OAuth/JWT 검증 로직 구현
-- JWK 캐싱 및 스케줄링 기반 공개키 갱신 로직 구현
-- Spring Security 기반 JWT 인증 필터 구성
-- AWS S3 파일 업로드 환경 설정 및 파일 저장 로직 구현
-- GitHub Actions, ECR, Elastic Beanstalk 기반 배포 자동화 구성
-- Swagger/OpenAPI 설정 및 API 문서화
-- Controller, Service, Repository 계층 테스트 코드 작성
+- RDB와 NoSQL의 schema / document 구조 공동 설계
+  - DDD 기반 Bounded Context 별로 도메인 분리
+  - 도메인별 특성에 맞는 DBMS 선택 및 설정
+  - map 도메인은 NoSQL, user 도메인은 RDB 중심으로 구성
+- 유저 인증 로직 구현
+  - Epic Games 기반 JWT 검증 로직 구현
+  - Scheduler를 사용한 Epic Games JWK 갱신 로직 구현
+  - Spring Security 기반 JWT 검증 Filter 구현
+- Java/Spring 기반 주요 도메인 CRUD API 개발 및 테스트 코드 작성
+- AWS S3 파일 객체 스토리지 환경 설정 및 파일 CRUD 로직 구현
+
+### 내 담당 영역
+
+이력서와 저장소 구현 기준으로 별도 정리한 담당 영역입니다.
+
+- Spring Boot 기반 DevLink 백엔드 API 설계 및 구현 참여
+- 프로젝트, 팀, 길드, 지원, 사용자 등 주요 서비스 도메인 API 구현
+- MySQL/JPA 기반 관계형 데이터와 MongoDB 문서형 데이터 연동 구조 적용
+- AWS 배포 흐름 구성 참여
+  - Docker 이미지 빌드
+  - Amazon ECR 이미지 push
+  - Elastic Beanstalk 배포
+  - `Dockerrun.aws.json` 기반 컨테이너 실행 설정
+- GitHub Actions 기반 `dev` 브랜치 자동 배포 파이프라인 구성
+- S3 파일 업로드 및 URL 저장 흐름 연동
+- Swagger/OpenAPI 기반 API 문서화 및 협업용 API 명세 정리
+- 도메인별 Controller, Service, Repository 테스트 코드 작성 및 검증
 
 ## CI/CD
 
